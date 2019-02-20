@@ -30,10 +30,10 @@ GNRS <- function(political_division_dataframe){
   
   
   # Inspect the input
-  #head(obs,10)
+  #head(political_division_dataframe ,10)
   
   # Convert to JSON
-  obs_json <- toJSON(unname(split(obs, 1:nrow(obs))))
+  obs_json <- toJSON(unname(split(political_division_dataframe, 1:nrow(political_division_dataframe))))
   
   # Construct the request
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
