@@ -5,13 +5,16 @@
 #' @param state_province A single state/province or a vector of states.  If a vector, length must equal length of species vector.
 #' @param county_parish A single county/parish or a vector of counties.  If a vector, length must equal length of species vector.
 #' @param user_id A single user id to be appended to results (optional).
-#' @return Dataframe containing NSR results.
+#' @return Dataframe containing GNRS results.
 #' @import RCurl  rjson
 #' @export
 #' @examples \dontrun{
 #'
 #'  results <- GNRS_super_simple(country = "United States of America")
-#'  results <- GNRS_super_simple(country = "United States",state_province = "Arizona",county_parish = "Pima County")
+#'  results <- GNRS_super_simple(
+#'              country = "United States",
+#'              state_province = "Arizona",
+#'              county_parish = "Pima County")
 #' 
 #' }
 GNRS_super_simple <- function(country=NULL, state_province=NULL,county_parish=NULL,user_id=NULL){
@@ -35,7 +38,7 @@ GNRS_super_simple <- function(country=NULL, state_province=NULL,county_parish=NU
   
   
   #Make template
-  template<-NSR_template(nrow = max(length(country),length(state_province),length(county_parish)))
+  template<-GNRS_template(nrow = max(length(country),length(state_province),length(county_parish)))
   
   
   #Throw an error if user_id doesn't make sense

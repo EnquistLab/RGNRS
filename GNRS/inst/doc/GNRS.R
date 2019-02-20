@@ -1,48 +1,22 @@
----
-title: "GNRS"
-author: "Brian Maitner"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{GNRS R package}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
-  
----
-
-
-```{r setup, include=FALSE}
+## ----setup, include=FALSE------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
-```
 
-## Geographic Name Resolution Service
+## ---- eval=FALSE---------------------------------------------------------
+#  
+#  library(devtools)
+#  install_github("EnquistLab/RGNRS/GNRS")
+#  
+#  
 
-The package `GNRS` is designed to interact with the Geographic Name Resolution Service of the Botanical Information and Ecology Network.  
-
-
-#Installing GNRS
-```{r, eval=FALSE}
-
-library(devtools)
-install_github("EnquistLab/RGNRS/GNRS")
-
-
-```
-
-#The easiest case: one political division
-
-```{r}
+## ------------------------------------------------------------------------
 library(GNRS)
 GNRS_super_simple(country =  "United States", 
                  state_province = "Arizona",
                  county_parish = "Pima County")
 
 
-```
 
-#Multiple political divisions
-
-```{r}
+## ------------------------------------------------------------------------
 
 #First, we'll grab some occurrence records from BIEN
 library(BIEN)
@@ -63,4 +37,4 @@ xs_gnrs_results <- GNRS(xs_query)
 
 head(xs_gnrs_results)
 
-```
+
