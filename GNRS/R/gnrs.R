@@ -9,7 +9,7 @@
 #' @export
 #' @examples {
 #' gnrs_testfile <- 
-#'read.csv("http://bien.nceas.ucsb.edu/bien/wp-content/uploads/2019/02/gnrs_testfile.csv")
+#' read.csv(system.file("extdata", "gnrs_testfile.csv", package = "GNRS", mustWork = TRUE),stringsAsFactors = F)
 #'
 #' results <- GNRS(political_division_dataframe = gnrs_testfile)
 #'   
