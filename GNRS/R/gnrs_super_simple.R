@@ -6,9 +6,8 @@
 #' @param county_parish A single county/parish or a vector of counties.  If a vector, length must equal length of species vector.
 #' @param user_id A single user id to be appended to results (optional).
 #' @return Dataframe containing GNRS results.
-#' @import RCurl  rjson
 #' @export
-#' @examples \dontrun{
+#' @examples {
 #'
 #'  results <- GNRS_super_simple(country = "United States of America")
 #'  results <- GNRS_super_simple(

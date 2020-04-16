@@ -45,6 +45,7 @@ GNRS_super_simple(country =  "United States",
 ```{r}
 
 #First, we'll grab some occurrence records from BIEN
+
 library(BIEN)
 xs <- BIEN_occurrence_species(species = "Xanthium strumarium", political.boundaries = T)
 

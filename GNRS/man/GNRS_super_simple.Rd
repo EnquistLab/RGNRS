@@ -4,8 +4,12 @@
 \alias{GNRS_super_simple}
 \title{Standardize political division names}
 \usage{
-GNRS_super_simple(country = NULL, state_province = NULL,
-  county_parish = NULL, user_id = NULL)
+GNRS_super_simple(
+  country = NULL,
+  state_province = NULL,
+  county_parish = NULL,
+  user_id = NULL
+)
 }
 \arguments{
 \item{country}{A single country or a vector of countries.  If a vector, length must equal length of species vector.}
@@ -23,7 +27,7 @@ Dataframe containing GNRS results.
 GNRS_super_simple returns standardized political division names (according to geonames.org).
 }
 \examples{
-\dontrun{
+{
 
  results <- GNRS_super_simple(country = "United States of America")
  results <- GNRS_super_simple(

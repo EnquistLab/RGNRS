@@ -16,7 +16,7 @@ Dataframe containing GNRS results.
 GNRS returns standardized political division names (according to geonames.org).
 }
 \examples{
-\dontrun{
+{
 gnrs_testfile <- 
 read.csv("http://bien.nceas.ucsb.edu/bien/wp-content/uploads/2019/02/gnrs_testfile.csv")
 

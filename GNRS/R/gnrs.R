@@ -3,9 +3,11 @@
 #'GNRS returns standardized political division names (according to geonames.org).
 #' @param political_division_dataframe A properly formatted dataframe, see http://bien.nceas.ucsb.edu/bien/tools/gnrs/gnrs-api/
 #' @return Dataframe containing GNRS results.
-#' @import RCurl rjson
+#' @import RCurl
+#' @importFrom jsonlite fromJSON
+#' @importFrom rjson toJSON
 #' @export
-#' @examples \dontrun{
+#' @examples {
 #' gnrs_testfile <- 
 #'read.csv("http://bien.nceas.ucsb.edu/bien/wp-content/uploads/2019/02/gnrs_testfile.csv")
 #'
@@ -23,6 +25,7 @@ GNRS <- function(political_division_dataframe){
   
   # URL for GNRS API
   url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_ws.php"
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_ws.php" #development
   
   # Read in example file of political division names
   # See the BIEN website for details on how to organize a GNRS Batch Mode input file:
@@ -33,7 +36,7 @@ GNRS <- function(political_division_dataframe){
   #head(political_division_dataframe ,10)
   
   # Convert to JSON
-  obs_json <- toJSON(unname(split(political_division_dataframe, 1:nrow(political_division_dataframe))))
+  obs_json <- rjson::toJSON(unname(split(political_division_dataframe, 1:nrow(political_division_dataframe))))
   
   # Construct the request
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
@@ -47,10 +50,10 @@ GNRS <- function(political_division_dataframe){
   
   # Convert JSON file to a data frame
   # This takes a bit of work
-  results <- fromJSON(results_json)
-  results <- as.data.frame(do.call(rbind,results))
-  
-  rownames(results) <- NULL	# Reset row numbers
+    #results <- fromJSON(results_json)
+  results <- jsonlite::fromJSON(results_json)
+    #results <- as.data.frame(do.call(rbind,results))
+    #rownames(results) <- NULL	# Reset row numbers
   
   return(results)
   
