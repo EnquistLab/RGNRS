@@ -17,7 +17,7 @@
 #'              county_parish = "Pima County")
 #' 
 #' }
-GNRS_super_simple <- function(country=NULL, state_province=NULL,county_parish=NULL,user_id=NULL){
+GNRS_super_simple <- function(country = NULL, state_province = NULL, county_parish = NULL, user_id = NULL ){
   
   
   #Check input for odd stuff
@@ -38,7 +38,7 @@ GNRS_super_simple <- function(country=NULL, state_province=NULL,county_parish=NU
   
   
   #Make template
-  template<-GNRS_template(nrow = max(length(country),length(state_province),length(county_parish)))
+  template <- GNRS_template(nrow = max(length(country),length(state_province),length(county_parish)))
   
   
   #Throw an error if user_id doesn't make sense
@@ -74,8 +74,8 @@ GNRS_super_simple <- function(country=NULL, state_province=NULL,county_parish=NU
   GNRS_out <- GNRS(template)
   
   
-  #Re-order output to match what was submitted
-  GNRS_out <- GNRS_out[match(x = GNRS_out$user_id,table = template$user_id),]
+  #Re-order output to match what was submitted #no longer needed since this is done by the GNRS function
+  #GNRS_out <- GNRS_out[match(table = GNRS_out$user_id,x = template$user_id),]
   
   #Return output
   return(GNRS_out)
