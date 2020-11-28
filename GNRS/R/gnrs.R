@@ -66,6 +66,10 @@ GNRS <- function(political_division_dataframe){
   #Re-order results to match original data
   results <- results[match(table = results$user_id,x = political_division_dataframe$user_id),]
   
+  #reset the row numbers
+  rownames(results) <- NULL 
+  
+  
   return(results)
   
 }
