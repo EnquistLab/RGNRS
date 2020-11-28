@@ -1,5 +1,5 @@
 ---
-title: "GNRS"
+title: "GNRS R package"
 author: "Brian Maitner"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

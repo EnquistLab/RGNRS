@@ -18,13 +18,16 @@ GNRS_super_simple(
 
 \item{county_parish}{A single county/parish or a vector of counties.  If a vector, length must equal length of species vector.}
 
-\item{user_id}{A single user id to be appended to results (optional).}
+\item{user_id}{A single identifier or vector of identifiers.  This field is assigned if not provided and is used to maintain record order.}
 }
 \value{
 Dataframe containing GNRS results.
 }
 \description{
 GNRS_super_simple returns standardized political division names (according to geonames.org).
+}
+\note{
+The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order poltical division and should be treated as a "state_province" and cannot be matched as a country.)
 }
 \examples{
 {

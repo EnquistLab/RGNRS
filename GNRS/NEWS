@@ -1,4 +1,13 @@
 ===============
+GNRS 0.1.1
+===============
+
+## NEW FEATURES
+
+* The field "user_id" is now required to be either null or contain only unique values.
+* The field "user_id" is now used to ensure the order of the returned records match the order that was submitted.
+
+===============
 GNRS 0.1.0
 ===============
 
