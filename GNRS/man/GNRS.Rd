@@ -4,10 +4,12 @@
 \alias{GNRS}
 \title{Standardize political division names}
 \usage{
-GNRS(political_division_dataframe)
+GNRS(political_division_dataframe, batches = NULL)
 }
 \arguments{
 \item{political_division_dataframe}{A properly formatted dataframe, see http://bien.nceas.ucsb.edu/bien/tools/gnrs/gnrs-api/}
+
+\item{batches}{NULL or Numeric.  Optional number of batches to divide the request into for parallel processing.}
 }
 \value{
 Dataframe containing GNRS results.

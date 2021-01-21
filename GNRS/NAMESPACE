@@ -3,6 +3,7 @@
 export(GNRS)
 export(GNRS_super_simple)
 export(GNRS_template)
+export(GNRS_version)
 import(RCurl)
 importFrom(jsonlite,fromJSON)
-importFrom(rjson,toJSON)
+importFrom(jsonlite,toJSON)
