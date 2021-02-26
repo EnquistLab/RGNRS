@@ -7,7 +7,7 @@
 GNRS_get_counties(state_province_id = NULL)
 }
 \arguments{
-\item{state__province_id}{A GNRS state_id, or a vector of state_ids.}
+\item{state_province_id}{A GNRS state_id, or a vector of state_ids.}
 }
 \value{
 Dataframe containing information on counties/parishes (e.g. iso code, fips code, continent, standardized name)

@@ -1,7 +1,7 @@
 #'Get metadata on counties
 #'
 #'Return metadata about counties, parishes, etc. used by the GNRS
-#' @param state__province_id A GNRS state_id, or a vector of state_ids.
+#' @param state_province_id A GNRS state_id, or a vector of state_ids.
 #' @return Dataframe containing information on counties/parishes (e.g. iso code, fips code, continent, standardized name)
 #' @import RCurl
 #' @importFrom jsonlite toJSON fromJSON
