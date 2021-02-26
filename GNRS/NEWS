@@ -1,5 +1,5 @@
 ===============
-GNRS 0.1.1
+GNRS 0.2.0
 ===============
 
 ## NEW FEATURES
@@ -9,6 +9,9 @@ GNRS 0.1.1
 * The URL used by the API was updated
 * Added the option to specify the number of batches to use for processing.
 * Added GNRS_version function
+* Added GNRS_get_countries()
+* Added GNRS_get_states()
+* Added GNRS_get_counties()
 
 ===============
 GNRS 0.1.0
