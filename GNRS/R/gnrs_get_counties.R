@@ -15,12 +15,18 @@
 #' 
 GNRS_get_counties <- function(state_province_id = NULL){
   
-
   if(is.null(state_province_id)) {
     #state_id <- GNRS_get_states()$state_province_id 
     stop("Please specify one or more state_ids")
     
-    }
+  }
+  
+  if(length(state_province_id) > 5000){
+    stop("At present the GNRS API has a record limit of 5000.")
+  
+  }
+  
+  
   
   # api url
   #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
