@@ -12,8 +12,8 @@
 GNRS_get_countries <- function(){
   
   # api url
-  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
-  url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
+  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
   
   # All we need to do is reset option mode.
   # all other options will be ignored

@@ -4,7 +4,7 @@
 \alias{GNRS_get_counties}
 \title{Get metadata on counties}
 \usage{
-GNRS_get_counties(state_province_id = NULL)
+GNRS_get_counties(state_province_id = "")
 }
 \arguments{
 \item{state_province_id}{A GNRS state_id, or a vector of state_ids.}

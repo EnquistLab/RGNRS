@@ -13,12 +13,21 @@
 #' which(states$country_iso == "US")])
 #' }
 #' 
-GNRS_get_counties <- function(state_province_id = NULL){
+
+GNRS_get_counties <- function(state_province_id = "") {
   
-  if(is.null(state_province_id)) {
-    #state_id <- GNRS_get_states()$state_province_id 
-    stop("Please specify one or more state_ids")
+  #Check input format
+  if(!identical(x = state_province_id, y = "")){
     
+    id_check <- suppressWarnings(all(as.numeric(state_province_id) %% 1 == 0))
+    if(is.na(id_check)) {
+      stop("state_province_id should be an integer(s) or an empty character (the default)")
+    }
+    
+    if(!id_check) {
+      stop("state_province_id should be an integer(s) or an empty character (the default)")
+    }
+  
   }
   
   if(length(state_province_id) > 5000){
@@ -26,11 +35,9 @@ GNRS_get_counties <- function(state_province_id = NULL){
   
   }
   
-  
-  
   # api url
-  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
-  url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
+  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
   
   # Construct the request
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
@@ -53,6 +60,14 @@ GNRS_get_counties <- function(state_province_id = NULL){
   
   # Display the results
   results <- jsonlite::fromJSON(results_json)
+  
+  if (length(results) == 0) {
+    
+    return(cat("No matches found for the submitted state_id"))
+    
+
+    
+  }
   
   return(results)
   

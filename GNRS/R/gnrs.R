@@ -26,10 +26,9 @@ GNRS <- function(political_division_dataframe, batches = NULL){
   # Date: Feb. 19, 2019
   ###############################################
   
-  # URL for GNRS API
-  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php"
-  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_ws.php"
-  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_ws.php" #development
+  # api url
+  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
   
   
   #Check that user_id is populated properly, and populate if not

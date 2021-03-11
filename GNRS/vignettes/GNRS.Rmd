@@ -53,7 +53,7 @@ xs <- BIEN_occurrence_species(species = "Xanthium strumarium", political.boundar
 #The GNRS function expects 4 columns as input, but all are optional.
 #If you ever forget, you can use the function GNRS_template as a quick lookup, or to populate.
 
-xs_query<-GNRS_template(nrow = nrow(xs))
+xs_query <- GNRS_template(nrow = nrow(xs))
 
 xs_query$country <- xs$country
 xs_query$state_province <- xs$state_province

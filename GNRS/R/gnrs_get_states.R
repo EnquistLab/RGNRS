@@ -10,13 +10,24 @@
 #' states <- GNRS_get_states()
 #' }
 #' 
-GNRS_get_states <- function(country_id = NULL){
+GNRS_get_states <- function(country_id = ""){
   
-  if(is.null(country_id)){country_id <- GNRS_get_countries()$country_id}
+  
+  if(!identical(x = country_id,y = "")){
+    
+  id_check <- suppressWarnings(all(as.numeric(country_id) %% 1 == 0))
+  if(is.na(id_check)) {
+    stop("country_id should be an integer(s) or an empty character (the default)")
+    }
+  
+  if(!id_check) {
+    stop("country_id should be an integer(s) or an empty character (the default)")
+  }
+  }
   
   # api url
-  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
-  url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
+  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
   
   # Construct the request
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
@@ -36,6 +47,19 @@ GNRS_get_states <- function(country_id = NULL){
   # Form the input json, including both options and data
   input_json <- paste0('{"opts":', opts_json, ',"data":', data_json, '}' )
   results_json <- postForm(url, .opts=list(postfields= input_json, httpheader=headers))
+  
+  #Convert from JSON
+  results <- jsonlite::fromJSON(results_json)
+  
+  #Check whether anything was found
+  if (length(results) == 0) {
+    
+    return(cat("No matches found for the submitted country_id"))
+    
+    
+    
+  }
+  
   
   # Display the results
   results <- jsonlite::fromJSON(results_json)

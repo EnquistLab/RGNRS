@@ -4,7 +4,7 @@
 \alias{GNRS_get_states}
 \title{Get metadata on states}
 \usage{
-GNRS_get_states(country_id = NULL)
+GNRS_get_states(country_id = "")
 }
 \arguments{
 \item{country_id}{A GNRS country_id, or a vector of country_ids. If empty, will return metadata for all countries.}

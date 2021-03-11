@@ -12,7 +12,8 @@
 GNRS_version <- function(){
   
   # api url
-  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production: /var/www/gnrs
+  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
   
   # set option mode.
   mode <- "meta"		
