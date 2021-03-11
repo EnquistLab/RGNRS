@@ -1,0 +1,25 @@
+Package: GNRS
+Title: Access the 'Geographic Name Resolution Service'
+Version: 0.2.0
+Authors@R: c(
+            person("Brad", "Boyle", email = "bboyle@email.arizona.edu", role = c("aut")),
+            person("Brian", "Maitner", email = "bmaitner@gmail.com", role = c("aut","cre"))
+            )
+Description: Provides tools for interacting with the 'geographic name resolution service' ('GNRS') API <https://github.com/ojalaquellueva/gnrs> and associated functionality. The 'GNRS' is a batch application for resolving & standardizing political division names against standard name in the geonames database <http://www.geonames.org/>. The 'GNRS' resolves political division names at three levels: country, state/province and county/parish. Resolution is performed in a series of steps, beginning with direct matching to standard names, followed by direct matching to alternate names in different languages, followed by direct matching to standard codes (such as ISO and FIPS codes). If direct matching fails, the 'GNRS' attempts to match to standard and then alternate names using fuzzy matching, but does not perform fuzzing matching of political division codes. The 'GNRS' works down the political division hierarchy, stopping at the current level if all matches fail. In other words, if a country cannot be matched, the 'GNRS' does not attempt to match state or county.
+Depends: 
+        R (>= 3.4.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+        rjson,
+        RCurl,
+        jsonlite
+Suggests:
+        knitr,
+        rmarkdown,
+        testthat,
+        devtools,
+        BIEN
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
