@@ -3,3 +3,5 @@
 ^doc$
 ^Meta$
 ^cran-comments\.md$
+^misc$
+^old_builds$
