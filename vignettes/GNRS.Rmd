@@ -44,24 +44,36 @@ GNRS_super_simple(country =  "United States",
 
 ```{r}
 
-#First, we'll grab some occurrence records from BIEN
+#First, we'll load the test data that are included with this package
 
-library(BIEN)
-xs <- BIEN_occurrence_species(species = "Xanthium strumarium", political.boundaries = T)
-
-
-#The GNRS function expects 4 columns as input, but all are optional.
-#If you ever forget, you can use the function GNRS_template as a quick lookup, or to populate.
-
-xs_query <- GNRS_template(nrow = nrow(xs))
-
-xs_query$country <- xs$country
-xs_query$state_province <- xs$state_province
-xs_query$county_parish <- xs$county
+gnrs_testfile <- read.csv(system.file("extdata", "gnrs_testfile.csv",
+                                      package = "GNRS", mustWork = TRUE),
+                          stringsAsFactors = FALSE)
 
 
-xs_gnrs_results <- GNRS(xs_query)
+head(gnrs_testfile, n = 10)
+```
 
-head(xs_gnrs_results)
+As you can see, the sample data include spelling variants (USA vs U.S.A.) and non-standard characters that may cause problems.  The GNRS will standardize these spelling variants and non-standard characters.
+
+
+```{r}
+
+gnrs_results <- GNRS(gnrs_testfile)
+
+#The standardized names are found in these columns:
+head(gnrs_results[c("country","state_province","county_parish")], n = 10)
 
 ```
+
+
+The GNRS function expects 4 columns as input, but all are optional. If you ever forget, you can use the function GNRS_template as a quick look-up, or as a template to populate
+
+```{r}
+
+
+head(GNRS_template())
+
+
+```
+

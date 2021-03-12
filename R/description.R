@@ -1,6 +1,6 @@
 #' GNRS: Tools for accessing the Geographic Name Resolution Service (GNRS).
 #'
-#' @description The Geographic Name Resolution Service (GNRS) R package provides access to the GNRS service as well as other associated tools.
+#' @description Provides access to the Geographic Name Resolution Service (GNRS) service as well as other associated tools.
 #' 
 #' @section Getting started:
 #' Type vignette("GNRS") to view the vignette, which contains useful information on the NSR package.

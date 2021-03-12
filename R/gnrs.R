@@ -20,12 +20,7 @@
 #' }
 GNRS <- function(political_division_dataframe, batches = NULL){
   
-  ###############################################
-  # Example use of GNRS API
-  # By: Brad Boyle (bboyle@email.arizona.edu)
-  # Date: Feb. 19, 2019
-  ###############################################
-  
+
   # api url
   url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
   #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
