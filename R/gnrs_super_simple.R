@@ -5,7 +5,7 @@
 #' @param state_province A single state/province or a vector of states.  If a vector, length must equal length of species vector.
 #' @param county_parish A single county/parish or a vector of counties.  If a vector, length must equal length of species vector.
 #' @param user_id A single identifier or vector of identifiers.  This field is assigned if not provided and is used to maintain record order.
-#' @note The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order poltical division and should be treated as a "state_province" and cannot be matched as a country.)
+#' @note The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order political division and should be treated as a "state_province" and cannot be matched as a country.)
 #' @return Dataframe containing GNRS results.
 #' @export
 #' @examples {

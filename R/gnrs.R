@@ -5,7 +5,7 @@
 #' @param batches NULL or Numeric.  Optional number of batches to divide the request into for parallel processing.
 #' @return Dataframe containing GNRS results.
 #' @note To create an empty and properly formatted dataframe, use GNRS_template()
-#' @note The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order poltical division and should be treated as a "state_province" and cannot be matched as a country.)
+#' @note The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order political division and should be treated as a "state_province" and cannot be matched as a country.)
 #' @import RCurl
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
