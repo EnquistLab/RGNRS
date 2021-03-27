@@ -13,7 +13,7 @@ Dataframe containing current GNRS version number, build date, and code version.
 Return metadata about the current GNRS version
 }
 \examples{
-{
+\dontrun{
 GNRS_version_metadata <- GNRS_version()
 }
 

@@ -16,7 +16,7 @@ Template data.frame that can be populated and then used in GNRS queries.
 GNRS_template builds a template that can be populated to submit a GNRS query.
 }
 \examples{
-{
+\dontrun{
 
 template<-GNRS_template(nrow = 2)
 template$country<-c("United Stapes","Mexico")

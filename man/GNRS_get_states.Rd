@@ -16,7 +16,7 @@ Dataframe containing information on states/provinces (e.g. iso code, fips code, 
 Return metadata about states used by the GNRS
 }
 \examples{
-{
+\dontrun{
 states <- GNRS_get_states()
 }
 

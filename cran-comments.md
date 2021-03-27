@@ -10,4 +10,4 @@
 * This is a new release.
 
 ## Notes
-* The examples may take more than 5 seconds depending on how busy the API (and server) is.  Usually they'll be less than 5 seconds, but this does vary depending on when the checks are done.
+* The examples may take more than 5 seconds depending on how busy the API (and server) is, so I now test the examples (and other functionality) via testthat. 

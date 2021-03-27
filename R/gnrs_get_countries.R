@@ -5,7 +5,7 @@
 #' @import RCurl
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
-#' @examples{
+#' @examples \dontrun{
 #' countries <- GNRS_get_countries()
 #' }
 #' 

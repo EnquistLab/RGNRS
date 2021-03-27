@@ -6,7 +6,7 @@
 #' @import RCurl
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
-#' @examples{
+#' @examples \dontrun{
 #' states <- GNRS_get_states()
 #' us_counties <- GNRS_get_counties(
 #' state_province_id = states$state_province_id[

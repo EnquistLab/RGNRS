@@ -16,7 +16,7 @@ Dataframe containing information on counties/parishes (e.g. iso code, fips code,
 Return metadata about counties, parishes, etc. used by the GNRS
 }
 \examples{
-{
+\dontrun{
 states <- GNRS_get_states()
 us_counties <- GNRS_get_counties(
 state_province_id = states$state_province_id[

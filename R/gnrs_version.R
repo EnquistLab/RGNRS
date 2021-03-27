@@ -5,7 +5,7 @@
 #' @import RCurl
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
-#' @examples{
+#' @examples \dontrun{
 #' GNRS_version_metadata <- GNRS_version()
 #' }
 #' 

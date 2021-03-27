@@ -13,7 +13,7 @@ Dataframe containing information on countries (e.g. iso code, fips code, contine
 Return metadata about countries used by the GNRS
 }
 \examples{
-{
+\dontrun{
 countries <- GNRS_get_countries()
 }
 

@@ -4,7 +4,7 @@
 #' @param nrow The number of rows to include in the template
 #' @return Template data.frame that can be populated and then used in GNRS queries.
 #' @export
-#' @examples {
+#' @examples \dontrun{
 #' 
 #' template<-GNRS_template(nrow = 2)
 #' template$country<-c("United Stapes","Mexico")

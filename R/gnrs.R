@@ -9,7 +9,7 @@
 #' @import RCurl
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
-#' @examples {
+#' @examples\dontrun{
 #' gnrs_testfile <- 
 #' read.csv(system.file("extdata", "gnrs_testfile.csv", package = "GNRS", mustWork = TRUE),
 #' stringsAsFactors = FALSE)
@@ -25,6 +25,11 @@ GNRS <- function(political_division_dataframe, batches = NULL){
   url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
   #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
   
+  #check that input is a data.frame
+  if(!inherits(political_division_dataframe,"data.frame")){
+    stop("political_division_dataframe should be a data.frame")
+  }
+  
   
   #Check that user_id is populated properly, and populate if not
 
@@ -33,7 +38,7 @@ GNRS <- function(political_division_dataframe, batches = NULL){
   
   #check that batches makes sense
   
-  #check that it its either NULL or numeric
+  #check that batches is either NULL or numeric
   if(!is.null(batches) & !is.numeric(batches)){stop("Argument 'batches' must be either NULL or a positive integer. ")}
   
   #check that it is a whole number greater than zero
