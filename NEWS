@@ -12,6 +12,7 @@ GNRS 0.2.0
 * Added GNRS_get_countries()
 * Added GNRS_get_states()
 * Added GNRS_get_counties()
+* Added testing via testthat
 
 ===============
 GNRS 0.1.0
