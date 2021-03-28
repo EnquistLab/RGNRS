@@ -24,7 +24,7 @@ The package `GNRS` is designed to interact with the Geographic Name Resolution S
 ```{r, eval=FALSE}
 
 library(devtools)
-install_github("EnquistLab/RGNRS/GNRS")
+install_github("EnquistLab/RGNRS")
 
 
 ```
@@ -44,12 +44,9 @@ GNRS_super_simple(country =  "United States",
 
 ```{r}
 
-#First, we'll load the test data that are included with this package
+#First, we'll load the test data that are included with this package, gnrs_testfile
 
-gnrs_testfile <- read.csv(system.file("extdata", "gnrs_testfile.csv",
-                                      package = "GNRS", mustWork = TRUE),
-                          stringsAsFactors = FALSE)
-
+gnrs_testfile <- gnrs_testfile
 
 head(gnrs_testfile, n = 10)
 ```

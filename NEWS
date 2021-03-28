@@ -13,6 +13,7 @@ GNRS 0.2.0
 * Added GNRS_get_states()
 * Added GNRS_get_counties()
 * Added testing via testthat
+* Moved data to from inst/extdata to data/ and added documentation
 
 ===============
 GNRS 0.1.0

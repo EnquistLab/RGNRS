@@ -24,10 +24,6 @@ The fields the GNRS takes as input are titled "country", "state_province", and "
 }
 \examples{
 \dontrun{
-gnrs_testfile <- 
-read.csv(system.file("extdata", "gnrs_testfile.csv", package = "GNRS", mustWork = TRUE),
-stringsAsFactors = FALSE)
-
 results <- GNRS(political_division_dataframe = gnrs_testfile)
   
 

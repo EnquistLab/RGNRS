@@ -10,10 +10,6 @@
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
 #' @examples\dontrun{
-#' gnrs_testfile <- 
-#' read.csv(system.file("extdata", "gnrs_testfile.csv", package = "GNRS", mustWork = TRUE),
-#' stringsAsFactors = FALSE)
-#'
 #' results <- GNRS(political_division_dataframe = gnrs_testfile)
 #'   
 #' 
