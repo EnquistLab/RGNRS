@@ -1,6 +1,6 @@
 Package: GNRS
 Title: Access the 'Geographic Name Resolution Service'
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
             person("Brad", "Boyle", email = "bboyle@email.arizona.edu", role = c("aut")),
             person("Brian", "Maitner", email = "bmaitner@gmail.com", role = c("aut","cre"))

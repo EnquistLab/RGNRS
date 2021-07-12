@@ -16,6 +16,12 @@
 
 GNRS_get_counties <- function(state_province_id = "") {
   
+  # Check for internet access
+  if (!is.character(getURL("www.google.com"))) {
+    message("This function requires internet access, please check your connection.")
+    return(invisible(NULL))
+  }
+  
   #Check input format
   if(!identical(x = state_province_id, y = "")){
     
@@ -56,7 +62,19 @@ GNRS_get_counties <- function(state_province_id = "") {
   
   # Form the input json, including both options and data
   input_json <- paste0('{"opts":', opts_json, ',"data":', data_json, '}' )
-  results_json <- postForm(url, .opts=list(postfields= input_json, httpheader=headers))
+  
+  
+  # Send the request in a "graceful failure" wrapper for CRAN compliance
+  tryCatch(expr =results_json <-  postForm(url, .opts=list(postfields= input_json, httpheader=headers)),
+           error = function(e) {
+             message("There appears to be a problem reaching the API.") 
+             return(NULL)
+           })
+  
+  #Return NULL if API isn't working
+  if(is.null(results_json)){return(invisible(NULL))}
+  
+  
   
   # Display the results
   results <- jsonlite::fromJSON(results_json)

@@ -1,4 +1,18 @@
 ===============
+GNRS 0.3.0
+===============
+## NEW FEATURES
+
+* Added GNRS_metadata
+* Added GNRS_acknowledgments
+* Added GNRS_citations
+* Added GNRS_sources
+
+## BUG FIXES
+
+* FUnctions return a message if they cannot connect to either the internet or the API.
+
+===============
 GNRS 0.2.0
 ===============
 
