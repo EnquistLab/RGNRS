@@ -11,12 +11,12 @@
 #' 
 GNRS_citations <- function(){
   
-  # Check for internet access
-  if (!is.character(getURL("www.google.com"))) {
+  # # Check for internet access
+  if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
     return(invisible(NULL))
   }
-  
+
   # api url
   #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
   url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
@@ -45,12 +45,11 @@ GNRS_citations <- function(){
   # Send the request in a "graceful failure" wrapper for CRAN compliance
   tryCatch(expr = results_json <-  postForm(url, .opts=list(postfields= input_json, httpheader=headers)),
            error = function(e) {
-             message("There appears to be a problem reaching the API.") 
-             return(NULL)
+             message("There appears to be a problem reaching the API.")
            })
   
   #Return NULL if API isn't working
-  if(is.null(results_json)){return(invisible(NULL))}
+  if(!exists("results_json")){return(invisible(NULL))}
   
   # Format the results
   results <- fromJSON(results_json)

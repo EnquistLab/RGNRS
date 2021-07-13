@@ -12,7 +12,7 @@
 GNRS_sources <- function(){
   
   # Check for internet access
-  if (!is.character(getURL("www.google.com"))) {
+  if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
     return(invisible(NULL))
   }
@@ -43,15 +43,14 @@ GNRS_sources <- function(){
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
   
   # Send the request in a "graceful failure" wrapper for CRAN compliance
-  tryCatch(expr =results_json <-  postForm(url, .opts=list(postfields= input_json, httpheader=headers)),
-                           error = function(e) {
-                             message("There appears to be a problem reaching the API.") 
-                             return(NULL)
-                           })
+  tryCatch(expr = results_json <-  postForm(url, .opts=list(postfields= input_json, httpheader=headers)),
+           error = function(e) {
+             message("There appears to be a problem reaching the API.")
+           })
   
   #Return NULL if API isn't working
-  if(is.null(results_json)){return(invisible(NULL))}
-  
+  if(!exists("results_json")){return(invisible(NULL))}
+
   # Format the results
   results <- fromJSON(results_json)
   
