@@ -3,6 +3,8 @@ context("gnrs_template")
 
 test_that("example works", {
   
+  skip_if_offline()
+  
   template <- GNRS_template(nrow = 2)
   template$country <- c("United Stapes","Mexico")
   template$state_province <- c("Arizona","Sinalo")

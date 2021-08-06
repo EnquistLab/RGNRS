@@ -24,7 +24,7 @@ This function provides citation information in bibtex format that can be used wi
 This function is a wrapper that returns the output of the functions GNRS_citations, GNRS_sources, GNRS_version, and GNRS_acknowledgments.
 }
 \examples{
-{
+\dontrun{
 metadata <- GNRS_metadata()
 }
 

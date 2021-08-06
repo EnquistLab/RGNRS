@@ -3,27 +3,31 @@ context("gnrs_super_simple")
 
 test_that("example works", {
   
-results <- GNRS_super_simple(country = "United States of America")
-
-expect_equal(object = class(results), expected = "data.frame")
-expect_equal(object = nrow(results),expected = 1)
-
-
-results <- GNRS_super_simple(
-              country = "United States",
-              state_province = "Arizona",
-              county_parish = "Pima County")
+  skip_if_offline()
   
-expect_equal(object = class(results), expected = "data.frame")
-expect_equal(object = nrow(results),expected = 1)
+  results <- GNRS_super_simple(country = "United States of America")
+  
+  expect_equal(object = class(results), expected = "data.frame")
 
+  expect_equal(object = nrow(results),expected = 1)
+
+
+  results <- GNRS_super_simple(
+                country = "United States",
+                state_province = "Arizona",
+                county_parish = "Pima County")
   
-  
+
+  expect_equal(object = class(results), expected = "data.frame")
+
+  expect_equal(object = nrow(results),expected = 1)
+
 })
 
 
 test_that("bad input returns no match", {
   
+  skip_if_offline()  
   
   nonsense_query <- 
     GNRS_super_simple(country = "Autobot",
@@ -38,6 +42,7 @@ test_that("bad input returns no match", {
 
 test_that("Good input returns a match", {
   
+  skip_if_offline()
   
   sensible_query <- 
     GNRS_super_simple(country = "USA",
@@ -48,5 +53,5 @@ test_that("Good input returns a match", {
   expect_equal(object = sensible_query$match_status,
                expected = "full match")
   
-
 })
+

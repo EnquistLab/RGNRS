@@ -9,11 +9,17 @@
 #' @note This function provides citation information in bibtex format that can be used with reference manager software (e.g. Paperpile, Zotero). Please remember to cite both the sources and the GNRS, as the GNRS couldn't exist without these sources!
 #' @note This function is a wrapper that returns the output of the functions GNRS_citations, GNRS_sources, GNRS_version, and GNRS_acknowledgments.
 #' @export
-#' @examples {
+#' @examples \dontrun{
 #' metadata <- GNRS_metadata()
 #' }
 #'
 GNRS_metadata <- function(bibtex_file=NULL){
+  
+  # Check for internet access
+  if (!check_internet()) {
+    message("This function requires internet access, please check your connection.")
+    return(invisible(NULL))
+  }
   
   output <- list()
   

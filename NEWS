@@ -1,12 +1,13 @@
 
 
 ===============
-GNRS 0.3.0.9000
+GNRS 0.3.1
 ===============
 ## NEW FEATURES
 
 ## BUG FIXES
-*Fixed probles with handling of API being down/unavailable
+* Fixed problem with handling of API being down/unavailable
+* Tests are now skipped if offline
 
 ===============
 GNRS 0.3.0
