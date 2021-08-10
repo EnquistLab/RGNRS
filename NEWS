@@ -4,6 +4,7 @@
 GNRS 0.3.1
 ===============
 ## NEW FEATURES
+* Added GNRS_data_dictionary() function and associated test.
 
 ## BUG FIXES
 * Fixed problem with handling of API being down/unavailable

@@ -3,6 +3,7 @@
 export(GNRS)
 export(GNRS_acknowledgments)
 export(GNRS_citations)
+export(GNRS_data_dictionary)
 export(GNRS_get_counties)
 export(GNRS_get_countries)
 export(GNRS_get_states)
