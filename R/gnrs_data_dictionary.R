@@ -54,7 +54,19 @@ GNRS_data_dictionary <- function(){
   if(!exists("results_json")){return(invisible(NULL))}
   
   # Format the results
-  results <- as.data.frame( fromJSON( rawToChar( results_json$content ) ) )
+  # Ensure that the results are properly formatted
+  tryCatch(expr = results_raw <- fromJSON(rawToChar(results_json$content)),
+           error = function(e) {
+             message(paste("There seems to be a problem with the query, which returned the following: \n",rawToChar(results_json$content)))
+           })
+  
+  #Convert to data.frame if things worked
+  
+  if(!exists("results_raw")){
+    return(invisible(NULL))
+  }else{
+    results <- as.data.frame(results_raw)  
+  }
   
   return(results)
   

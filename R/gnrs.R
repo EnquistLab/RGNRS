@@ -34,25 +34,33 @@ GNRS <- function(political_division_dataframe, batches = NULL){
     stop("political_division_dataframe should be a data.frame")
   }
   
-  
   #Check that user_id is populated properly, and populate if not
 
-  if(all(is.na(political_division_dataframe$user_id))){political_division_dataframe$user_id <- 1:nrow(political_division_dataframe)}
-  if(any(duplicated(political_division_dataframe$user_id))){stop("user_id should be either null or populated by unique values")}         
+  if(all(is.na(political_division_dataframe$user_id))){
+    political_division_dataframe$user_id <- 1:nrow(political_division_dataframe)
+    political_division_dataframe <- political_division_dataframe[c("user_id","country","state_province","county_parish")]
+  }
+  
+  
+  if(any(duplicated(political_division_dataframe$user_id))) {
+    stop("user_id should be either null or populated by unique values")
+    }
   
   #check that batches makes sense
   
   #check that batches is either NULL or numeric
-  if(!is.null(batches) & !is.numeric(batches)){stop("Argument 'batches' must be either NULL or a positive integer. ")}
-  
+  if(!is.null(batches) & !is.numeric(batches)) {
+    stop("Argument 'batches' must be either NULL or a positive integer. ")
+    }
+
   #check that it is a whole number greater than zero
-  if(is.numeric(batches)){ 
-    
+  if(is.numeric(batches)){
+
     
     if(batches<=0 | batches%%1!=0){stop("Argument 'batches' must be either NULL or a positive integer.")}
-    
+
     }
-  
+
   # Convert the data to JSON
   data_json <- toJSON(unname(political_division_dataframe))
   
@@ -91,11 +99,29 @@ GNRS <- function(political_division_dataframe, batches = NULL){
            })
   
   #Return NULL if API isn't working
-  if(!exists("results_json")){return(invisible(NULL))}
+  if(!exists("results_json")){
+    return(invisible(NULL))
+    }
 
-  # Convert JSON results to a data frame
-  results_raw <- fromJSON(rawToChar(results_json$content)) 
-  results <- as.data.frame(results_raw)
+  # Ensure that the results are properly formatted
+  tryCatch(expr = results_raw <- fromJSON(rawToChar(results_json$content)),
+           error = function(e) {
+             message(paste("There seems to be a problem with the query, which returned the following: \n",rawToChar(results_json$content)))
+           })
+  
+  #Convert to data.frame if things worked
+  
+  if(!exists("results_raw")){
+    return(invisible(NULL))
+  }else{
+    results <- as.data.frame(results_raw)  
+  }
+  
+  
+  if(!"country" %in% colnames(results)){
+    message("There appears to be a problem with the API, improperly formatted data were returned.")
+    return(invisible(NULL))
+  }
   
   #Re-order results to match original data
   results <- results[match(table = results$user_id,
