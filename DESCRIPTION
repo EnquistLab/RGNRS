@@ -13,7 +13,8 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
         RCurl,
-        jsonlite
+        jsonlite,
+        httr
 Suggests:
         knitr,
         rmarkdown,

@@ -3,7 +3,7 @@
 #'Return metadata about counties, parishes, etc. used by the GNRS
 #' @param state_province_id A GNRS state_id, or a vector of state_ids.
 #' @return Dataframe containing information on counties/parishes (e.g. iso code, fips code, continent, standardized name)
-#' @import RCurl
+#' @import httr
 #' @importFrom jsonlite toJSON fromJSON
 #' @export
 #' @examples \dontrun{
@@ -42,18 +42,13 @@ GNRS_get_counties <- function(state_province_id = "") {
   }
   
   # api url
-  url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # production
-  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" # development
+  url = "https://gnrsapi.xyz/gnrs_api.php" # public stable version
+  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # public development production
+  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" #bleeding edge development
   
-  # Construct the request
-  headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
-  
-  #Format input data
   data_json <- jsonlite::toJSON(data.frame(state = state_province_id))
   
-  # Re-form the options json again
-  # Note that only 'mode' is needed
-  mode <- "countylist"	
+  mode <- "countylist"		
   opts <- data.frame(c(mode))
   names(opts) <- c("mode")
   opts_json <- jsonlite::toJSON(opts)
@@ -62,10 +57,16 @@ GNRS_get_counties <- function(state_province_id = "") {
   
   # Form the input json, including both options and data
   input_json <- paste0('{"opts":', opts_json, ',"data":', data_json, '}' )
-
+  
   
   # Send the request in a "graceful failure" wrapper for CRAN compliance
-  tryCatch(expr = results_json <-  postForm(url, .opts=list(postfields= input_json, httpheader=headers)),
+  tryCatch(expr = results_json <- POST(url = url,
+                                       add_headers('Content-Type' = 'application/json'),
+                                       add_headers('Accept' = 'application/json'),
+                                       add_headers('charset' = 'UTF-8'),
+                                       body = input_json,
+                                       encode = "json"
+                                       ),
            error = function(e) {
              message("There appears to be a problem reaching the API.")
            })
@@ -75,7 +76,8 @@ GNRS_get_counties <- function(state_province_id = "") {
   
   
   # Display the results
-  results <- jsonlite::fromJSON(results_json)
+  results <- as.data.frame( fromJSON( rawToChar( results_json$content ) ) )
+  
   
   if (length(results) == 0) {
     
