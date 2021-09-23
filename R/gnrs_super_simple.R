@@ -5,6 +5,7 @@
 #' @param state_province A single state/province or a vector of states.  If a vector, length must equal length of species vector.
 #' @param county_parish A single county/parish or a vector of counties.  If a vector, length must equal length of species vector.
 #' @param user_id A single identifier or vector of identifiers.  This field is assigned if not provided and is used to maintain record order.
+#' @param ... Additional parameters passed to internal functions
 #' @note The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order political division and should be treated as a "state_province" and cannot be matched as a country.)
 #' @return Dataframe containing GNRS results.
 #' @export
@@ -17,7 +18,7 @@
 #'              county_parish = "Pima County")
 #' 
 #' }
-GNRS_super_simple <- function(country = NULL, state_province = NULL, county_parish = NULL, user_id = NULL ){
+GNRS_super_simple <- function(country = NULL, state_province = NULL, county_parish = NULL, user_id = NULL, ... ){
   
   # Check for internet access
   if (!check_internet()) {
@@ -76,7 +77,7 @@ GNRS_super_simple <- function(country = NULL, state_province = NULL, county_pari
 
   
   #Get GNRS output
-  GNRS_out <- GNRS(template)
+  GNRS_out <- GNRS(template, ...)
   
   
   #Re-order output to match what was submitted #no longer needed since this is done by the GNRS function

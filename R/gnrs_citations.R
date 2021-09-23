@@ -1,6 +1,7 @@
 #'Get citation information
 #'
 #'Return information needed to cite the GNRS
+#' @param ... Additional parameters passed to internal functions
 #' @return Dataframe containing bibtex-formatted citation information
 #' @import httr
 #' @importFrom jsonlite toJSON fromJSON
@@ -9,66 +10,15 @@
 #' GNRS_citations_metadata <- GNRS_citations()
 #' }
 #' 
-GNRS_citations <- function(){
-  
+GNRS_citations <- function(...){
+
   # # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
     return(invisible(NULL))
   }
 
-  # api url
-  url = "https://gnrsapi.xyz/gnrs_api.php" # public stable version
-  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # public development production
-  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" #bleeding edge development
-  
-  
-  # set option mode.
-  mode <- "citations"		
-  
-  # Construct the request
-  headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
-  
-  # Re-form the options json again
-  # Note that only 'mode' is needed
-  opts <- data.frame(c(mode))
-  names(opts) <- c("mode")
-  opts_json <- jsonlite::toJSON(opts)
-  opts_json <- gsub('\\[','',opts_json)
-  opts_json <- gsub('\\]','',opts_json)
-  
-  # Make the options
-  # No data needed
-  input_json <- paste0('{"opts":', opts_json, '}' )
-  
-  # Send the request in a "graceful failure" wrapper for CRAN compliance
-  tryCatch(expr = results_json <- POST(url = url,
-                                       add_headers('Content-Type' = 'application/json'),
-                                       add_headers('Accept' = 'application/json'),
-                                       add_headers('charset' = 'UTF-8'),
-                                       body = input_json,
-                                       encode = "json"
-                                       ),
-           error = function(e) {
-             message("There appears to be a problem reaching the API.")
-           })
-  
-  #Return NULL if API isn't working
-  if(!exists("results_json")){return(invisible(NULL))}
-  
-  # Ensure that the results are properly formatted
-  tryCatch(expr = results_raw <- fromJSON(rawToChar(results_json$content)),
-           error = function(e) {
-             message(paste("There seems to be a problem with the query, which returned the following: \n",rawToChar(results_json$content)))
-           })
-  
-  #Convert to data.frame if things worked
-  if(!exists("results_raw")){
-    return(invisible(NULL))
-  }else{
-    results <- as.data.frame(results_raw)  
-  }
-  
-  return(results)
-  
-}#GNRS sources
+  return(gnrs_core(mode = "citations", ...))
+
+
+}#GNRS citations

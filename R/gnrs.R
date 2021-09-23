@@ -3,6 +3,7 @@
 #'GNRS returns standardized political division names (according to geonames.org).
 #' @param political_division_dataframe A properly formatted dataframe, see http://bien.nceas.ucsb.edu/bien/tools/gnrs/gnrs-api/
 #' @param batches NULL or Numeric.  Optional number of batches to divide the request into for parallel processing.
+#' @param ... Additional parameters passed to internal functions
 #' @return Dataframe containing GNRS results.
 #' @note To create an empty and properly formatted dataframe, use GNRS_template()
 #' @note The fields the GNRS takes as input are titled "country", "state_province", and "county_parish" for simplicity, but these field actually refer to 0th-, 1st-, and 2nd-order political division, respectively. In the case of some exceptions (e.g. the UK) this distinction becomes important (e.g. Ireland is a 1st-order political division and should be treated as a "state_province" and cannot be matched as a country.)
@@ -14,15 +15,13 @@
 #'   
 #' 
 #' }
-GNRS <- function(political_division_dataframe, batches = NULL){
+GNRS <- function(political_division_dataframe, batches = NULL, ...){
   
   # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
     return(invisible(NULL))
   }
-  
-  
 
   # api url
   url = "https://gnrsapi.xyz/gnrs_api.php" # public stable version
@@ -64,60 +63,8 @@ GNRS <- function(political_division_dataframe, batches = NULL){
   # Convert the data to JSON
   data_json <- toJSON(unname(political_division_dataframe))
   
-  #################################
-  # Example 1: Resolve
-  #################################
-  
-  # Set API options
-  mode <- "resolve"			# Processing mode
-  
-  # Convert the options to data frame and then JSON
-  opts <- data.frame( c(mode) )
-  names(opts) <- c("mode")
-  if ( exists("batches") ) opts$batches <- batches
-  
-  opts_json <-  jsonlite::toJSON(opts)
-  opts_json <- gsub('\\[','',opts_json)
-  opts_json <- gsub('\\]','',opts_json)
-  
-  # Combine the options and data into single JSON object
-  input_json <- paste0('{"opts":', opts_json, ',"data":', data_json, '}' )
-  
-  # Send the API request
-  
-  
-  # Send the request in a "graceful failure" wrapper for CRAN compliance
-  tryCatch(expr = results_json <- POST(url = url,
-                                       add_headers('Content-Type' = 'application/json'),
-                                       add_headers('Accept' = 'application/json'),
-                                       add_headers('charset' = 'UTF-8'),
-                                       body = input_json,
-                                       encode = "json"
-                                       ),
-           error = function(e) {
-             message("There appears to be a problem reaching the API.")
-           })
-  
-  #Return NULL if API isn't working
-  if(!exists("results_json")){
-    return(invisible(NULL))
-    }
+  results <- gnrs_core(mode = "resolve",data_json = data_json, ...)
 
-  # Ensure that the results are properly formatted
-  tryCatch(expr = results_raw <- fromJSON(rawToChar(results_json$content)),
-           error = function(e) {
-             message(paste("There seems to be a problem with the query, which returned the following: \n",rawToChar(results_json$content)))
-           })
-  
-  #Convert to data.frame if things worked
-  
-  if(!exists("results_raw")){
-    return(invisible(NULL))
-  }else{
-    results <- as.data.frame(results_raw)  
-  }
-  
-  
   if(!"country" %in% colnames(results)){
     message("There appears to be a problem with the API, improperly formatted data were returned.")
     return(invisible(NULL))
