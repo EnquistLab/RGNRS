@@ -14,10 +14,15 @@
 #' }
 GNRS_template <- function(nrow=1){
   
-  
-  template<-matrix(nrow = nrow, ncol= 4)
-  template<-as.data.frame(template)
-  colnames(template)<-c("user_id", "country", "state_province", "county_parish" )      
+  template <- matrix(nrow = nrow, ncol= 4)
+
+  template <- as.data.frame(template)
+
+  colnames(template) <- c("user_id",
+                          "country",
+                          "state_province",
+                          "county_parish" )
+
   return(template)  
   
 }

@@ -9,15 +9,6 @@
 #' @keywords internal
 gnrs_core <- function(url = "https://gnrsapi.xyz/gnrs_api.php", mode, data_json = NULL){
 
-  # api url
-    #url = "https://gnrsapi.xyz/gnrs_api.php" # public stable version
-    #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # public development production
-    #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" #bleeding edge development
-# 
-#   # set option mode.
-#   mode <- "collaborators"		
-
-    
   # Construct the request
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
   
@@ -68,7 +59,7 @@ gnrs_core <- function(url = "https://gnrsapi.xyz/gnrs_api.php", mode, data_json 
   #Check status, if it doesn't equal
   if(results_json$status_code != 200){
     
-    message(paste("HTTP Status Error",results_json$status_code))
+    message(paste("HTTP Status" ,results_json$status_code,fromJSON(rawToChar(results_json$content))))
     
     return(invisible(NULL))
 

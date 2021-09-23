@@ -47,8 +47,9 @@ GNRS_get_counties <- function(state_province_id = "", ...) {
   results <- gnrs_core(mode = "countylist",data_json = data_json, ...)
 
   if (length(results) == 0) {
-
-    return(cat("No matches found for the submitted state_id"))
+    
+    message("NO matches found for the submitted state_id")
+    return(invisible(NULL))
 
   }
 

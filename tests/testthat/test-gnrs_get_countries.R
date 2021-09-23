@@ -13,7 +13,7 @@ test_that("example works", {
   
   skip_if_offline()
   
-  countries <- GNRS_get_countries()
+  countries <- GNRS_get_countries(url = url)
 
   expect_equal(object = class(countries), expected = "data.frame")
   

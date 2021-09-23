@@ -3,6 +3,7 @@ GNRS 0.3.2
 ===============
 ## NEW FEATURES
 * Added internal function 'gnrs_core'to reduce code duplication
+* Improved warning messages from API and R package
 
 ## BUG FIXES
 * Updated API to properly format HTTP status codes, allowing us to avoid errors due to conversion from json

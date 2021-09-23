@@ -23,11 +23,7 @@ GNRS <- function(political_division_dataframe, batches = NULL, ...){
     return(invisible(NULL))
   }
 
-  # api url
-  url = "https://gnrsapi.xyz/gnrs_api.php" # public stable version
-  #url = "http://vegbiendev.nceas.ucsb.edu:8875/gnrs_api.php" # public development production
-  #url = "http://vegbiendev.nceas.ucsb.edu:9875/gnrs_api.php" #bleeding edge development
-  
+
   #check that input is a data.frame
   if(!inherits(political_division_dataframe,"data.frame")){
     stop("political_division_dataframe should be a data.frame")
@@ -36,8 +32,16 @@ GNRS <- function(political_division_dataframe, batches = NULL, ...){
   #Check that user_id is populated properly, and populate if not
 
   if(all(is.na(political_division_dataframe$user_id))){
-    political_division_dataframe$user_id <- 1:nrow(political_division_dataframe)
-    political_division_dataframe <- political_division_dataframe[c("user_id","country","state_province","county_parish")]
+
+    political_division_dataframe$user_id <- 
+      1:nrow(political_division_dataframe)
+
+    political_division_dataframe <- 
+      political_division_dataframe[c("user_id",
+                                     "country",
+                                     "state_province",
+                                     "county_parish")]
+
   }
   
   
@@ -56,30 +60,40 @@ GNRS <- function(political_division_dataframe, batches = NULL, ...){
   if(is.numeric(batches)){
 
     
-    if(batches<=0 | batches%%1!=0){stop("Argument 'batches' must be either NULL or a positive integer.")}
+    if(batches<=0 | batches%%1!=0) {
+      stop("Argument 'batches' must be either NULL or a positive integer.")
+      }
 
     }
 
   # Convert the data to JSON
   data_json <- toJSON(unname(political_division_dataframe))
   
-  results <- gnrs_core(mode = "resolve",data_json = data_json, ...)
+  results <- gnrs_core(mode = "resolve",
+                       data_json = data_json, ...)
 
+
+  #If the API didn't work, return a null
+  if(is.null(results)){
+    return(invisible(NULL))
+  }
+
+  #If the results are properly formatted, but don't have the right columns, return a null
   if(!"country" %in% colnames(results)){
     message("There appears to be a problem with the API, improperly formatted data were returned.")
     return(invisible(NULL))
   }
-  
+
   #Re-order results to match original data
   results <- results[match(table = results$user_id,
                            x = political_division_dataframe$user_id),]
-  
+
   #reset the row numbers
   rownames(results) <- NULL 
-  
-  
+
+
   return(results)
-  
+
 }
 
 

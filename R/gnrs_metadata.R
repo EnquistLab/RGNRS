@@ -2,6 +2,7 @@
 #'
 #'Returns metadata on GNRS including version and citation information
 #' @param bibtex_file Optional output file for writing bibtex citations.
+#' @param ... Additional parameters passed to internal functions
 #' @return List containing: (1) bibtex-formatted citation information,
 #' (2) information about GNRS data sources,
 #' (3) GNRS version information, and
@@ -13,7 +14,7 @@
 #' metadata <- GNRS_metadata()
 #' }
 #'
-GNRS_metadata <- function(bibtex_file=NULL){
+GNRS_metadata <- function(bibtex_file = NULL, ...){
   
   # Check for internet access
   if (!check_internet()) {
@@ -23,16 +24,31 @@ GNRS_metadata <- function(bibtex_file=NULL){
   
   output <- list()
   
-  output[[1]] <- GNRS_citations()
-  output[[2]] <- GNRS_sources()
-  output[[3]] <- GNRS_version()
-  output[[4]] <- GNRS_acknowledgments()
+  output[[1]] <- GNRS_citations(...)
+  output[[2]] <- GNRS_sources(...)
+  output[[3]] <- GNRS_version(...)
+  output[[4]] <- GNRS_acknowledgments(...)
   
-  names(output) <- c("citations", "sources", "version", "acknowledgments")
+  #If all arguments have been properly returned
   
-  #Write the bibtex information if a file is specified
-  if(!is.null(bibtex_file)){writeLines(text = output$citations$citation, con = bibtex_file)}
+  if(length(output) == 4){
   
-  return(output)
+    names(output) <- c("citations", "sources", "version", "acknowledgments")  
+    
+    
+    #Write the bibtex information if a file is specified
+    if(!is.null(bibtex_file)){
+      writeLines(text = output$citations$citation, con = bibtex_file)
+    }
+    
+    return(output)
+    
+    
+  }
+  
+  #If something went wrong, invisibly return a null
+  return(invisible(NULL))
+  
+  
   
 }

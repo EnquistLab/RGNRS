@@ -12,10 +12,11 @@ test_that("example works", {
   
   skip_if_offline()
   
-  states <- GNRS_get_states()
+  states <- GNRS_get_states(url = url)
   us_counties <- GNRS_get_counties(state_province_id =
                                      states$state_province_id[
-                                       which(states$country_iso == "US")])
+                                       which(states$country_iso == "US")],
+                                   url = url)
   
   
   expect_equal(object = class(us_counties), expected = "data.frame")
@@ -29,7 +30,7 @@ test_that("default input returns data.frame", {
   
   skip_if_offline()
   
-  counties <- GNRS_get_counties()
+  counties <- GNRS_get_counties(url = url)
 
   expect_equal(object = class(counties), expected = "data.frame")
 
@@ -41,9 +42,9 @@ test_that("bad input returns error or NULL", {
   
   skip_if_offline()
   
-  expect_null(object = GNRS_get_counties(1))
+  expect_null(object = GNRS_get_counties(1, url = url))
   
-  expect_error(object = GNRS_get_counties("Optimus Prime"))  
-  
+  expect_error(object = GNRS_get_counties("Optimus Prime", url = url))
+
 })
 
