@@ -4,10 +4,12 @@
 \alias{GNRS_get_states}
 \title{Get metadata on states}
 \usage{
-GNRS_get_states(country_id = "")
+GNRS_get_states(country_id = "", ...)
 }
 \arguments{
 \item{country_id}{A GNRS country_id, or a vector of country_ids. If empty, will return metadata for all countries.}
+
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing information on states/provinces (e.g. iso code, fips code, continent, standardized name)

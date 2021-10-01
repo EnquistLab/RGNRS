@@ -4,10 +4,12 @@
 \alias{GNRS_metadata}
 \title{Get GNRS metadata}
 \usage{
-GNRS_metadata(bibtex_file = NULL)
+GNRS_metadata(bibtex_file = NULL, ...)
 }
 \arguments{
 \item{bibtex_file}{Optional output file for writing bibtex citations.}
+
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 List containing: (1) bibtex-formatted citation information,

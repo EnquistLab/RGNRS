@@ -4,9 +4,12 @@ GNRS 0.3.2
 ## NEW FEATURES
 * Added internal function 'gnrs_core'to reduce code duplication
 * Improved warning messages from API and R package
+* Added explicit testing to ensure code fails gracefully when the server is down
+* Added testing to make sure that incorrectly formatted input returns a useful message without an error.
 
 ## BUG FIXES
 * Updated API to properly format HTTP status codes, allowing us to avoid errors due to conversion from json
+* standardized handling of queries that return empty data between _get_counties and _get_states.
 
 ===============
 GNRS 0.3.1

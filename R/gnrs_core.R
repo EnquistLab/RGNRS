@@ -4,10 +4,11 @@
 #' @param url Server URL to use.  Defaults to the stable production version
 #' @param mode API mode to use.  One of "collaborators",
 #' @param data_json Either NULL (the default) or properly formatted json
+#' @param batches NULL or Numeric.  Optional number of batches to divide the request into for parallel processing.
 #' @importFrom jsonlite toJSON
 #' @import httr
 #' @keywords internal
-gnrs_core <- function(url = "https://gnrsapi.xyz/gnrs_api.php", mode, data_json = NULL){
+gnrs_core <- function(url = "https://gnrsapi.xyz/gnrs_api.php", mode, data_json = NULL, batches = NULL){
 
   # Construct the request
   headers <- list('Accept' = 'application/json', 'Content-Type' = 'application/json', 'charset' = 'UTF-8')
@@ -59,8 +60,9 @@ gnrs_core <- function(url = "https://gnrsapi.xyz/gnrs_api.php", mode, data_json 
   #Check status, if it doesn't equal
   if(results_json$status_code != 200){
     
-    message(paste("HTTP Status" ,results_json$status_code,fromJSON(rawToChar(results_json$content))))
-    
+    message(paste("Problem with the API: HTTP Status" ,results_json$status_code))
+    #fromJSON(rawToChar(results_json$content))
+
     return(invisible(NULL))
 
   }

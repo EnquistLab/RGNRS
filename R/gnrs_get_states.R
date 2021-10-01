@@ -36,7 +36,18 @@ GNRS_get_states <- function(country_id = "", ...){
   #Format input data
   data_json <- jsonlite::toJSON(data.frame(country = country_id))
 
-  return(gnrs_core(mode = "statelist",data_json = data_json, ...))
+  results <- gnrs_core(mode = "statelist", data_json = data_json, ...)
+  #results <- gnrs_core(mode = "statelist", data_json = data_json)
+  
+  
+  if (length(results) == 0) {
+    
+    message("NO matches found for the submitted country_id")
+    return(invisible(NULL))
+    
+  }
+  
+  return(results)
   
 
 } 

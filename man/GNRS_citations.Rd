@@ -4,7 +4,10 @@
 \alias{GNRS_citations}
 \title{Get citation information}
 \usage{
-GNRS_citations()
+GNRS_citations(...)
+}
+\arguments{
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing bibtex-formatted citation information

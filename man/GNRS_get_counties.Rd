@@ -4,10 +4,12 @@
 \alias{GNRS_get_counties}
 \title{Get metadata on counties}
 \usage{
-GNRS_get_counties(state_province_id = "")
+GNRS_get_counties(state_province_id = "", ...)
 }
 \arguments{
 \item{state_province_id}{A GNRS state_id, or a vector of state_ids.}
+
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing information on counties/parishes (e.g. iso code, fips code, continent, standardized name)

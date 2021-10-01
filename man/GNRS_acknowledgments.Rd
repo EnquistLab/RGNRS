@@ -4,7 +4,10 @@
 \alias{GNRS_acknowledgments}
 \title{Get acknowledgment information}
 \usage{
-GNRS_acknowledgments()
+GNRS_acknowledgments(...)
+}
+\arguments{
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing acknowledgments

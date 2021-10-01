@@ -4,7 +4,10 @@
 \alias{GNRS_data_dictionary}
 \title{Get Data Dictionary}
 \usage{
-GNRS_data_dictionary()
+GNRS_data_dictionary(...)
+}
+\arguments{
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing GNRS Data Dictionary

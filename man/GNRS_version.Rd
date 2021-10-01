@@ -4,7 +4,10 @@
 \alias{GNRS_version}
 \title{Get metadata on current GNRS version}
 \usage{
-GNRS_version()
+GNRS_version(...)
+}
+\arguments{
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing current GNRS version number, build date, and code version.

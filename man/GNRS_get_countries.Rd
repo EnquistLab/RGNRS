@@ -4,7 +4,10 @@
 \alias{GNRS_get_countries}
 \title{Get metadata on countries}
 \usage{
-GNRS_get_countries()
+GNRS_get_countries(...)
+}
+\arguments{
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing information on countries (e.g. iso code, fips code, continent, standardized name)

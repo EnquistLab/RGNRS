@@ -4,7 +4,10 @@
 \alias{GNRS_sources}
 \title{Get metadata on current GNRS sources}
 \usage{
-GNRS_sources()
+GNRS_sources(...)
+}
+\arguments{
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing current GNRS sources.

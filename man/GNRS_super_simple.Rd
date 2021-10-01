@@ -8,7 +8,8 @@ GNRS_super_simple(
   country = NULL,
   state_province = NULL,
   county_parish = NULL,
-  user_id = NULL
+  user_id = NULL,
+  ...
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ GNRS_super_simple(
 \item{county_parish}{A single county/parish or a vector of counties.  If a vector, length must equal length of species vector.}
 
 \item{user_id}{A single identifier or vector of identifiers.  This field is assigned if not provided and is used to maintain record order.}
+
+\item{...}{Additional parameters passed to internal functions}
 }
 \value{
 Dataframe containing GNRS results.
