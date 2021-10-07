@@ -3,6 +3,7 @@ context("gnrs_data_dictionary")
 test_that("example works", {
   
   skip_if_offline()
+  skip_on_cran()
   
   GNRS_dictionary <- GNRS_data_dictionary(url = url)
   

@@ -4,6 +4,8 @@ context("gnrs_super_simple")
 test_that("example works", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   results <- GNRS_super_simple(country = "United States of America", url = url)
   
@@ -28,7 +30,9 @@ test_that("example works", {
 
 test_that("bad input returns no match", {
   
-  skip_if_offline()  
+  skip_if_offline()
+  skip_on_cran()
+  
   
   nonsense_query <- 
     GNRS_super_simple(country = "Autobot",
@@ -45,6 +49,8 @@ test_that("bad input returns no match", {
 test_that("Good input returns a match", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   sensible_query <- 
     GNRS_super_simple(country = "USA",

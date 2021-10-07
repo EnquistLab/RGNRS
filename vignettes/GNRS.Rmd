@@ -17,11 +17,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Geographic Name Resolution Service
 
-The package `GNRS` is designed to interact with the Geographic Name Resolution Service of the Botanical Information and Ecology Network.  
+The package `GNRS` is designed to interact with the Geographic Name Resolution Service API (GNRS; https://gnrs.biendata.org/) of the Botanical Information and Ecology Network (BIEN; https://bien.nceas.ucsb.edu). The GNRS is a tool for resolving, standardizing, and indexing political division names. The GNRS resolves political division names against standard world political units in the Geonames (https://www.geonames.org/) and Global Administrative Areas (GADM; https://gadm.org/) databases. Names are resolved to three levels: country, state/province and county/parish. The GNRS uses both exact and fuzzy matching to match starndard and alternative political division names in a variety of languages, as well as abbreviations and codes such as ISO and FIPS codes. Results returned by the GNRS include the original names submitted, the standard names and codes of the political units matched, unique identifiers from the Geonames and GADM databases, and additional fields describe how each name was resolved. An overall match score from 0-1 describes how closely the submitted names matches standard names, where 1 is a perfect match.
 
 
-#Installing GNRS
+# Installing the GNRS package
+The current, stable version of the GNRS package is available on CRAN, while the development version can be installed from Github using devtools.  
+
 ```{r, eval=FALSE}
+
+# To install the stable version from CRAN
+install.packages("GNRS")
+
+# To install the development version from Github
 
 library(devtools)
 install_github("EnquistLab/RGNRS")
@@ -29,18 +36,38 @@ install_github("EnquistLab/RGNRS")
 
 ```
 
-#The easiest case: one political division
+# Standardizing a single name
+
+In some cases, we may only want to standardize a single name.  Say, we'd like to check what the standardized name for the United States of America is.  Or perhaps we'd like to get the standardized name for the Canadian province of Quebec.  We can use the function `GNRS_super_simple` for this.
 
 ```{r}
-library(GNRS)
-GNRS_super_simple(country =  "United States", 
-                 state_province = "Arizona",
-                 county_parish = "Pima County")
 
+library(GNRS)
+
+
+# Standardizing a single country
+
+USA_standardized <- GNRS_super_simple(country = "United States of America")
+
+# Take a look at the columns returned
+colnames(USA_standardized)
+
+# The most useful columns in this case are country and overall_score
+USA_standardized[c("country","overall_score","match_method_country")]
 
 ```
 
-#Multiple political divisions
+In this case, the standardized name is just "United States".  We have high confidence in this name because it matched perfectly (overall_score = 1.00) to an alternate name for "United States of America".  Note that even though we didn't supply any state/province or country/parish names, there are still fields returned for these.  This is because, when resolving names, the output is always identical, but may be empty.
+
+
+```{r}
+
+# Standardizing a single state
+
+
+
+```
+# Multiple political divisions
 
 ```{r}
 

@@ -7,6 +7,8 @@ context("error-handling")
 test_that("server being down fails gracefully", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   expect_null(object = suppressMessages(GNRS(political_division_dataframe = gnrs_testfile,
                                              url = "http://www.google.com")))
@@ -40,6 +42,7 @@ test_that("server being down fails gracefully", {
 test_that("bad input fails gracefully", {
   
   skip_if_offline()
+  skip_on_cran()
   
   expect_null(object = suppressMessages(GNRS(political_division_dataframe = gnrs_testfile[,-2], url = url)))
   expect_message(object = GNRS(political_division_dataframe = gnrs_testfile[,-2], url = url))

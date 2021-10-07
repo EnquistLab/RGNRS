@@ -12,6 +12,8 @@ safe_nrow <- function(x){
 test_that("example works", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   countries <- GNRS_get_countries(url = url)
 

@@ -12,6 +12,8 @@ safe_nrow <- function(x){
 test_that("example works", {
   
   skip_if_offline()
+  skip_on_cran()
+  
 
   results <- GNRS(political_division_dataframe = gnrs_testfile, url = url)
   
@@ -35,6 +37,8 @@ test_that("example works", {
 test_that("bad input returns error", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   expect_error(object = GNRS(political_division_dataframe = 1,
                              url = url))  

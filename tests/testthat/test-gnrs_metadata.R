@@ -4,6 +4,8 @@ context("gnrs_metadata")
 test_that("example works", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   all_metadata <- GNRS_metadata(url = url)
   

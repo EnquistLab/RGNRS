@@ -11,6 +11,8 @@ safe_nrow <- function(x){
 test_that("example works", {
   
   skip_if_offline()
+  skip_on_cran()
+  
   
   states <- GNRS_get_states(url = url)
   us_counties <- GNRS_get_counties(state_province_id =
