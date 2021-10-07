@@ -4,7 +4,7 @@ GNRS 0.3.3
 ## NEW FEATURES
 
 ## BUG FIXES
-
+* Updated tests to be skipped when run on CRAN in order to prevent errors when server is temporarily down.
 
 ===============
 GNRS 0.3.2
