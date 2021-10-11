@@ -1,0 +1,30 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      encoding: ''
+      string: '{"opts":{"mode":"resolve"},"data":[[2005,"Autobot","Optimus","Prime"]]}'
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      charset: UTF-8
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Mon, 11 Oct 2021 17:45:41 GMT
+      server: Apache/2.4.29 (Ubuntu)
+      access-control-allow-origin: '*'
+      content-length: '741'
+      content-type: application/json
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"poldiv_full":"Autobot@Optimus@Prime","country_verbatim":"Autobot","state_province_verbatim":"Optimus","state_province_verbatim_alt":"","county_parish_verbatim":"Prime","county_parish_verbatim_alt":"","country":"","state_province":"","county_parish":"","country_id":"","state_province_id":"","county_parish_id":"","country_iso":"","state_province_iso":"","county_parish_iso":"","geonameid":"","gid_0":"","gid_1":"","gid_2":"","match_method_country":"","match_method_state_province":"","match_method_county_parish":"","match_score_country":"0.00","match_score_state_province":"0.00","match_score_county_parish":"0.00","overall_score":"0.00","poldiv_submitted":"county_parish","poldiv_matched":"","match_status":"no
+        match","user_id":"2005"}]'
+  recorded_at: 2021-10-11 17:45:45 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

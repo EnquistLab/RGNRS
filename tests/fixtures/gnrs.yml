@@ -1,0 +1,35 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      encoding: ''
+      string: '{"opts":{"mode":"resolve"},"data":[[1,"Russia","Lipetsk","Dobrovskiy
+        rayon"]]}'
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      charset: UTF-8
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Mon, 11 Oct 2021 17:43:38 GMT
+      server: Apache/2.4.29 (Ubuntu)
+      access-control-allow-origin: '*'
+      content-length: '928'
+      content-type: application/json
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"poldiv_full":"Russia@Lipetsk@Dobrovskiy rayon","country_verbatim":"Russia","state_province_verbatim":"Lipetsk","state_province_verbatim_alt":"","county_parish_verbatim":"Dobrovskiy
+        rayon","county_parish_verbatim_alt":"Dobrovskiy","country":"Russia","state_province":"Lipetskaya
+        Oblast''","county_parish":"Dobrovskiy Rayon","country_id":"2017370","state_province_id":"535120","county_parish_id":"565805","country_iso":"RU","state_province_iso":"43","county_parish_iso":"565805","geonameid":"565805","gid_0":"RUS","gid_1":"RUS.39_1","gid_2":"RUS.39.5_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact alternate name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"1"}]'
+  recorded_at: 2021-10-11 17:43:45 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

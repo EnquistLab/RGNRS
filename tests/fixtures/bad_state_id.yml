@@ -1,0 +1,29 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      encoding: ''
+      string: '{"opts":{"mode":"countylist"},"data":[{"state":1}]}'
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      charset: UTF-8
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Mon, 11 Oct 2021 17:45:08 GMT
+      server: Apache/2.4.29 (Ubuntu)
+      access-control-allow-origin: '*'
+      content-length: '2'
+      content-type: application/json
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[]'
+  recorded_at: 2021-10-11 17:45:09 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

@@ -1,0 +1,31 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      encoding: ''
+      string: '{"opts":{"mode":"resolve"},"data":[[1,"Lipetsk","Dobrovskiy rayon"]]}'
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      charset: UTF-8
+  response:
+    status:
+      status_code: 400
+      category: Client error
+      reason: Bad Request
+      message: 'Client error: (400) Bad Request'
+    headers:
+      date: Mon, 11 Oct 2021 17:44:07 GMT
+      server: Apache/2.4.29 (Ubuntu)
+      access-control-allow-origin: '*'
+      content-length: '105'
+      connection: close
+      content-type: application/json
+    body:
+      encoding: UTF-8
+      file: no
+      string: '"ERROR: Data has wrong number of columns in one or more rows, should
+        be exactly 4 for mode=''resolve''\r\n"'
+  recorded_at: 2021-10-11 17:44:07 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

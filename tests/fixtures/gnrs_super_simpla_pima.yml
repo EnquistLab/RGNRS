@@ -1,0 +1,35 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      encoding: ''
+      string: '{"opts":{"mode":"resolve"},"data":[[1,"United States","Arizona","Pima
+        County"]]}'
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      charset: UTF-8
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Mon, 11 Oct 2021 17:43:46 GMT
+      server: Apache/2.4.29 (Ubuntu)
+      access-control-allow-origin: '*'
+      content-length: '899'
+      content-type: application/json
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"poldiv_full":"United States@Arizona@Pima County","country_verbatim":"United
+        States","state_province_verbatim":"Arizona","state_province_verbatim_alt":"","county_parish_verbatim":"Pima
+        County","county_parish_verbatim_alt":"Pima","country":"United States","state_province":"Arizona","county_parish":"Pima","country_id":"6252001","state_province_id":"5551752","county_parish_id":"5308878","country_iso":"US","state_province_iso":"AZ","county_parish_iso":"019","geonameid":"5308878","gid_0":"USA","gid_1":"USA.3_1","gid_2":"USA.3.11_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"1"}]'
+  recorded_at: 2021-10-11 17:43:55 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

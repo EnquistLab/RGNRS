@@ -1,0 +1,60 @@
+http_interactions:
+- request:
+    method: post
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      encoding: ''
+      string: '{"opts":{"mode":"dd"}}'
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+      charset: UTF-8
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      date: Mon, 11 Oct 2021 17:43:56 GMT
+      server: Apache/2.4.29 (Ubuntu)
+      access-control-allow-origin: '*'
+      content-length: '3971'
+      content-type: application/json
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"col_name":"poldiv_full","ordinal_position":"1","data_type":"Text","description":"Verbatim
+        country, state\/province and county\/parish, concatenated with \\\"@\\\" as
+        delimiter. For use as key to join results back to original data."},{"col_name":"country_verbatim","ordinal_position":"2","data_type":"Text","description":"Verbatim
+        country, as submitted"},{"col_name":"state_province_verbatim","ordinal_position":"3","data_type":"Text","description":"Verbatim
+        state\/province, as submitted"},{"col_name":"state_province_verbatim_alt","ordinal_position":"4","data_type":"Text","description":"Verbatim
+        state\/province, stripped of class identifier (if applicable)"},{"col_name":"county_parish_verbatim","ordinal_position":"5","data_type":"Text","description":"Verbatim
+        county, as submitted"},{"col_name":"county_parish_verbatim_alt","ordinal_position":"6","data_type":"Text","description":"Verbatim
+        county, stripped of class identifier (if applicable)"},{"col_name":"country","ordinal_position":"7","data_type":"Text","description":"Resolved
+        country name"},{"col_name":"state_province","ordinal_position":"8","data_type":"Text","description":"Resolved
+        state\/province name"},{"col_name":"county_parish","ordinal_position":"9","data_type":"Text","description":"Resolve
+        county\/parish name"},{"col_name":"country_id","ordinal_position":"10","data_type":"Integer","description":"GNRS
+        identifier for country"},{"col_name":"state_province_id","ordinal_position":"11","data_type":"Integer","description":"GNRS
+        identifier for state\/province"},{"col_name":"county_parish_id","ordinal_position":"12","data_type":"Integer","description":"GNRS
+        identifier for county\/parish"},{"col_name":"country_iso","ordinal_position":"13","data_type":"Text","description":"Two-letter
+        ISO code for country"},{"col_name":"state_province_iso","ordinal_position":"14","data_type":"Text","description":"Two-letter
+        ISO code for state\/province"},{"col_name":"county_parish_iso","ordinal_position":"15","data_type":"Text","description":"Two-letter
+        ISO code for county\/parish"},{"col_name":"geonameid","ordinal_position":"16","data_type":"Integer","description":"Geoname
+        identifier of lowest resolved political division"},{"col_name":"gid_0","ordinal_position":"17","data_type":"Text","description":"GADM
+        identifier of country"},{"col_name":"gid_1","ordinal_position":"18","data_type":"Text","description":"GADM
+        identifier of state\/province"},{"col_name":"gid_2","ordinal_position":"19","data_type":"Text","description":"GADM
+        identifier of county\/parish"},{"col_name":"match_method_country","ordinal_position":"20","data_type":"Text","description":"Method
+        by which country was matched"},{"col_name":"match_method_state_province","ordinal_position":"21","data_type":"Text","description":"Method
+        by which state\/province was matched"},{"col_name":"match_method_county_parish","ordinal_position":"22","data_type":"Text","description":"Method
+        by which county\/parish was matched"},{"col_name":"match_score_country","ordinal_position":"23","data_type":"Decimal
+        (0:1)","description":"Match score for country"},{"col_name":"match_score_state_province","ordinal_position":"24","data_type":"Decimal
+        (0:1)","description":"Match score for state\/province"},{"col_name":"match_score_county_parish","ordinal_position":"25","data_type":"Decimal
+        (0:1)","description":"Match score for county\/parish"},{"col_name":"overall_score","ordinal_position":"26","data_type":"Decimal
+        (0:1)","description":"Overall match score"},{"col_name":"poldiv_submitted","ordinal_position":"27","data_type":"Text","description":"Lowest
+        political division submitted"},{"col_name":"poldiv_matched","ordinal_position":"28","data_type":"Text","description":"Lowest
+        political division matched"},{"col_name":"match_status","ordinal_position":"29","data_type":"Text","description":"Complete
+        match, partial match, or no match?"},{"col_name":"user_id","ordinal_position":"30","data_type":"Text","description":"Optional
+        user-supplied identifier"}]'
+  recorded_at: 2021-10-11 17:43:56 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
