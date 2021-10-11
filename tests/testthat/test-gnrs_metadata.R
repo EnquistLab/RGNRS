@@ -3,8 +3,8 @@ context("gnrs_metadata")
 
 test_that("example works", {
   
-  skip_if_offline()
-  skip_on_cran()
+  #skip_if_offline()
+  #skip_on_cran()
   
   
   vcr::use_cassette(name = "all_metadata",
