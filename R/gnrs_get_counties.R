@@ -20,7 +20,7 @@ GNRS_get_counties <- function(state_province_id = "", ...) {
   # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
-    return(invisible(NULL))
+    #return(invisible(NULL))
   }
 
   #Check input format

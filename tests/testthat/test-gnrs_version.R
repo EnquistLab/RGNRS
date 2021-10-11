@@ -3,11 +3,11 @@ context("gnrs_version")
 
 test_that("example works", {
   
-  skip_if_offline()
-  skip_on_cran()
+  # skip_if_offline()
+  # skip_on_cran()
   
-  
-  GNRS_version_metadata <- GNRS_version(url = url)
+  vcr::use_cassette("version_metadata",
+                    {   GNRS_version_metadata <- GNRS_version(url = url) })
   
   expect_equal(object = class(GNRS_version_metadata), expected = "data.frame")
   

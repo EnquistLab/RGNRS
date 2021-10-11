@@ -23,7 +23,7 @@ GNRS_super_simple <- function(country = NULL, state_province = NULL, county_pari
   # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
-    return(invisible(NULL))
+    #return(invisible(NULL))
   }
   
   #Check input for odd stuff

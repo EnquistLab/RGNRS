@@ -15,7 +15,7 @@ GNRS_data_dictionary <- function(...){
   # # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
-    return(invisible(NULL))
+    #return(invisible(NULL))
   }
   
   return(gnrs_core(mode = "dd", ...))

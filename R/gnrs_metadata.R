@@ -19,7 +19,7 @@ GNRS_metadata <- function(bibtex_file = NULL, ...){
   # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
-    return(invisible(NULL))
+    #return(invisible(NULL))
   }
   
   output <- list()

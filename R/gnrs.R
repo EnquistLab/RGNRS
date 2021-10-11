@@ -20,7 +20,7 @@ GNRS <- function(political_division_dataframe, batches = NULL, ...){
   # Check for internet access
   if (!check_internet()) {
     message("This function requires internet access, please check your connection.")
-    return(invisible(NULL))
+    #return(invisible(NULL))
   }
 
 

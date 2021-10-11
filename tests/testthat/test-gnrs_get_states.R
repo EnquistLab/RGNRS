@@ -11,11 +11,11 @@ safe_nrow <- function(x){
 
 test_that("example works", {
   
-  skip_if_offline()
-  skip_on_cran()
-  
-  
-  states <- GNRS_get_states(url = url)
+  # skip_if_offline()
+  # skip_on_cran()
+  # 
+  vcr::use_cassette("states",
+                    {     states <- GNRS_get_states(url = url) })
   
   expect_equal(object = class(states), expected = "data.frame")
   
@@ -26,13 +26,14 @@ test_that("example works", {
 
 test_that("inputing specific countries works", {
   
-  skip_if_offline()
-  skip_on_cran()
+  #skip_if_offline()
+  #skip_on_cran()
   
+  vcr::use_cassette("countries_for_states",
+                    {     countries <- GNRS_get_countries(url = url) })
   
-  countries <- GNRS_get_countries(url = url)
-  
-  states <- GNRS_get_states(country_id = countries$country_id[1:10])
+  vcr::use_cassette("get_states",
+                    {     states <- GNRS_get_states(country_id = countries$country_id[1:10]) })
   
   expect_equal(object = class(states), expected = "data.frame")
   

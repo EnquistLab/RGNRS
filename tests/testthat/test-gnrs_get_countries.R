@@ -11,12 +11,13 @@ safe_nrow <- function(x){
 
 test_that("example works", {
   
-  skip_if_offline()
-  skip_on_cran()
+  # skip_if_offline()
+  # skip_on_cran()
   
   
-  countries <- GNRS_get_countries(url = url)
-
+  vcr::use_cassette("countries",
+                    {   countries <- GNRS_get_countries(url = url) })
+  
   expect_equal(object = class(countries), expected = "data.frame")
   
   expect_gt(object = safe_nrow(countries),expected = 100)
