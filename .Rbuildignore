@@ -6,3 +6,5 @@
 ^misc$
 ^old_builds$
 ^CRAN-RELEASE$
+^dev_notes$
+^\.github$

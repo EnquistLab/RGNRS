@@ -1,0 +1,215 @@
+---
+title: "Resolving political division names offline"
+author: "Brian Maitner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Resolving political division names offline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## Status: beta
+
+The offline engine is a new port of the resolution cascade the Geographic Name
+Resolution Service runs.  It resolves against the service's own reference
+tables, so identifiers, standard names and codes are the service's.  Measured
+against the web service on 2026-09-03:
+
+| set | rows | country | state/province | county/parish |
+|---|---|---|---|---|
+| `gnrs_testfile` | 21 | 21 of 21 | 21 of 21 | 21 of 21 |
+| hand-picked edge cases (codes, alternate names, misspellings, the cross-level routes) | 179 | 177 of 179 | 178 of 179 | 178 of 179 |
+| names drawn from the reference with perturbations | 1,088 | 99.4% | 96.4% | 99.4% |
+
+The figures are agreement on the identifier of the resolved division.  Nearly
+every disagreement is one of three things, discussed below: the local
+alternate names are newer than the service's copy, and match where the service
+does not; the service picked one of several equally good matches arbitrarily
+and this package picked the other; or the service answered from its cache.
+The last row is the harshest test, because a third of it submits states by an
+alternate name sampled from the current GeoNames file, which the service's
+2020 copy often lacks; on the rest of that set agreement is above 99% at every
+level.
+
+Beyond these sets the engine has not been tested broadly, nor independently
+reviewed.  Treat the results as provisional: for work where the answer matters,
+resolve a sample through `GNRS()` as well and compare, and please report
+anything that disagrees.
+
+## Why resolve names offline
+
+`GNRS()` sends your names to the web service and returns the server's answer.
+That is the right choice most of the time, but it needs an internet
+connection, it needs the service to be up, and it accepts at most 5,000 rows
+per request.
+
+`GNRS_local()` runs the same resolution cascade on your own machine, against a
+copy of the reference data that you download once.  It works with no network,
+it does not depend on the service being available, and there is no row limit.
+
+The two are separate functions rather than one function with a switch.  That
+is deliberate: they do not always give the same answer, and it should always be
+obvious from your code which one produced a result.
+
+## One-off setup
+
+```{r}
+library(GNRS)
+
+GNRS_local_build()
+```
+
+This fetches two things.  The first is the web service's own reference tables,
+through its API: every country, state/province and county/parish it knows,
+with the identifiers, standard names, codes and GADM identifiers it returns.
+About 25 MB is transferred and a few megabytes kept.  The second is the
+alternate-names file from GeoNames, about 195 MB, from which the service takes
+the names in other languages, abbreviations and historical names its
+alternate-name matching uses.  The API does not serve these, so they come from
+the publisher; only the rows for the reference divisions are kept, and the
+archive is deleted once they are extracted.  The whole build took about four
+minutes and left 8.5 MB on disk.
+
+To see what you have:
+
+```{r}
+GNRS_local_status()
+```
+
+```
+    source                          full_name built
+1     gnrs GNRS reference political divisions  TRUE
+2 geonames           GeoNames alternate names  TRUE
+                                  version downloaded size_mb download_mb
+1 database 2.2.5 (2024-04-02), code 1.7.4 2026-09-03     5.4          25
+2                              2026-09-03 2026-09-03     2.7         195
+```
+
+Keep those version strings.  They are what makes a local result citable and
+reproducible: the first is the web service's database and code version at the
+time of the build, the second the date of the GeoNames file.
+`GNRS_local_citations()` writes them into citations for you, optionally as
+BibTeX.
+
+Asking `GNRS_local()` for data you have not built does not quietly start a
+download.  It tells you what is missing and the call that would fix it; in an
+interactive session you can pass `build_missing = TRUE` and answer the prompt,
+and in a script the same argument builds without asking.
+`GNRS_local_remove()` deletes the cache if you want the space back.
+
+## Resolving names
+
+```{r}
+results <- GNRS_local(gnrs_testfile)
+
+results[1:4, c("country", "state_province", "county_parish", "overall_score", "match_status")]
+```
+
+```
+        country     state_province    county_parish overall_score  match_status
+1        Russia Lipetskaya Oblast' Dobrovskiy Rayon             1    full match
+2        Mexico             Sonora                              1 partial match
+3     Guatemala             Izabal                              1    full match
+4 United States            Arizona             Pima             1    full match
+```
+
+The input is the same four-column data.frame `GNRS()` takes (see
+`GNRS_template()`), and the output has the same columns in the same order, so
+code that reads the result of one will read the other.  Two details differ:
+the scores are numeric rather than the character strings the service returns,
+and an unmatched or unsubmitted value is an empty string, as the service
+returns it.
+
+The first call in a session loads the reference data, which takes a few
+seconds; after that it is held in memory.  On one machine, 1,088 rows resolved
+in about 20 seconds once loaded, and the web service took a few seconds for
+the same rows, so for a short list of names the service is quicker.  The local
+version pays off when the service is down, when there is no connection, and
+for long lists, which it takes in one go.
+
+## How local results differ from the web service
+
+They usually agree, but not always, and the differences are worth
+understanding before you rely on either.
+
+### The alternate names are newer
+
+The service's alternate names are from a GeoNames dump of April 2020.
+`GNRS_local_build()` downloads the current file, so a name added to GeoNames
+since then matches locally and not on the service.  Every disagreement of this
+kind seen in validation was an improvement: "Eswatini" now resolves to the
+country the service still lists as Swaziland, "DRC" to the Democratic Republic
+of the Congo, "Bengaluru Urban" to the district the service only finds under
+its older spelling.  It also means a name can match by a different route:
+where the service finds "Praha" through a wildcard search, the local version
+has it as an exact alternate name.  The resolved division is the same; the
+`match_method_*` column differs.
+
+Expect this effect to grow, and report the GeoNames file date from
+`GNRS_local_status()` with your results.
+
+### Ties are broken by identifier
+
+The upstream SQL updates a row from a join, and when several reference rows
+match equally well PostgreSQL uses whichever it visits first.  Two counties of
+Punjab are both called "Lahore" in short form; the service returned one, this
+package the other.  "Hbeei Sheng" is equally similar to Hebei and Hubei; the
+service happened to pick Hebei.  This package always takes the lowest
+identifier, so its answer is at least reproducible.  Three of the upstream
+fuzzy steps also fail to select the best-scoring candidate at all, updating
+with any candidate above the threshold; this package takes the best, which is
+what the other steps do and what the scripts evidently intend.
+
+### Ambiguous wildcard matches are refused
+
+One of the service's steps strips words such as "Province of" from the
+submitted name and looks for the remainder inside the alternate names.  It is
+written to accept the result only when it is unique, but its grouping makes
+that test ineffective, so the service takes whatever candidate comes first.
+Submitted "Province of Parana" under Brazil, the remainder "Parana" contains
+"Para" and is contained in "Paraná", and the service answered Pará, the wrong
+state.  This package requires a unique candidate, as the step intends, and
+leaves the state unmatched instead.
+
+### No result cache
+
+The service caches earlier answers by the trimmed submitted names, and a cache
+hit returns the earlier verbatim values and methods.  That is why " Mexico "
+can come back from the service as "Mexico" with an exact match while
+"  Mexico  " comes back untrimmed with a fuzzy one.  This package resolves
+every submission afresh.
+
+### Other small points
+
+A percent sign in a submitted name is treated as text rather than as the
+wildcard the SQL would take it for.  HASC codes are matched in full ("US.AZ")
+but not in their short form, because the deployed service does not match the
+short form either: its legacy source for those codes never populated the
+database, as the service's own answers show.
+
+## Building without the alternate names
+
+```{r}
+GNRS_local_build("gnrs")
+results <- GNRS_local(my_names, alternate_names = FALSE)
+```
+
+This is quick and small, but confines matching to the standard names, ASCII
+forms, short forms and codes, so a country submitted in another language or a
+state by its local name will not resolve.  The default builds both.
+
+## Citing a local result
+
+```{r}
+GNRS_local_citations()
+```
+
+This lists the GNRS publication, this package, and the two data components at
+the versions actually built.  The reference tables are the web service's, built
+from GADM, GeoNames and Natural Earth; the alternate names are GeoNames', under
+CC BY 4.0.  Please cite them: the service could not exist without them.

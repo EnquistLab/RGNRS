@@ -1,4 +1,39 @@
 ===============
+GNRS 0.4.0
+===============
+## NEW FEATURES
+* Political division names can now be resolved offline, against a locally
+  cached copy of the reference data, using the same resolution cascade as the
+  web service.  Five new functions:
+
+  - "GNRS_local_build" downloads and prepares the reference data.  This is a
+    one-off step: the web service's own reference tables of countries, states
+    and counties are fetched through its API (about 25 MB), and the alternate
+    names the service matches on are fetched from GeoNames (about 195 MB, of
+    which a few megabytes are kept).  Afterwards no internet connection is
+    needed.
+  - "GNRS_local" resolves names against that local copy.  It takes the same
+    input as "GNRS" and returns the same columns, in the same order, with the
+    same identifiers, standard names, codes and match-method labels, so
+    existing code that reads the output keeps working.  There is no limit on
+    the number of rows and no round trip to the server.  Because the local
+    reference is the service's own, identifiers agree with the service's and
+    the two sets of results can be joined.
+  - "GNRS_local_status" reports what has been built, at which version, and
+    how much space it takes.
+  - "GNRS_local_citations" assembles everything a local result should be
+    cited with: the GNRS publication, this package, and the reference data at
+    the version actually built, optionally as BibTeX.
+  - "GNRS_local_remove" deletes the cache.
+
+  The offline engine is new and should be treated as beta.  Measured against
+  the web service it returns the same resolved political divisions for all
+  21 rows of "gnrs_testfile" and for the large majority of a larger
+  validation set; the differences are explained in vignette("GNRS_offline")
+  and are mostly cases where the local GeoNames names are newer than the
+  service's copy.
+
+===============
 GNRS 0.3.3
 ===============
 ## NEW FEATURES

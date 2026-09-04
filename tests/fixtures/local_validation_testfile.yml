@@ -1,0 +1,115 @@
+http_interactions:
+- request:
+    method: POST
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      string: '{"opts":{"mode":"resolve"},"data":[[1,"Russia","Lipetsk","Dobrovskiy
+        rayon"],[2,"Mexico","Sonora, Estado de","Hua^sA(C)pac"],[3,"Guatemala","Izabal",""],[4,"USA","Arizona","Pima
+        County"],[5,"U.S.A","Arizona","Pima"],[6,"USA","Ilinois",""],[7,"Mexico","Quintana
+        Roo","La^sA°zaro Ca^sA°rdenas"],[8,"Mexico","Quintana Roo","Municipio de La^sA°zaro
+        Ca^sA°rdenas"],[9,"Ukraine","Kharkiv","Novovodolaz''kyi"],[10,"Canada","Province
+        of Nova Scotia",""],[11,"Germany","Niedersachsen","Emden"],[12,"United States","Arkansas","Greene"],[13,"Romania","Covasna","Intorsura
+        Buzaului"],[14,"United States","Kansas","Jewell"],[15,"Mexico","Chiapas","Villa
+        Corzo"],[16,"Romania","Cluj","Marisel"],[17,"Mexico","Nuevo Lea^sa‰¥n","Los
+        Aldamas"],[18,"South Korea","Busan","Haeundae"],[19,"Mexico","Guanajuato","Jera^sA(C)cuaro"],[20,"Colombia","Cundinamarca","Medina"],[21,"Thailand","Chaiyaphum","Nong
+        Bua Daeng"]]}'
+  response:
+    status: 200
+    headers:
+      date: Thu, 03 Sep 2026 23:54:17 GMT
+      server: Apache/2.4.41 (Ubuntu)
+      access-control-allow-origin: '*'
+      transfer-encoding: chunked
+      content-type: application/json
+    body:
+      string: '[{"poldiv_full":"Russia@Lipetsk@Dobrovskiy rayon","country_verbatim":"Russia","state_province_verbatim":"Lipetsk","state_province_verbatim_alt":"","county_parish_verbatim":"Dobrovskiy
+        rayon","county_parish_verbatim_alt":"Dobrovskiy","country":"Russia","state_province":"Lipetskaya
+        Oblast''","county_parish":"Dobrovskiy Rayon","country_id":"2017370","state_province_id":"535120","county_parish_id":"565805","country_iso":"RU","state_province_iso":"43","county_parish_iso":"565805","geonameid":"565805","gid_0":"RUS","gid_1":"RUS.39_1","gid_2":"RUS.39.5_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact alternate name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"1"},{"poldiv_full":"Canada@Province of Nova Scotia@","country_verbatim":"Canada","state_province_verbatim":"Province
+        of Nova Scotia","state_province_verbatim_alt":"Nova Scotia","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"Canada","state_province":"Nova
+        Scotia","county_parish":"","country_id":"6251999","state_province_id":"6091530","county_parish_id":"","country_iso":"CA","state_province_iso":"07","county_parish_iso":"","geonameid":"6091530","gid_0":"CAN","gid_1":"CAN.7_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"wildcard alt name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"state_province","poldiv_matched":"state_province","match_status":"full
+        match","user_id":"10"},{"poldiv_full":"Germany@Niedersachsen@Emden","country_verbatim":"Germany","state_province_verbatim":"Niedersachsen","state_province_verbatim_alt":"","county_parish_verbatim":"Emden","county_parish_verbatim_alt":"","country":"Germany","state_province":"Lower
+        Saxony","county_parish":"Emden","country_id":"2921044","state_province_id":"2862926","county_parish_id":"11620736","country_iso":"DE","state_province_iso":"06","county_parish_iso":"","geonameid":"11620736","gid_0":"DEU","gid_1":"DEU.9_1","gid_2":"DEU.9.9_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact alternate name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"11"},{"poldiv_full":"United States@Arkansas@Greene","country_verbatim":"United
+        States","state_province_verbatim":"Arkansas","state_province_verbatim_alt":"","county_parish_verbatim":"Greene","county_parish_verbatim_alt":"","country":"United
+        States","state_province":"Arkansas","county_parish":"Greene","country_id":"6252001","state_province_id":"4099753","county_parish_id":"4113088","country_iso":"US","state_province_iso":"AR","county_parish_iso":"055","geonameid":"4113088","gid_0":"USA","gid_1":"USA.4_1","gid_2":"USA.4.28_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact name","match_method_county_parish":"exact
+        ascii short name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"12"},{"poldiv_full":"Romania@Covasna@Intorsura Buzaului","country_verbatim":"Romania","state_province_verbatim":"Covasna","state_province_verbatim_alt":"","county_parish_verbatim":"Intorsura
+        Buzaului","county_parish_verbatim_alt":"","country":"Romania","state_province":"Covasna","county_parish":"Comuna
+        Intorsura Buzaului","country_id":"798549","state_province_id":"680428","county_parish_id":"675584","country_iso":"RO","state_province_iso":"15","county_parish_iso":"63580","geonameid":"675584","gid_0":"ROU","gid_1":"ROU.16_1","gid_2":"ROU.16.21_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact name","match_method_county_parish":"wildcard
+        alt name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"13"},{"poldiv_full":"United States@Kansas@Jewell","country_verbatim":"United
+        States","state_province_verbatim":"Kansas","state_province_verbatim_alt":"","county_parish_verbatim":"Jewell","county_parish_verbatim_alt":"","country":"United
+        States","state_province":"Kansas","county_parish":"Jewell","country_id":"6252001","state_province_id":"4273857","county_parish_id":"4273605","country_iso":"US","state_province_iso":"KS","county_parish_iso":"089","geonameid":"4273605","gid_0":"USA","gid_1":"USA.17_1","gid_2":"USA.17.45_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact name","match_method_county_parish":"exact
+        ascii short name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"14"},{"poldiv_full":"Mexico@Chiapas@Villa Corzo","country_verbatim":"Mexico","state_province_verbatim":"Chiapas","state_province_verbatim_alt":"","county_parish_verbatim":"Villa
+        Corzo","county_parish_verbatim_alt":"","country":"Mexico","state_province":"Chiapas","county_parish":"Villa
+        Corzo","country_id":"3996063","state_province_id":"3531011","county_parish_id":"8581789","country_iso":"MX","state_province_iso":"05","county_parish_iso":"107","geonameid":"8581789","gid_0":"MEX","gid_1":"MEX.5_1","gid_2":"MEX.5.106_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"15"},{"poldiv_full":"Romania@Cluj@Marisel","country_verbatim":"Romania","state_province_verbatim":"Cluj","state_province_verbatim_alt":"","county_parish_verbatim":"Marisel","county_parish_verbatim_alt":"","country":"Romania","state_province":"Judetul
+        Cluj","county_parish":"Comuna Marisel","country_id":"798549","state_province_id":"681291","county_parish_id":"673772","country_iso":"RO","state_province_iso":"13","county_parish_iso":"58534","geonameid":"673772","gid_0":"ROU","gid_1":"ROU.14_1","gid_2":"ROU.14.51_1","match_method_country":"exact
+        standard name","match_method_state_province":"wildcard alt name","match_method_county_parish":"wildcard
+        alt name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"16"},{"poldiv_full":"Mexico@Nuevo Lea^sa\u2030\u00a5n@Los
+        Aldamas","country_verbatim":"Mexico","state_province_verbatim":"Nuevo Lea^sa\u2030\u00a5n","state_province_verbatim_alt":"","county_parish_verbatim":"Los
+        Aldamas","county_parish_verbatim_alt":"","country":"Mexico","state_province":"","county_parish":"","country_id":"3996063","state_province_id":"","county_parish_id":"","country_iso":"MX","state_province_iso":"","county_parish_iso":"","geonameid":"3996063","gid_0":"MEX","gid_1":"","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"0.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.33","poldiv_submitted":"county_parish","poldiv_matched":"country","match_status":"partial
+        match","user_id":"17"},{"poldiv_full":"South Korea@Busan@Haeundae","country_verbatim":"South
+        Korea","state_province_verbatim":"Busan","state_province_verbatim_alt":"","county_parish_verbatim":"Haeundae","county_parish_verbatim_alt":"","country":"South
+        Korea","state_province":"Busan","county_parish":"Haeundae-gu","country_id":"1835841","state_province_id":"1838519","county_parish_id":"8462808","country_iso":"KR","state_province_iso":"10","county_parish_iso":"21090","geonameid":"8462808","gid_0":"KOR","gid_1":"KOR.1_1","gid_2":"KOR.1.8_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact name","match_method_county_parish":"wildcard
+        alt name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"18"},{"poldiv_full":"Mexico@Guanajuato@Jera^sA(C)cuaro","country_verbatim":"Mexico","state_province_verbatim":"Guanajuato","state_province_verbatim_alt":"","county_parish_verbatim":"Jera^sA(C)cuaro","county_parish_verbatim_alt":"","country":"Mexico","state_province":"Guanajuato","county_parish":"","country_id":"3996063","state_province_id":"4005267","county_parish_id":"","country_iso":"MX","state_province_iso":"11","county_parish_iso":"","geonameid":"4005267","gid_0":"MEX","gid_1":"MEX.11_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.67","poldiv_submitted":"county_parish","poldiv_matched":"state_province","match_status":"partial
+        match","user_id":"19"},{"poldiv_full":"Mexico@Sonora, Estado de@Hua^sA(C)pac","country_verbatim":"Mexico","state_province_verbatim":"Sonora,
+        Estado de","state_province_verbatim_alt":"","county_parish_verbatim":"Hua^sA(C)pac","county_parish_verbatim_alt":"","country":"Mexico","state_province":"Sonora","county_parish":"","country_id":"3996063","state_province_id":"3982846","county_parish_id":"","country_iso":"MX","state_province_iso":"26","county_parish_iso":"","geonameid":"3982846","gid_0":"MEX","gid_1":"MEX.26_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"wildcard alt name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.67","poldiv_submitted":"county_parish","poldiv_matched":"state_province","match_status":"partial
+        match","user_id":"2"},{"poldiv_full":"Colombia@Cundinamarca@Medina","country_verbatim":"Colombia","state_province_verbatim":"Cundinamarca","state_province_verbatim_alt":"","county_parish_verbatim":"Medina","county_parish_verbatim_alt":"","country":"Colombia","state_province":"Cundinamarca","county_parish":"Medina","country_id":"3686110","state_province_id":"3685413","county_parish_id":"3674933","country_iso":"CO","state_province_iso":"33","county_parish_iso":"25438","geonameid":"3674933","gid_0":"COL","gid_1":"COL.14_1","gid_2":"COL.14.56_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"20"},{"poldiv_full":"Thailand@Chaiyaphum@Nong Bua Daeng","country_verbatim":"Thailand","state_province_verbatim":"Chaiyaphum","state_province_verbatim_alt":"","county_parish_verbatim":"Nong
+        Bua Daeng","county_parish_verbatim_alt":"","country":"Thailand","state_province":"Chaiyaphum","county_parish":"Amphoe
+        Nong Bua Daeng","country_id":"1605651","state_province_id":"1611406","county_parish_id":"1608272","country_iso":"TH","state_province_iso":"26","county_parish_iso":"3605","geonameid":"1608272","gid_0":"THA","gid_1":"THA.8_1","gid_2":"THA.8.12_1","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"exact
+        alternate name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"21"},{"poldiv_full":"Guatemala@Izabal@","country_verbatim":"Guatemala","state_province_verbatim":"Izabal","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"Guatemala","state_province":"Izabal","county_parish":"","country_id":"3595528","state_province_id":"3595259","county_parish_id":"","country_iso":"GT","state_province_iso":"09","county_parish_iso":"","geonameid":"3595259","gid_0":"GTM","gid_1":"GTM.9_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"state_province","poldiv_matched":"state_province","match_status":"full
+        match","user_id":"3"},{"poldiv_full":"USA@Arizona@Pima County","country_verbatim":"USA","state_province_verbatim":"Arizona","state_province_verbatim_alt":"","county_parish_verbatim":"Pima
+        County","county_parish_verbatim_alt":"Pima","country":"United States","state_province":"Arizona","county_parish":"Pima","country_id":"6252001","state_province_id":"5551752","county_parish_id":"5308878","country_iso":"US","state_province_iso":"AZ","county_parish_iso":"019","geonameid":"5308878","gid_0":"USA","gid_1":"USA.3_1","gid_2":"USA.3.11_1","match_method_country":"iso_alpha3
+        code","match_method_state_province":"exact name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"4"},{"poldiv_full":"U.S.A@Arizona@Pima","country_verbatim":"U.S.A","state_province_verbatim":"Arizona","state_province_verbatim_alt":"","county_parish_verbatim":"Pima","county_parish_verbatim_alt":"","country":"United
+        States","state_province":"Arizona","county_parish":"Pima","country_id":"6252001","state_province_id":"5551752","county_parish_id":"5308878","country_iso":"US","state_province_iso":"AZ","county_parish_iso":"019","geonameid":"5308878","gid_0":"USA","gid_1":"USA.3_1","gid_2":"USA.3.11_1","match_method_country":"fuzzy
+        alternate name","match_method_state_province":"exact name","match_method_county_parish":"exact
+        ascii short name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"5"},{"poldiv_full":"USA@Ilinois@","country_verbatim":"USA","state_province_verbatim":"Ilinois","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"United
+        States","state_province":"Illinois","county_parish":"","country_id":"6252001","state_province_id":"4896861","county_parish_id":"","country_iso":"US","state_province_iso":"IL","county_parish_iso":"","geonameid":"4896861","gid_0":"USA","gid_1":"USA.14_1","gid_2":"","match_method_country":"iso_alpha3
+        code","match_method_state_province":"wildcard alt name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"state_province","poldiv_matched":"state_province","match_status":"full
+        match","user_id":"6"},{"poldiv_full":"Mexico@Quintana Roo@La^sA\u00b0zaro
+        Ca^sA\u00b0rdenas","country_verbatim":"Mexico","state_province_verbatim":"Quintana
+        Roo","state_province_verbatim_alt":"","county_parish_verbatim":"La^sA\u00b0zaro
+        Ca^sA\u00b0rdenas","county_parish_verbatim_alt":"","country":"Mexico","state_province":"Quintana
+        Roo","county_parish":"","country_id":"3996063","state_province_id":"3520887","county_parish_id":"","country_iso":"MX","state_province_iso":"23","county_parish_iso":"","geonameid":"3520887","gid_0":"MEX","gid_1":"MEX.23_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.67","poldiv_submitted":"county_parish","poldiv_matched":"state_province","match_status":"partial
+        match","user_id":"7"},{"poldiv_full":"Mexico@Quintana Roo@Municipio de La^sA\u00b0zaro
+        Ca^sA\u00b0rdenas","country_verbatim":"Mexico","state_province_verbatim":"Quintana
+        Roo","state_province_verbatim_alt":"","county_parish_verbatim":"Municipio
+        de La^sA\u00b0zaro Ca^sA\u00b0rdenas","county_parish_verbatim_alt":"La^sA\u00b0zaro
+        Ca^sA\u00b0rdenas","country":"Mexico","state_province":"Quintana Roo","county_parish":"","country_id":"3996063","state_province_id":"3520887","county_parish_id":"","country_iso":"MX","state_province_iso":"23","county_parish_iso":"","geonameid":"3520887","gid_0":"MEX","gid_1":"MEX.23_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"exact ascii short name","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.67","poldiv_submitted":"county_parish","poldiv_matched":"state_province","match_status":"partial
+        match","user_id":"8"},{"poldiv_full":"Ukraine@Kharkiv@Novovodolaz''kyi","country_verbatim":"Ukraine","state_province_verbatim":"Kharkiv","state_province_verbatim_alt":"","county_parish_verbatim":"Novovodolaz''kyi","county_parish_verbatim_alt":"","country":"Ukraine","state_province":"Kharkivs''ka
+        Oblast''","county_parish":"Novovodolaz''kyi","country_id":"690791","state_province_id":"706482","county_parish_id":"11616624","country_iso":"UA","state_province_iso":"07","county_parish_iso":"","geonameid":"11616624","gid_0":"UKR","gid_1":"UKR.8_1","gid_2":"UKR.8.22_1","match_method_country":"exact
+        standard name","match_method_state_province":"wildcard alt name","match_method_county_parish":"exact
+        name","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"9"}]'
+  recorded_at: 2026-09-03 23:54:19
+recorded_with: VCR-vcr/2.1.0

@@ -3,10 +3,10 @@
 #' @description Provides access to the Geographic Name Resolution Service (GNRS) service as well as other associated tools.
 #' 
 #' @section Getting started:
-#' Type vignette("GNRS") to view the vignette, which contains useful information on the NSR package.
+#' Type vignette("GNRS") to view the vignette, which contains useful information on the GNRS package.
 #' 
-#' @references Enquist, B.J., Sandel, B., Boyle, B., Donoghue II, J.C., Regetz, J., Svenning, J.C., McGill, B.J., Peet, R.K., Jorgensen, P.M., Condit, R., Thiers, B., Schildhauer, M., Smith, S.A., Hinchliff, C.E., Wiser, S.K., Violle, C., Simova, I., Spencer, N., Dolins, S., Morueta-Holme, N., Marcuse-Kubitza, A., Kraft, N.J.B., Ott, J.E., Andelman, S., ter Steege, H., Phillips, O., Sloat, L.L., Narro, M.L., Casler, N., Guaderama, D.,  Merow, C., Maitner, B.S. (in prep) A general signature of taxonomic and phylogenetic diversity across the Land Plants of the New World.
+#' @references Boyle, B.L., Maitner, B.S., Barbosa, G.G., Sajja, R.K., Feng, X., Merow, C., Newman, E.A., Park, D.S., Roehrdanz, P.R. and Enquist, B.J., 2022. Geographic name resolution service: A tool for the standardization and indexing of world political division names, with applications to species distribution modeling. Plos one, 17(11), p.e0268162.
 #' 
 #' @docType package
-#' @name NSR
-#' @aliases NSR-package
+#' @name GNRS
+#' @aliases GNRS-package

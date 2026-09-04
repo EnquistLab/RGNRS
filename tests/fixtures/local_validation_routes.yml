@@ -1,0 +1,58 @@
+http_interactions:
+- request:
+    method: POST
+    uri: https://gnrsapi.xyz/gnrs_api.php
+    body:
+      string: '{"opts":{"mode":"resolve"},"data":[[1,"United States","Puerto Rico",""],[2,"United
+        States","Puerto Rico","Mayaguez"],[3,"England","Devon",""],[4,"Scotland","",""],[5,"Wales","",""],[6,"China","Taiwan","Taipei"],[7,"Peru","","Lima"],[8,"USA","AZ",""],[9,"GBR","GB-ENG","DEV"],[10,"Unted
+        States","Arizonna","Pima Cnty"]]}'
+  response:
+    status: 200
+    headers:
+      date: Thu, 03 Sep 2026 23:54:38 GMT
+      server: Apache/2.4.41 (Ubuntu)
+      access-control-allow-origin: '*'
+      transfer-encoding: chunked
+      content-type: application/json
+    body:
+      string: '[{"poldiv_full":"United States@Puerto Rico@","country_verbatim":"United
+        States","state_province_verbatim":"Puerto Rico","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"Puerto
+        Rico","state_province":"","county_parish":"","country_id":"4566966","state_province_id":"","county_parish_id":"","country_iso":"PR","state_province_iso":"","county_parish_iso":"","geonameid":"4566966","gid_0":"PRI","gid_1":"","gid_2":"","match_method_country":"exact
+        standard name, state-as-country","match_method_state_province":"","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"0.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"0.50","poldiv_submitted":"state_province","poldiv_matched":"state-as-country","match_status":"full
+        match","user_id":"1"},{"poldiv_full":"Unted States@Arizonna@Pima Cnty","country_verbatim":"Unted
+        States","state_province_verbatim":"Arizonna","state_province_verbatim_alt":"","county_parish_verbatim":"Pima
+        Cnty","county_parish_verbatim_alt":"","country":"United States","state_province":"Arizona","county_parish":"Pima","country_id":"6252001","state_province_id":"5551752","county_parish_id":"5308878","country_iso":"US","state_province_iso":"AZ","county_parish_iso":"019","geonameid":"5308878","gid_0":"USA","gid_1":"USA.3_1","gid_2":"USA.3.11_1","match_method_country":"fuzzy
+        standard name","match_method_state_province":"fuzzy standard name","match_method_county_parish":"wildcard
+        alt name","match_score_country":"0.69","match_score_state_province":"0.70","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"0.80","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"10"},{"poldiv_full":"United States@Puerto Rico@Mayaguez","country_verbatim":"United
+        States","state_province_verbatim":"Puerto Rico","state_province_verbatim_alt":"","county_parish_verbatim":"Mayaguez","county_parish_verbatim_alt":"","country":"Puerto
+        Rico","state_province":"Mayaguez","county_parish":"","country_id":"4566966","state_province_id":"4566217","county_parish_id":"","country_iso":"PR","state_province_iso":"097","county_parish_iso":"","geonameid":"4566217","gid_0":"PRI","gid_1":"PRI.50_1","gid_2":"","match_method_country":"exact
+        standard name, state-as-country","match_method_state_province":"exact standard
+        name, county-as-state","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.67","poldiv_submitted":"county_parish","poldiv_matched":"county-as-state","match_status":"full
+        match","user_id":"2"},{"poldiv_full":"England@Devon@","country_verbatim":"England","state_province_verbatim":"Devon","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"United
+        Kingdom","state_province":"England","county_parish":"Devon","country_id":"2635167","state_province_id":"6269131","county_parish_id":"2651292","country_iso":"GB","state_province_iso":"ENG","county_parish_iso":"D4","geonameid":"2651292","gid_0":"GBR","gid_1":"GBR.1_1","gid_2":"GBR.1.26_1","match_method_country":"inferred
+        from country-as-state","match_method_state_province":"exact standard name,
+        country-as-state","match_method_county_parish":"exact standard name, state-as-county","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"state_province","poldiv_matched":"state-as-county","match_status":"full
+        match","user_id":"3"},{"poldiv_full":"Scotland@@","country_verbatim":"Scotland","state_province_verbatim":"","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"United
+        Kingdom","state_province":"Scotland","county_parish":"","country_id":"2635167","state_province_id":"2638360","county_parish_id":"","country_iso":"GB","state_province_iso":"SCT","county_parish_iso":"","geonameid":"2638360","gid_0":"GBR","gid_1":"GBR.3_1","gid_2":"","match_method_country":"inferred
+        from country-as-state","match_method_state_province":"exact standard name,
+        country-as-state","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"country","poldiv_matched":"country-as-state","match_status":"full
+        match","user_id":"4"},{"poldiv_full":"Wales@@","country_verbatim":"Wales","state_province_verbatim":"","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"United
+        Kingdom","state_province":"Wales","county_parish":"","country_id":"2635167","state_province_id":"2634895","county_parish_id":"","country_iso":"GB","state_province_iso":"WLS","county_parish_iso":"","geonameid":"2634895","gid_0":"GBR","gid_1":"GBR.4_1","gid_2":"","match_method_country":"inferred
+        from country-as-state","match_method_state_province":"exact standard name,
+        country-as-state","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"country","poldiv_matched":"country-as-state","match_status":"full
+        match","user_id":"5"},{"poldiv_full":"China@Taiwan@Taipei","country_verbatim":"China","state_province_verbatim":"Taiwan","state_province_verbatim_alt":"","county_parish_verbatim":"Taipei","county_parish_verbatim_alt":"","country":"Taiwan","state_province":"Taipei","county_parish":"","country_id":"1668284","state_province_id":"7280290","county_parish_id":"","country_iso":"TW","state_province_iso":"03","county_parish_iso":"","geonameid":"7280290","gid_0":"TWN","gid_1":"TWN.6_1","gid_2":"","match_method_country":"exact
+        standard name, state-as-country","match_method_state_province":"exact standard
+        name, county-as-state","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"0.67","poldiv_submitted":"county_parish","poldiv_matched":"county-as-state","match_status":"full
+        match","user_id":"6"},{"poldiv_full":"Peru@@Lima","country_verbatim":"Peru","state_province_verbatim":"","state_province_verbatim_alt":"","county_parish_verbatim":"Lima","county_parish_verbatim_alt":"","country":"Peru","state_province":"Lima","county_parish":"","country_id":"3932488","state_province_id":"3936451","county_parish_id":"","country_iso":"PE","state_province_iso":"LMA","county_parish_iso":"","geonameid":"3936451","gid_0":"PER","gid_1":"PER.15_1","gid_2":"","match_method_country":"exact
+        standard name","match_method_state_province":"wildcard state-in-county-field","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"","match_score_county_parish":"0.00","threshold_fuzzy":"0.50","overall_score":"","poldiv_submitted":"county_parish","poldiv_matched":"state_province","match_status":"partial
+        match","user_id":"7"},{"poldiv_full":"USA@AZ@","country_verbatim":"USA","state_province_verbatim":"AZ","state_province_verbatim_alt":"","county_parish_verbatim":"","county_parish_verbatim_alt":"","country":"United
+        States","state_province":"Arizona","county_parish":"","country_id":"6252001","state_province_id":"5551752","county_parish_id":"","country_iso":"US","state_province_iso":"AZ","county_parish_iso":"","geonameid":"5551752","gid_0":"USA","gid_1":"USA.3_1","gid_2":"","match_method_country":"iso_alpha3
+        code","match_method_state_province":"iso code","match_method_county_parish":"","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"state_province","poldiv_matched":"state_province","match_status":"full
+        match","user_id":"8"},{"poldiv_full":"GBR@GB-ENG@DEV","country_verbatim":"GBR","state_province_verbatim":"GB-ENG","state_province_verbatim_alt":"","county_parish_verbatim":"DEV","county_parish_verbatim_alt":"","country":"United
+        Kingdom","state_province":"England","county_parish":"Devon","country_id":"2635167","state_province_id":"6269131","county_parish_id":"2651292","country_iso":"GB","state_province_iso":"ENG","county_parish_iso":"D4","geonameid":"2651292","gid_0":"GBR","gid_1":"GBR.1_1","gid_2":"GBR.1.26_1","match_method_country":"iso_alpha3
+        code","match_method_state_province":"full alternate code","match_method_county_parish":"alternate
+        code","match_score_country":"1.00","match_score_state_province":"1.00","match_score_county_parish":"1.00","threshold_fuzzy":"0.50","overall_score":"1.00","poldiv_submitted":"county_parish","poldiv_matched":"county_parish","match_status":"full
+        match","user_id":"9"}]'
+  recorded_at: 2026-09-03 23:54:40
+recorded_with: VCR-vcr/2.1.0
