@@ -1,5 +1,5 @@
 ===============
-GNRS 0.4.0
+# GNRS 0.4.0
 ===============
 ## NEW FEATURES
 * Political division names can now be resolved offline, against a locally
@@ -34,7 +34,7 @@ GNRS 0.4.0
   service's copy.
 
 ===============
-GNRS 0.3.3
+# GNRS 0.3.3
 ===============
 ## NEW FEATURES
 * Rather than skipping tests when on CRAN or Offline, most are now handled using vcr to cache API responses
@@ -42,10 +42,8 @@ GNRS 0.3.3
 ## BUG FIXES
 * Fixed potential source of errors when testing on CRAN for a few tests that I failed to skip on CRAN
 
-
-
 ===============
-GNRS 0.3.3
+# GNRS 0.3.3
 ===============
 ## NEW FEATURES
 
@@ -53,7 +51,7 @@ GNRS 0.3.3
 * Updated tests to be skipped when run on CRAN in order to prevent errors when server is temporarily down.
 
 ===============
-GNRS 0.3.2
+# GNRS 0.3.2
 ===============
 ## NEW FEATURES
 * Added internal function 'gnrs_core'to reduce code duplication
@@ -66,7 +64,7 @@ GNRS 0.3.2
 * standardized handling of queries that return empty data between _get_counties and _get_states.
 
 ===============
-GNRS 0.3.1
+# GNRS 0.3.1
 ===============
 ## NEW FEATURES
 * Added GNRS_data_dictionary() function and associated test.
@@ -76,7 +74,7 @@ GNRS 0.3.1
 * Tests are now skipped if offline
 
 ===============
-GNRS 0.3.0
+# GNRS 0.3.0
 ===============
 ## NEW FEATURES
 
@@ -90,7 +88,7 @@ GNRS 0.3.0
 * FUnctions return a message if they cannot connect to either the internet or the API.
 
 ===============
-GNRS 0.2.0
+# GNRS 0.2.0
 ===============
 
 ## NEW FEATURES
@@ -107,7 +105,7 @@ GNRS 0.2.0
 * Moved data to from inst/extdata to data/ and added documentation
 
 ===============
-GNRS 0.1.0
+# GNRS 0.1.0
 ===============
 
 ## NEW FEATURES
