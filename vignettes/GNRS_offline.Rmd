@@ -192,6 +192,100 @@ but not in their short form, because the deployed service does not match the
 short form either: its legacy source for those codes never populated the
 database, as the service's own answers show.
 
+## Keeping GADM current
+
+The service's reference tables were built from GADM 3.6 in 2020, and the
+snapshot inherits that.  GADM has moved on, so a `gid_1` from the service may
+no longer correspond to a polygon in a current GADM download, and divisions
+created since then are unknown to the service.  The `"gadm"` component brings
+the current GADM release in:
+
+```{r}
+GNRS_local_build("gadm")
+```
+
+This fetches GADM's world GeoPackage, about 1.4 GB, reads the names and codes
+of levels 0 to 2 out of it with RSQLite (a GeoPackage is an SQLite database,
+so no spatial software is needed) and deletes the archive, keeping a few
+megabytes.  Each GADM division is then linked to the service's division it
+corresponds to, and added as a new division where it has none.  Linked
+divisions keep the service's identifiers, so results still join to the
+service's; new divisions are numbered above every existing identifier, as the
+service's build numbers its own GADM additions, and those identifiers are
+local to your build.  Afterwards the `gid_0`, `gid_1` and `gid_2` columns
+refer to the GADM version built, GADM's names and alternate names take part in
+matching, and `GNRS_local_status()` and `GNRS_local_citations()` report the
+GADM version.
+
+The linking has no geometry to go on, only names and codes, and neither
+side's are wholly reliable: GADM has renumbered divisions between releases and
+reused identifiers for different divisions, the service's HASC codes are wrong
+here and there, and its tables hold about a thousand divisions twice.  So no
+single field is trusted.  Within its parent a division links, in order, by the
+national statistical code GADM carries (`CC_2`), where that is the code
+GeoNames carries for the country; by the GADM identifier the service
+recorded, believed only when the HASC codes or the names agree, and not when
+the name points elsewhere (another GADM division bears the reference name
+outright, or another GeoNames division bears the GADM name); by HASC code, on
+the same terms; by name; by GeoNames alternate name, when the alternate names
+are built ("Mwali" for Mohéli); by the same words in either order; by
+name with type words removed ("Gemeente Zutphen" and "Zutphen"); and by one
+name being whole words of the other, where nothing else could be meant.  The service's own duplicate rows stand for their
+GeoNames row.  Built on 2026-09-04 against GADM 4.1, this linked 254
+countries, 3,592 states and 45,573 counties to the service's divisions (7,806
+of the counties by statistical code, which is how a renamed Brazilian
+municipality keeps its row) and added 9, 69 and 1,626 the service lacks; 329
+of the service's GeoNames counties that had a GADM 3.6 identifier have no
+counterpart in 4.1 (Dutch municipalities that merged, Ghanaian districts that
+split, and a few whose recorded identifier was another division's) and keep
+their row without one.  The build took about four minutes once the archive
+was downloaded.
+
+The links were audited against geometry, which the build itself does not use:
+each division's GeoNames coordinates dropped into the GADM 4.1 polygons put
+98 percent of the linked counties and 99 percent of the linked states inside
+the polygon they were linked to, and 99.8 percent of the counties inside it
+or inside a polygon touching it, which is what a point placed near a
+boundary looks like; the few dozen that remain are mostly a GeoNames
+district linked to the GADM town of the same name, a difference of level
+rather than of place.  The wrong links that did turn up (identifiers the service has
+shifted for whole countries) are what the "name points elsewhere" conditions
+now catch.
+
+### Checking the links against the geometry
+
+Names and codes are all the linking has, and a few of the service's recorded
+identifiers point at the wrong division outright.  A fourth component lets
+the build check its links against GADM's geometry, using the one piece of
+evidence independent of every name and code: GeoNames' own coordinates for
+each division.
+
+```{r}
+GNRS_local_build(c("points", "gadm"))
+```
+
+`"points"` fetches GeoNames' full gazetteer, about 400 MB, and keeps only the
+latitude and longitude of the reference divisions.  When it is present and
+the sf package is installed, the GADM build measures, for every link it
+makes, the distance from the division's point to the polygon it was linked
+to, while the GeoPackage is still on disk, and then withdraws any link that
+rests on an identifier or a code alone when the point lies more than 25 km
+away.  A link whose names agree outright is kept whatever the point says:
+GeoNames places its points at a seat or centroid that sits near an edge
+often enough, and in an audit of every link, 99.8 percent of the points
+fell inside the linked polygon or one touching it.  The distances are kept
+with the layer, so the check stays in force when the alternate names are
+rebuilt later.  `GNRS_local_status()` lists `"points"` with the others.
+
+It is not built by default because it changes what a result means: a `gid_2`
+is no longer the one the service would return, and a name can now resolve to a
+division the service does not have.  On the package's validation sets the
+resolved divisions were otherwise unchanged.  To go back:
+
+```{r}
+GNRS_local_remove(sources = "gadm")
+```
+
 ## Building without the alternate names
 
 ```{r}

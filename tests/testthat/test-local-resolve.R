@@ -195,8 +195,8 @@ test_that("a missing backbone is reported rather than erroring", {
 
 test_that("status and citations describe what was built", {
   s <- suppressMessages(GNRS_local_status(dir))
-  expect_equal(s$source, c("gnrs", "geonames"))
-  expect_true(all(s$built))
+  expect_equal(s$source, c("gnrs", "gadm", "geonames", "points"))
+  expect_equal(s$built, c(TRUE, FALSE, TRUE, FALSE))
   expect_equal(s$version[1], "database test (2024-01-01), code test")
   cit <- GNRS_local_citations(dir, quiet = TRUE)
   expect_equal(cit$what, c("method", "software", "source", "source"))

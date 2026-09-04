@@ -188,9 +188,9 @@ gnrs_numeric2 <- function(x) {
 
 #' Does each of several names contain, or fit inside, a submitted value?
 #'
-#' Internal.  The wildcard steps in the SQL test
-#' \code{name LIKE '%' || verbatim || '%' OR verbatim LIKE '%' || name || '%'}:
-#' either string contains the other, case-sensitively.  Wildcard characters
+#' Internal.  The wildcard steps in the SQL test whether the name is LIKE the
+#' submitted value wrapped in percent signs, or the other way round: either
+#' string contains the other, case-sensitively.  Wildcard characters
 #' inside the submitted value are treated as ordinary text here; the SQL
 #' excludes underscores itself and a percent sign in a place name is rare.
 #'

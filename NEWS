@@ -24,7 +24,23 @@
   - "GNRS_local_citations" assembles everything a local result should be
     cited with: the GNRS publication, this package, and the reference data at
     the version actually built, optionally as BibTeX.
-  - "GNRS_local_remove" deletes the cache.
+  - "GNRS_local_remove" deletes the cache, or one component of it.
+
+  A third component, "gadm", lays the current GADM release over the service's
+  reference tables, whose GADM is the 3.6 release of 2020: GADM's current
+  divisions are read from the publisher's world GeoPackage (a 1.4 GB
+  download, of which only the names and codes of levels 0 to 2 are kept;
+  needs RSQLite), linked to the service's divisions by statistical code,
+  GADM identifier, HASC code, name or GeoNames alternate name (the rules
+  are in the vignette), and added where the service lacks them.  A fourth
+  component, "points" (GeoNames' coordinates for the reference divisions,
+  from its 400 MB gazetteer), lets the "gadm" build check every link
+  against the GADM geometry when the sf package is installed, withdrawing
+  links that rest on an identifier or code alone with the point more than
+  25 km from the polygon.  Linked divisions keep the service's
+  identifiers.  Build it with
+  GNRS_local_build("gadm") and remove it with GNRS_local_remove(sources =
+  "gadm"); it is not built by default.
 
   The offline engine is new and should be treated as beta.  Measured against
   the web service it returns the same resolved political divisions for all

@@ -10,6 +10,9 @@ skip_without_reference <- function() {
     gnrs_is_built("gnrs") && gnrs_is_built("geonames"),
     "no local reference data; run GNRS_local_build()"
   )
+  # With the current GADM laid over the service's tables, divisions the
+  # service lacks can match, so the answers are not expected to be the same
+  skip_if(gnrs_is_built("gadm"), "the GADM layer is built; answers may differ from the service's")
 }
 
 test_that("the package test file resolves to the service's political divisions", {

@@ -27,7 +27,8 @@ against, at the version actually built.
 \details{
 The reference political divisions are the web service's own tables, which
 it builds from GADM, GeoNames and Natural Earth; the alternate names come
-from GeoNames.  A local result is only reproducible if the versions are
+from GeoNames; and where the GADM layer was built, the current GADM release
+is cited at its version.  A local result is only reproducible if the versions are
 reported with it, which is why they come from what was built rather than
 from what is current.  \code{GNRS_local_status()} shows the same versions.
 }

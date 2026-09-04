@@ -26,6 +26,13 @@ GNRS_local_status()  # what is built, and at which version
 GNRS_local_citations()
 ```
 
+The service's reference was built from GADM 3.6 in 2020.  To resolve against
+the current GADM release instead, with current `gid_*` identifiers and the
+divisions added since, layer it on with `GNRS_local_build("gadm")`, or
+`GNRS_local_build(c("points", "gadm"))` to have the links checked against
+GADM's geometry with GeoNames' coordinates; see the
+vignette for what changes.
+
 `GNRS_local()` takes the same input as `GNRS()` and returns the same columns.
 It is a separate function rather than an option on `GNRS()` because the two do
 not always give the same answer: the alternate names are downloaded from

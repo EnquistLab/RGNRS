@@ -15,17 +15,19 @@ GNRS_local_build(
 }
 \arguments{
 \item{sources}{Character vector of components to build: \code{"gnrs"},
-\code{"geonames"}, or both (the default).  The alternate names are filtered
-to the reference political divisions, so \code{"gnrs"} is built first if
-\code{"geonames"} is asked for on its own.}
+\code{"geonames"} (the two defaults), \code{"points"} and
+\code{"gadm"}.  The other components are layered on or filtered to the
+service's tables, so \code{"gnrs"} is built first if it is missing
+whatever is asked for.}
 
 \item{dir}{Cache directory. Defaults to the standard user cache location.}
 
 \item{overwrite}{Re-download and rebuild even if the data is already present?}
 
-\item{keep_archive}{Keep the downloaded GeoNames archive after building?  It
-is not needed for matching and is far larger than what is kept from it, so
-it is deleted by default.  Keep it if you expect to rebuild.}
+\item{keep_archive}{Keep the downloaded GeoNames and GADM archives after
+building?  They are not needed for matching and are far larger than what
+is kept from them, so they are deleted by default.  Keep them if you
+expect to rebuild.}
 
 \item{url}{URL of the GNRS API, from which the reference tables are fetched.}
 
@@ -42,7 +44,8 @@ is kept in the standard user cache directory, and can be removed again with
 \code{GNRS_local_remove()}.
 }
 \details{
-Two components are fetched.  \code{"gnrs"} is the web service's own
+Two components are fetched by default, and two more can be added.
+\code{"gnrs"} is the web service's own
 reference tables of countries, states/provinces and counties/parishes,
 fetched through its API in a few small requests: every political division it
 knows, with the identifiers, standard names, codes and GADM identifiers it
@@ -54,6 +57,35 @@ historical names its alternate-name matching uses; the API does not serve
 these, so they are fetched from the publisher and only the rows for the
 reference political divisions are kept, a few megabytes.  Without it,
 matching is confined to standard names and codes, so it is built by default.
+
+\code{"gadm"} lays the current release of GADM over the service's tables.
+The service's reference was built from GADM 3.6 in 2020 and grows more out
+of date as time passes; this component fetches the current GADM divisions
+from the publisher (the world GeoPackage, about 1.4 GB, of which only the
+names and codes of levels 0 to 2 are kept; reading it needs the RSQLite
+package), links each to the service's
+division it corresponds to, by GADM identifier, HASC code or name, and adds
+those with no counterpart as new divisions.  Linked divisions keep the
+service's identifiers, so results remain joinable with the service's; new
+ones are numbered above every existing identifier, as the service's own
+build numbers its GADM additions, and are local to your build.  The
+\code{gid_0}, \code{gid_1} and \code{gid_2} columns then refer to the
+GADM version built, and GADM's names and alternate names take part in
+matching.  It is not built by default because it changes what a result
+means: build it when you want current GADM identifiers or coverage of
+divisions the service lacks, and remove it again with
+\code{GNRS_local_remove(sources = "gadm")}.
+
+\code{"points"} is GeoNames' own latitude and longitude for every reference
+division, taken from its full gazetteer (about 400 MB, of which under a
+megabyte is kept).  It serves one purpose: when it has been built and the
+sf package is installed, the \code{"gadm"} build checks every link it
+makes against the geometry, measuring the distance from the division's
+point to the polygon it was linked to, and withdraws a link that rests on
+an identifier or a code alone when the point lies more than 25 km away.
+A link whose names agree outright is kept whatever the point says, since
+GeoNames places its points near an edge often enough.  Build it before
+\code{"gadm"} (the order is arranged whatever order is given).
 
 Each component is recorded with its version, so that results obtained locally
 can be cited as precisely as results from the web service.  Use
@@ -72,6 +104,9 @@ GNRS_local_build()
 
 # The reference tables alone: quick, but no alternate names
 GNRS_local_build("gnrs")
+
+# Add the current GADM release on top of the service's tables
+GNRS_local_build("gadm")
 
 # See what is available offline
 GNRS_local_status()

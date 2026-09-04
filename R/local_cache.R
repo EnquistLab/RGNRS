@@ -18,7 +18,8 @@ gnrs_cache_dir <- function(create = FALSE) {
 
 #' Data sources a local build can fetch
 #'
-#' Internal.  Two components make up the local reference data.
+#' Internal.  Three components can make up the local reference data; the first
+#' two are built by default.
 #'
 #' \code{"gnrs"} is the web service's own reference tables, fetched through its
 #' API: every country, state/province and county/parish it knows, with the
@@ -31,6 +32,9 @@ gnrs_cache_dir <- function(create = FALSE) {
 #' which the service takes the names in other languages, abbreviations and
 #' historical names that its alternate-name matching steps use.  The API does
 #' not serve these, so they are fetched from the publisher.
+#'
+#' \code{"gadm"} is the current GADM release, fetched from GADM and laid over
+#' the service's tables so that its identifiers and divisions are current.
 #'
 #' @return A named list of source definitions.
 #' @keywords internal
@@ -56,6 +60,19 @@ gnrs_builtin_registry <- function() {
       download_mb = 25,
       disk_mb = 6
     ),
+    gadm = list(
+      source = "gadm",
+      full_name = "GADM administrative areas",
+      publisher = "GADM",
+      version = "4.1",
+      url = "https://geodata.ucdavis.edu/gadm/gadm4.1/gadm_410-gpkg.zip",
+      license = "Free for academic and other non-commercial use; redistribution and commercial use need permission (gadm.org/license.html)",
+      citation = "GADM (2022). Database of Global Administrative Areas, version 4.1. https://gadm.org/",
+      # The world GeoPackage; only the attributes of levels 0 to 2 are kept,
+      # a few megabytes.  Extracting it needs about twice its size free.
+      download_mb = 1400,
+      disk_mb = 5
+    ),
     geonames = list(
       source = "geonames",
       full_name = "GeoNames alternate names",
@@ -67,6 +84,19 @@ gnrs_builtin_registry <- function() {
       # divisions are kept, which is a few megabytes
       download_mb = 195,
       disk_mb = 8
+    ),
+    points = list(
+      source = "points",
+      full_name = "GeoNames coordinates",
+      publisher = "GeoNames",
+      url = "https://download.geonames.org/export/dump/allCountries.zip",
+      license = "CC BY 4.0",
+      citation = "GeoNames (geonames.org). All countries. https://www.geonames.org/",
+      # The whole GeoNames gazetteer, about 400 MB; only the latitude and
+      # longitude of the reference political divisions are kept, under a
+      # megabyte.  Used to check the GADM links against the geometry.
+      download_mb = 400,
+      disk_mb = 1
     )
   )
 }
@@ -76,16 +106,49 @@ gnrs_builtin_registry <- function() {
 #' Internal.  Everything a source writes is prefixed with its name.  The
 #' \code{.gz.parquet} suffix records the codec, so the files are self-describing
 #' to anything else that reads them.
+#'
+#' The snapshot fetched from the API is kept as it came, and the reference
+#' tables the resolver reads are derived from it, with the GADM layer applied
+#' where one has been built.  That is what lets either component be rebuilt
+#' or removed on its own.
+#' @keywords internal
+#' @noRd
+gnrs_snapshot_path <- function(table, dir = gnrs_cache_dir()) {
+  file.path(dir, paste0("gnrs-api-", table, ".gz.parquet"))
+}
+
 #' @keywords internal
 #' @noRd
 gnrs_reference_path <- function(table, dir = gnrs_cache_dir()) {
   file.path(dir, paste0("gnrs-", table, ".gz.parquet"))
 }
 
+#' Names the GADM layer contributes, written when the reference is derived
+#' @keywords internal
+#' @noRd
+gnrs_gadm_names_path <- function(dir = gnrs_cache_dir()) {
+  file.path(dir, "gnrs-gadm-names.gz.parquet")
+}
+
 #' @keywords internal
 #' @noRd
 gnrs_altnames_path <- function(dir = gnrs_cache_dir()) {
   file.path(dir, "geonames-altnames.gz.parquet")
+}
+
+#' The coordinates of the reference divisions, from GeoNames
+#' @keywords internal
+#' @noRd
+gnrs_points_path <- function(dir = gnrs_cache_dir()) {
+  file.path(dir, "points-coordinates.gz.parquet")
+}
+
+#' Distances from each division's point to the GADM polygon it was linked
+#' to, measured while the GeoPackage was on disk
+#' @keywords internal
+#' @noRd
+gnrs_gadm_distances_path <- function(dir = gnrs_cache_dir()) {
+  file.path(dir, "gadm-distances.gz.parquet")
 }
 
 #' Path of the assembled name table
@@ -114,10 +177,12 @@ gnrs_provenance_path <- function(source, dir = gnrs_cache_dir()) {
 #' @noRd
 gnrs_is_built <- function(source, dir = gnrs_cache_dir()) {
   switch(source,
-    gnrs = all(file.exists(gnrs_reference_path(
+    gnrs = all(file.exists(gnrs_snapshot_path(
       c("country", "state_province", "county_parish"), dir
     ))),
+    gadm = file.exists(gnrs_gadm_path(dir)),
     geonames = file.exists(gnrs_altnames_path(dir)),
+    points = file.exists(gnrs_points_path(dir)),
     FALSE
   )
 }
@@ -129,7 +194,9 @@ gnrs_source_files <- function(source, dir = gnrs_cache_dir()) {
   if (!dir.exists(dir)) {
     return(character(0))
   }
-  list.files(dir, pattern = paste0("^", source, "-"), full.names = TRUE)
+  files <- list.files(dir, pattern = paste0("^", source, "-"), full.names = TRUE)
+  dirs <- files[dir.exists(files)]
+  c(files[!dir.exists(files)], list.files(dirs, full.names = TRUE, recursive = TRUE))
 }
 
 #' How a set of source names would be written in a call
@@ -224,40 +291,73 @@ GNRS_local_status <- function(dir = gnrs_cache_dir()) {
 
 #' Delete the locally cached GNRS reference data
 #'
-#' Removes the downloaded reference data and everything derived from it.  The
-#' data can be downloaded again at any time with \code{GNRS_local_build()}.
+#' Removes the downloaded reference data and everything derived from it, or
+#' just one component of it.  The data can be downloaded again at any time
+#' with \code{GNRS_local_build()}.
 #'
 #' @param dir Cache directory.  Defaults to the standard user cache location.
+#' @param sources NULL, the default, removes everything.  Otherwise the
+#'   components to remove, for instance \code{"gadm"} to go back to resolving
+#'   against the service's own GADM identifiers; the reference tables are
+#'   rederived from what remains.
 #' @param ask Ask for confirmation before deleting? Defaults to TRUE in an
 #'   interactive session.
 #' @return TRUE if anything was removed, FALSE otherwise, invisibly.
 #' @export
 #' @examples \dontrun{
 #' GNRS_local_remove()
+#'
+#' # Drop the GADM layer only
+#' GNRS_local_remove(sources = "gadm")
 #' }
-GNRS_local_remove <- function(dir = gnrs_cache_dir(), ask = interactive()) {
+GNRS_local_remove <- function(dir = gnrs_cache_dir(), sources = NULL, ask = interactive()) {
   if (!dir.exists(dir)) {
-    message("Nothing to remove; no cache directory at:\n  ", dir)
+    message("Nothing to remove; no cache directory at:
+  ", dir)
     return(invisible(FALSE))
   }
 
-  size_mb <- round(sum(
-    file.size(list.files(dir, recursive = TRUE, full.names = TRUE)),
-    na.rm = TRUE
-  ) / 1024^2, 1)
+  if (!is.null(sources)) {
+    unknown <- setdiff(sources, names(gnrs_builtin_registry()))
+    if (length(unknown) > 0) {
+      message("Unknown source(s): ", paste(unknown, collapse = ", "))
+      return(invisible(FALSE))
+    }
+    if ("gnrs" %in% sources) {
+      # Everything else is derived from or filtered by the snapshot
+      sources <- NULL
+    }
+  }
+
+  files <- if (is.null(sources)) {
+    list.files(dir, recursive = TRUE, full.names = TRUE)
+  } else {
+    unlist(lapply(sources, gnrs_source_files, dir = dir), use.names = FALSE)
+  }
+  size_mb <- round(sum(file.size(files), na.rm = TRUE) / 1024^2, 1)
+  what <- if (is.null(sources)) "the local GNRS reference data" else paste(sources, collapse = ", ")
 
   if (ask) {
-    answer <- readline(paste0(
-      "Delete the local GNRS reference data (", size_mb, " MB) in\n  ", dir,
-      "\n? [y/N] "
-    ))
+    answer <- readline(paste0("Delete ", what, " (", size_mb, " MB) in
+  ", dir, "
+? [y/N] "))
     if (!tolower(trimws(answer)) %in% c("y", "yes")) {
       message("Nothing removed.")
       return(invisible(FALSE))
     }
   }
 
-  unlink(dir, recursive = TRUE)
+  if (is.null(sources)) {
+    unlink(dir, recursive = TRUE)
+  } else {
+    unlink(files)
+    for (s in sources) unlink(gnrs_provenance_path(s, dir))
+    if ("gadm" %in% sources) unlink(gnrs_gadm_archive_path(dir))
+    if (gnrs_is_built("gnrs", dir)) {
+      gnrs_finalize_reference(dir, quiet = TRUE)
+      gnrs_assemble_names(dir, quiet = TRUE)
+    }
+  }
   gnrs_forget_backbone()
   message("Removed ", size_mb, " MB from ", dir)
   invisible(TRUE)

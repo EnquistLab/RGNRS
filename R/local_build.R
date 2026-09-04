@@ -6,7 +6,8 @@
 #' is kept in the standard user cache directory, and can be removed again with
 #' \code{GNRS_local_remove()}.
 #'
-#' Two components are fetched.  \code{"gnrs"} is the web service's own
+#' Two components are fetched by default, and two more can be added.
+#' \code{"gnrs"} is the web service's own
 #' reference tables of countries, states/provinces and counties/parishes,
 #' fetched through its API in a few small requests: every political division it
 #' knows, with the identifiers, standard names, codes and GADM identifiers it
@@ -19,19 +20,50 @@
 #' reference political divisions are kept, a few megabytes.  Without it,
 #' matching is confined to standard names and codes, so it is built by default.
 #'
+#' \code{"gadm"} lays the current release of GADM over the service's tables.
+#' The service's reference was built from GADM 3.6 in 2020 and grows more out
+#' of date as time passes; this component fetches the current GADM divisions
+#' from the publisher (the world GeoPackage, about 1.4 GB, of which only the
+#' names and codes of levels 0 to 2 are kept; reading it needs the RSQLite
+#' package), links each to the service's
+#' division it corresponds to, by GADM identifier, HASC code or name, and adds
+#' those with no counterpart as new divisions.  Linked divisions keep the
+#' service's identifiers, so results remain joinable with the service's; new
+#' ones are numbered above every existing identifier, as the service's own
+#' build numbers its GADM additions, and are local to your build.  The
+#' \code{gid_0}, \code{gid_1} and \code{gid_2} columns then refer to the
+#' GADM version built, and GADM's names and alternate names take part in
+#' matching.  It is not built by default because it changes what a result
+#' means: build it when you want current GADM identifiers or coverage of
+#' divisions the service lacks, and remove it again with
+#' \code{GNRS_local_remove(sources = "gadm")}.
+#'
+#' \code{"points"} is GeoNames' own latitude and longitude for every reference
+#' division, taken from its full gazetteer (about 400 MB, of which under a
+#' megabyte is kept).  It serves one purpose: when it has been built and the
+#' sf package is installed, the \code{"gadm"} build checks every link it
+#' makes against the geometry, measuring the distance from the division's
+#' point to the polygon it was linked to, and withdraws a link that rests on
+#' an identifier or a code alone when the point lies more than 25 km away.
+#' A link whose names agree outright is kept whatever the point says, since
+#' GeoNames places its points near an edge often enough.  Build it before
+#' \code{"gadm"} (the order is arranged whatever order is given).
+#'
 #' Each component is recorded with its version, so that results obtained locally
 #' can be cited as precisely as results from the web service.  Use
 #' \code{GNRS_local_status()} to see what has been built.
 #'
 #' @param sources Character vector of components to build: \code{"gnrs"},
-#'   \code{"geonames"}, or both (the default).  The alternate names are filtered
-#'   to the reference political divisions, so \code{"gnrs"} is built first if
-#'   \code{"geonames"} is asked for on its own.
+#'   \code{"geonames"} (the two defaults), \code{"points"} and
+#'   \code{"gadm"}.  The other components are layered on or filtered to the
+#'   service's tables, so \code{"gnrs"} is built first if it is missing
+#'   whatever is asked for.
 #' @param dir Cache directory. Defaults to the standard user cache location.
 #' @param overwrite Re-download and rebuild even if the data is already present?
-#' @param keep_archive Keep the downloaded GeoNames archive after building?  It
-#'   is not needed for matching and is far larger than what is kept from it, so
-#'   it is deleted by default.  Keep it if you expect to rebuild.
+#' @param keep_archive Keep the downloaded GeoNames and GADM archives after
+#'   building?  They are not needed for matching and are far larger than what
+#'   is kept from them, so they are deleted by default.  Keep them if you
+#'   expect to rebuild.
 #' @param url URL of the GNRS API, from which the reference tables are fetched.
 #' @param quiet Suppress progress messages?
 #' @return The output of \code{GNRS_local_status()}, invisibly.
@@ -47,6 +79,9 @@
 #'
 #' # The reference tables alone: quick, but no alternate names
 #' GNRS_local_build("gnrs")
+#'
+#' # Add the current GADM release on top of the service's tables
+#' GNRS_local_build("gadm")
 #'
 #' # See what is available offline
 #' GNRS_local_status()
@@ -67,14 +102,16 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
     return(invisible(NULL))
   }
 
-  if ("geonames" %in% sources && !"gnrs" %in% sources && !gnrs_is_built("gnrs", dir)) {
+  if (!"gnrs" %in% sources && !gnrs_is_built("gnrs", dir)) {
     if (!quiet) {
-      message("The alternate names are filtered to the reference political divisions, so 'gnrs' is built first.")
+      message("The other components are layered on the service's reference tables, so 'gnrs' is built first.")
     }
     sources <- c("gnrs", sources)
   }
-  # The reference tables come first whatever order was given
-  sources <- intersect(c("gnrs", "geonames"), sources)
+  # The reference tables come first whatever order was given, then the
+  # alternate names and the coordinates, then the GADM layer, whose linking
+  # uses the alternate names and the coordinates when it has them
+  sources <- intersect(c("gnrs", "geonames", "points", "gadm"), sources)
 
   if (!dir.exists(dir)) {
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -86,18 +123,38 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
       if (source == "geonames") {
         gnrs_tidy_archive(dir = dir, keep_archive = keep_archive, quiet = quiet)
       }
+      if (source == "gadm") {
+        gnrs_tidy_gadm_archive(dir = dir, keep_archive = keep_archive, quiet = quiet)
+      }
+      if (source == "points") {
+        gnrs_tidy_points_archive(dir = dir, keep_archive = keep_archive, quiet = quiet)
+      }
+      reference <- gnrs_reference_path(c("country", "state_province", "county_parish"), dir)
+      if (source %in% c("gnrs", "gadm") && !all(file.exists(reference))) {
+        gnrs_finalize_reference(dir = dir, quiet = quiet)
+      }
       next
     }
 
     if (source == "gnrs") {
       gnrs_build_reference(dir = dir, url = url, quiet = quiet)
+    } else if (source == "gadm") {
+      gnrs_build_gadm(dir = dir, overwrite = overwrite, keep_archive = keep_archive, quiet = quiet)
+    } else if (source == "points") {
+      gnrs_build_points(dir = dir, overwrite = overwrite, keep_archive = keep_archive, quiet = quiet)
     } else {
       gnrs_build_altnames(dir = dir, overwrite = overwrite, keep_archive = keep_archive, quiet = quiet)
+    }
+    # The reference tables are derived from the snapshot and the GADM layer,
+    # whose linking reads the alternate names, so they are rederived after
+    # any of the three
+    if (source %in% c("gnrs", "gadm") || gnrs_is_built("gadm", dir)) {
+      gnrs_finalize_reference(dir = dir, quiet = quiet)
     }
     if (!quiet) message("Built '", source, "'.")
   }
 
-  # The name table draws on both components, so it is reassembled after any
+  # The name table draws on every component, so it is reassembled after any
   # build
   if (gnrs_is_built("gnrs", dir)) {
     gnrs_assemble_names(dir = dir, quiet = quiet)
@@ -153,9 +210,9 @@ gnrs_build_reference <- function(dir, url, quiet = FALSE) {
 
   tables <- gnrs_import_reference(countries, states, counties)
 
-  nanoparquet::write_parquet(tables$country, gnrs_reference_path("country", dir), compression = "gzip")
-  nanoparquet::write_parquet(tables$state, gnrs_reference_path("state_province", dir), compression = "gzip")
-  nanoparquet::write_parquet(tables$county, gnrs_reference_path("county_parish", dir), compression = "gzip")
+  nanoparquet::write_parquet(tables$country, gnrs_snapshot_path("country", dir), compression = "gzip")
+  nanoparquet::write_parquet(tables$state, gnrs_snapshot_path("state_province", dir), compression = "gzip")
+  nanoparquet::write_parquet(tables$county, gnrs_snapshot_path("county_parish", dir), compression = "gzip")
 
   provenance <- list(
     source = "gnrs",
@@ -176,6 +233,69 @@ gnrs_build_reference <- function(dir, url, quiet = FALSE) {
   )
   saveRDS(provenance, gnrs_provenance_path("gnrs", dir))
   invisible(provenance)
+}
+
+#' Derive the reference tables from the snapshot and the GADM layer
+#'
+#' Internal.  The tables the resolver reads are the API snapshot as fetched,
+#' with the current GADM divisions laid over it where that component has been
+#' built.  Rederived whenever either component changes.  The names GADM
+#' contributes are written alongside for the name-table assembly, and the link
+#' counts are recorded in the GADM provenance so that the status report can
+#' say what the layer did.
+#'
+#' @param dir Cache directory.
+#' @param quiet Suppress progress messages?
+#' @return Invisibly, the list of tables.
+#' @keywords internal
+#' @noRd
+gnrs_finalize_reference <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
+  country <- as.data.frame(nanoparquet::read_parquet(gnrs_snapshot_path("country", dir)))
+  state <- as.data.frame(nanoparquet::read_parquet(gnrs_snapshot_path("state_province", dir)))
+  county <- as.data.frame(nanoparquet::read_parquet(gnrs_snapshot_path("county_parish", dir)))
+
+  gadm_names <- NULL
+  if (gnrs_is_built("gadm", dir)) {
+    if (!quiet) message("Applying the GADM layer to the reference tables ...")
+    gadm <- as.data.frame(nanoparquet::read_parquet(gnrs_gadm_path(dir)))
+    altnames <- if (file.exists(gnrs_altnames_path(dir))) {
+      as.data.frame(nanoparquet::read_parquet(gnrs_altnames_path(dir)))
+    }
+    distances <- if (file.exists(gnrs_gadm_distances_path(dir))) {
+      as.data.frame(nanoparquet::read_parquet(gnrs_gadm_distances_path(dir)))
+    }
+    applied <- gnrs_apply_gadm(country, state, county, gadm, altnames = altnames, distances = distances)
+    country <- applied$country
+    state <- applied$state
+    county <- applied$county
+    gadm_names <- applied$names
+    record_path <- gnrs_provenance_path("gadm", dir)
+    if (file.exists(record_path)) {
+      record <- readRDS(record_path)
+      record$counts <- applied$counts
+      record$steps <- applied$steps
+      saveRDS(record, record_path)
+    }
+    if (!quiet) {
+      k <- applied$counts
+      message(
+        "  linked ", k$country_linked, " countries, ", k$state_linked, " states and ",
+        k$county_linked, " counties; added ", k$country_added, ", ", k$state_added,
+        " and ", k$county_added, " that the service lacks"
+      )
+    }
+  }
+
+  nanoparquet::write_parquet(country, gnrs_reference_path("country", dir), compression = "gzip")
+  nanoparquet::write_parquet(state, gnrs_reference_path("state_province", dir), compression = "gzip")
+  nanoparquet::write_parquet(county, gnrs_reference_path("county_parish", dir), compression = "gzip")
+  if (is.null(gadm_names)) {
+    unlink(gnrs_gadm_names_path(dir))
+  } else {
+    nanoparquet::write_parquet(gadm_names, gnrs_gadm_names_path(dir), compression = "gzip")
+  }
+  gnrs_forget_backbone()
+  invisible(list(country = country, state = state, county = county))
 }
 
 #' Turn the API's lists into the reference tables the resolver uses
@@ -286,6 +406,152 @@ gnrs_import_reference <- function(countries, states, counties) {
 #' @noRd
 gnrs_archive_path <- function(dir = gnrs_cache_dir()) {
   file.path(dir, "geonames-alternateNamesV2.zip")
+}
+
+#' Where the GeoNames gazetteer archive is kept
+#' @keywords internal
+#' @noRd
+gnrs_points_archive_path <- function(dir = gnrs_cache_dir()) {
+  file.path(dir, "points-allCountries.zip")
+}
+
+#' Download the GeoNames gazetteer and keep the coordinates of the reference
+#' divisions
+#'
+#' Internal.  \code{allCountries.zip} holds every GeoNames feature, about 13
+#' million rows; only the latitude and longitude of the reference states and
+#' counties are wanted, so it is read in chunks straight from the zip.
+#'
+#' @param dir Cache directory.
+#' @param overwrite Re-download even if the archive is present?
+#' @param keep_archive Keep the archive afterwards?
+#' @param quiet Suppress progress messages?
+#' @return The provenance record, invisibly.
+#' @keywords internal
+#' @noRd
+gnrs_build_points <- function(dir, overwrite = FALSE, keep_archive = FALSE, quiet = FALSE) {
+  spec <- gnrs_builtin_registry()$points
+  archive <- gnrs_points_archive_path(dir)
+
+  if (file.exists(archive) && !overwrite) {
+    if (!quiet) message("Using cached download of the GeoNames gazetteer")
+  } else {
+    if (!quiet) message("Downloading ", spec$full_name, " (about ", spec$download_mb, " MB) ...")
+    partial <- paste0(archive, ".part")
+    old <- options(timeout = max(7200, getOption("timeout")))
+    on.exit(options(old), add = TRUE)
+    status <- utils::download.file(
+      url = spec$url, destfile = partial, mode = "wb", quiet = quiet, cacheOK = FALSE
+    )
+    if (status != 0 || !file.exists(partial)) {
+      unlink(partial)
+      stop("Download failed for the GeoNames gazetteer.", call. = FALSE)
+    }
+    file.rename(partial, archive)
+  }
+  modified <- tryCatch(
+    {
+      h <- httr::HEAD(spec$url, httr::timeout(30))
+      lm <- httr::headers(h)[["last-modified"]]
+      if (is.null(lm)) NA_character_ else format(as.Date(httr::parse_http_date(lm)))
+    },
+    error = function(e) NA_character_
+  )
+
+  state <- nanoparquet::read_parquet(gnrs_snapshot_path("state_province", dir))
+  county <- nanoparquet::read_parquet(gnrs_snapshot_path("county_parish", dir))
+  ids <- unique(c(
+    state$state_province_id[state$is_geoname %in% TRUE],
+    county$county_parish_id[county$is_geoname %in% TRUE]
+  ))
+  points <- gnrs_import_points(archive, ids, quiet = quiet)
+  nanoparquet::write_parquet(points, gnrs_points_path(dir), compression = "gzip")
+
+  provenance <- list(
+    source = "points",
+    full_name = spec$full_name,
+    version = if (is.na(modified)) as.character(Sys.Date()) else modified,
+    url = spec$url,
+    license = spec$license,
+    publisher = spec$publisher,
+    archive = archive,
+    archive_kept = TRUE,
+    bytes = as.numeric(file.size(archive)),
+    md5 = unname(tools::md5sum(archive)),
+    downloaded = as.character(Sys.Date()),
+    n_points = nrow(points)
+  )
+  saveRDS(provenance, gnrs_provenance_path("points", dir))
+  if (!quiet) message("  ", nrow(points), " of ", length(ids), " reference divisions have coordinates")
+
+  gnrs_tidy_points_archive(dir = dir, keep_archive = keep_archive, quiet = quiet)
+  invisible(provenance)
+}
+
+#' Read the coordinates of given GeoNames identifiers out of the gazetteer
+#'
+#' Internal.  Columns of \code{allCountries.txt}: geonameid, name, asciiname,
+#' alternatenames, latitude, longitude, ...  Only the first field is looked
+#' at until a row is known to be wanted.
+#' @keywords internal
+#' @noRd
+gnrs_import_points <- function(archive, ids, quiet = FALSE) {
+  want <- as.character(as.integer(ids))
+  con <- unz(archive, "allCountries.txt")
+  open(con, "r")
+  on.exit(close(con), add = TRUE)
+  kept <- list()
+  n <- 0
+  repeat {
+    lines <- readLines(con, n = 1e6, encoding = "UTF-8", warn = FALSE)
+    if (length(lines) == 0) break
+    n <- n + length(lines)
+    first <- sub("\t.*$", "", lines)
+    hit <- lines[first %in% want]
+    if (length(hit) > 0) kept[[length(kept) + 1]] <- hit
+    if (!quiet) message("  read ", format(n, big.mark = ",", scientific = FALSE), " rows, kept ", sum(lengths(kept)))
+  }
+  lines <- unlist(kept, use.names = FALSE)
+  fields <- strsplit(lines, "\t", fixed = TRUE)
+  out <- data.frame(
+    geonameid = as.integer(vapply(fields, `[`, "", 1)),
+    lat = as.numeric(vapply(fields, `[`, "", 5)),
+    lon = as.numeric(vapply(fields, `[`, "", 6)),
+    stringsAsFactors = FALSE
+  )
+  out <- out[!is.na(out$lat) & !is.na(out$lon), , drop = FALSE]
+  out[!duplicated(out$geonameid), , drop = FALSE]
+}
+
+#' Delete the gazetteer archive once the coordinates are stored
+#' @keywords internal
+#' @noRd
+gnrs_tidy_points_archive <- function(dir = gnrs_cache_dir(), keep_archive = FALSE, quiet = FALSE) {
+  if (isTRUE(keep_archive) || !file.exists(gnrs_points_path(dir))) {
+    return(invisible(FALSE))
+  }
+  archive <- gnrs_points_archive_path(dir)
+  if (!file.exists(archive)) {
+    return(invisible(FALSE))
+  }
+  freed <- file.size(archive)
+  if (unlink(archive) != 0) {
+    return(invisible(FALSE))
+  }
+  record_path <- gnrs_provenance_path("points", dir)
+  if (file.exists(record_path)) {
+    record <- readRDS(record_path)
+    record$archive <- NA_character_
+    record$archive_kept <- FALSE
+    saveRDS(record, record_path)
+  }
+  if (!quiet) {
+    message(
+      "  removed the ", round(freed / 1024^2, 1), " MB GeoNames gazetteer archive; ",
+      "rebuilding 'points' would download it again (keep_archive = TRUE to keep it)."
+    )
+  }
+  invisible(TRUE)
 }
 
 #' Download the GeoNames alternate names and keep the rows that matter
@@ -472,7 +738,8 @@ gnrs_tidy_archive <- function(dir = gnrs_cache_dir(), keep_archive = FALSE, quie
 #' names.  The alternate-name steps match on the GeoNames-typed names; the
 #' wildcard steps on all of them.  Absence is judged as the SQL judges it,
 #' by the pair of identifier and name for the typed additions and by the name
-#' alone for the GADM additions.
+#' alone for the GADM additions.  Names contributed by a GADM layer built over
+#' the snapshot are added last, per division, typed "from GADM" as well.
 #'
 #' @param dir Cache directory.
 #' @param quiet Suppress progress messages?
@@ -592,6 +859,17 @@ gnrs_assemble_names <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
     cbind(level = "county_parish", county_names, stringsAsFactors = FALSE)
   )
   names$id <- as.integer(names$id)
+
+  if (file.exists(gnrs_gadm_names_path(dir))) {
+    layer <- as.data.frame(nanoparquet::read_parquet(gnrs_gadm_names_path(dir)))
+    layer <- data.frame(
+      level = layer$level, id = as.integer(layer$id), name = layer$name,
+      name_type = "from GADM", stringsAsFactors = FALSE
+    )
+    have <- paste(names$level, names$id, names$name, sep = "\r")
+    layer <- layer[!paste(layer$level, layer$id, layer$name, sep = "\r") %in% have, , drop = FALSE]
+    names <- rbind(names, unique(layer))
+  }
   names <- names[order(names$level, names$id, names$name), , drop = FALSE]
   rownames(names) <- NULL
 

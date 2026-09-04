@@ -4,10 +4,15 @@
 \alias{GNRS_local_remove}
 \title{Delete the locally cached GNRS reference data}
 \usage{
-GNRS_local_remove(dir = gnrs_cache_dir(), ask = interactive())
+GNRS_local_remove(dir = gnrs_cache_dir(), sources = NULL, ask = interactive())
 }
 \arguments{
 \item{dir}{Cache directory.  Defaults to the standard user cache location.}
+
+\item{sources}{NULL, the default, removes everything.  Otherwise the
+components to remove, for instance \code{"gadm"} to go back to resolving
+against the service's own GADM identifiers; the reference tables are
+rederived from what remains.}
 
 \item{ask}{Ask for confirmation before deleting? Defaults to TRUE in an
 interactive session.}
@@ -16,11 +21,15 @@ interactive session.}
 TRUE if anything was removed, FALSE otherwise, invisibly.
 }
 \description{
-Removes the downloaded reference data and everything derived from it.  The
-data can be downloaded again at any time with \code{GNRS_local_build()}.
+Removes the downloaded reference data and everything derived from it, or
+just one component of it.  The data can be downloaded again at any time
+with \code{GNRS_local_build()}.
 }
 \examples{
 \dontrun{
 GNRS_local_remove()
+
+# Drop the GADM layer only
+GNRS_local_remove(sources = "gadm")
 }
 }

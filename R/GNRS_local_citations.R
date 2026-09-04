@@ -49,7 +49,8 @@ gnrs_package_citation <- function() {
 #'
 #' The reference political divisions are the web service's own tables, which
 #' it builds from GADM, GeoNames and Natural Earth; the alternate names come
-#' from GeoNames.  A local result is only reproducible if the versions are
+#' from GeoNames; and where the GADM layer was built, the current GADM release
+#' is cited at its version.  A local result is only reproducible if the versions are
 #' reported with it, which is why they come from what was built rather than
 #' from what is current.  \code{GNRS_local_status()} shows the same versions.
 #'
@@ -89,13 +90,23 @@ GNRS_local_citations <- function(dir = gnrs_cache_dir(), bibtex_file = NULL, qui
     spec <- registry[[source]]
     version <- record$version %||% NA_character_
     accessed <- record$downloaded %||% NA_character_
-    citation <- if (source == "gnrs") {
+    citation <- if (source == "gadm") {
+      paste0(
+        "GADM (", substr(accessed, 1, 4), "). Database of Global Administrative Areas, version ",
+        version, ". https://gadm.org/. Accessed ", accessed, "."
+      )
+    } else if (source == "gnrs") {
       paste0(
         "Boyle B. L., Maitner B., Barbosa G. C. & Enquist B. J. Geographic Name ",
         "Resolution Service reference data, ", version,
         ", built from GADM (https://gadm.org/), GeoNames (https://www.geonames.org/) ",
         "and Natural Earth (https://www.naturalearthdata.com/). Botanical Information ",
         "and Ecology Network, https://gnrs.biendata.org/. Accessed ", accessed, "."
+      )
+    } else if (source == "points") {
+      paste0(
+        "GeoNames. Gazetteer (allCountries), file dated ", version,
+        ". https://www.geonames.org/ (CC BY 4.0). Accessed ", accessed, "."
       )
     } else {
       paste0(
