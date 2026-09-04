@@ -19,6 +19,9 @@ Imports:
         tools,
         utils
 Suggests:
+    DBI,
+    RSQLite,
+    sf,
     knitr,
     rmarkdown,
     testthat,
