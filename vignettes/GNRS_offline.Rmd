@@ -276,6 +276,12 @@ often enough, and in an audit of every link, 99.8 percent of the points
 fell inside the linked polygon or one touching it.  The distances are kept
 with the layer, so the check stays in force when the alternate names are
 rebuilt later.  `GNRS_local_status()` lists `"points"` with the others.
+Against GADM 4.1 the check measured 35,761 links in about seven minutes,
+found 67 with the point more than 25 km from the polygon, kept the 42 whose
+names agree outright and withdrew 25 (21 counties, 4 states).  For 22 of
+the 25 the withdrawn identifier is the one the web service records for that
+division, so for those names the service returns a polygon the division's
+own coordinates refute and the local build returns none.
 
 It is not built by default because it changes what a result means: a `gid_2`
 is no longer the one the service would return, and a name can now resolve to a

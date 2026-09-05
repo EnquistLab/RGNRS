@@ -1126,10 +1126,13 @@ gnrs_generic_words <- function() {
 #' and with GeoNames coordinates, the distance in kilometres from the point to
 #' the polygon it was linked to (0 inside).  The polygons are read from the
 #' GeoPackage with sf one country at a time, through a spatial filter around
-#' that country's points, which uses the file's index; the pieces of a
-#' division (GADM's rows are its lowest-level areas) are dissolved first.  A
-#' polygon that lies outside the filtered window is more than a degree from
-#' the point and is recorded as 999 km.
+#' that country's points, which uses the file's index.  GADM's rows are its
+#' lowest-level areas, so a division is a set of pieces: a point is inside
+#' the division when it is inside any piece carrying its identifier, found
+#' with one indexed intersection per country, and only the points inside no
+#' such piece (a few hundred worldwide) have distances computed, to the
+#' nearest of the pieces.  A division with no piece within the filtered
+#' window is more than a degree from the point and is recorded as 999 km.
 #'
 #' @param gpkg Path to the GeoPackage.
 #' @param dir Cache directory holding the reference tables of a first linking
@@ -1182,18 +1185,19 @@ gnrs_measure_links <- function(gpkg, dir = gnrs_cache_dir(), quiet = FALSE) {
     pairs$km[i] <- 999
     if (is.null(polys) || nrow(polys) == 0) next
     pts <- sf::st_as_sf(pairs[i, ], coords = c("lon", "lat"), crs = 4326)
-    for (level in unique(pairs$level[i])) {
-      j <- i[pairs$level[i] == level]
-      column <- if (level == "state_province") "GID_1" else "GID_2"
-      keep <- !is.na(polys[[column]])
-      if (!any(keep)) next
-      dissolved <- suppressMessages(aggregate(polys[keep, column], by = list(gid = polys[[column]][keep]), FUN = function(x) x[1]))
-      hit <- match(pairs$gid[j], dissolved$gid)
-      ok <- !is.na(hit)
-      if (any(ok)) {
-        d <- suppressMessages(sf::st_distance(pts[match(j[ok], i), ], dissolved[hit[ok], ], by_element = TRUE))
-        pairs$km[j[ok]] <- as.numeric(d) / 1000
+    # the pieces each point lies in, one indexed pass
+    inside <- suppressMessages(sf::st_intersects(pts, polys))
+    for (k in seq_along(i)) {
+      column <- if (pairs$level[i[k]] == "state_province") "GID_1" else "GID_2"
+      gid <- pairs$gid[i[k]]
+      if (any(polys[[column]][inside[[k]]] %in% gid)) {
+        pairs$km[i[k]] <- 0
+        next
       }
+      pieces <- which(polys[[column]] %in% gid)
+      if (length(pieces) == 0) next
+      d <- suppressMessages(sf::st_distance(pts[k, ], polys[pieces, ]))
+      pairs$km[i[k]] <- min(as.numeric(d)) / 1000
     }
     if (!quiet) message("  ", iso3, ": ", length(i), " divisions measured (", format(round(as.numeric(difftime(Sys.time(), t0, units = "mins")), 1)), " min)")
   }

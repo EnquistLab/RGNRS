@@ -1,4 +1,7 @@
 # RGNRS
+
+  [![R-CMD-check](https://github.com/EnquistLab/RGNRS/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EnquistLab/RGNRS/actions/workflows/R-CMD-check.yaml)
+
 R package for accessing the Geographic Name Resolution Service
 
 ## Description
