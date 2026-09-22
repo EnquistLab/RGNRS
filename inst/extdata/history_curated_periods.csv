@@ -1,0 +1,30 @@
+gwcode,from,to,entity_key,note,basis
+365,1886-01-01,1922-12-29,RU,Russian Empire and Soviet Russia: same continuing state as the Russian Federation (rename rule),curated
+365,1922-12-30,1991-12-25,SUHH,USSR,curated
+365,1991-12-26,2019-12-31,RU,Russian Federation,curated
+345,1918-12-01,1992-04-26,YUCS,Yugoslavia to the break-up,curated
+345,1992-04-27,2006-06-02,CSXX,FR Yugoslavia / Serbia and Montenegro,curated
+265,1945-05-08,1990-10-02,DDDE,CShapes starts the unit at the Soviet occupation zone (1945); the GDR was founded 1949-10-07,curated
+315,1918-11-11,1992-12-31,CSHH,Czechoslovakia,curated
+680,1967-11-30,1990-05-21,YDYE,South Yemen,curated
+678,1918-10-30,2019-12-31,YE,Yemen Arab Republic continues as Yemen after unification (ISO YE retained),curated
+816,1954-05-01,2019-12-31,VN,Democratic Republic of Vietnam continues as Vietnam (rename rule),curated
+817,1954-05-01,1975-04-30,VNRV,Republic of Vietnam,curated
+515,1920-06-28,1962-06-30,RUBI,Ruanda-Urundi,curated
+255,1886-01-01,1945-05-07,DE,German Empire / Reich: same continuing state as Germany (rename rule),curated
+6,1886-01-01,2019-12-31,PR,territory still exists,curated
+65,1886-01-01,2019-12-31,GP,territory still exists,curated
+66,1886-01-01,2019-12-31,MQ,territory still exists,curated
+120,1886-01-01,2019-12-31,GF,territory still exists,curated
+585,1886-01-01,2019-12-31,RE,territory still exists,curated
+930,1886-01-01,2019-12-31,NC,territory still exists,curated
+960,1903-05-19,2019-12-31,PF,territory still exists,curated
+347,2008-02-20,2019-12-31,XK,Kosovo,curated
+609,1958-10-10,1975-11-13,EH,Spanish Sahara is today's Western Sahara territory,curated
+6511,1948-05-14,1967-06-09,PS,Gaza under Egyptian administration; territory of today's PS,curated
+6631,1948-05-14,1967-06-09,PS,West Bank under Jordanian administration; territory of today's PS,curated
+665,1920-04-26,1948-05-13,CSH665,Mandatory Palestine,curated
+3,1886-01-01,1959-01-02,CSH3,Territory of Alaska,curated
+4,1898-07-06,1959-08-20,CSH4,Territory of Hawaii,curated
+21,1886-01-01,1948-07-21,CSH21,Newfoundland,curated
+730,1886-01-01,1945-08-14,CSH730,Korea before partition,curated

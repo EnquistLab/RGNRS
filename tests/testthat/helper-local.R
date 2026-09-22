@@ -153,3 +153,21 @@ gnrs_test_resolve <- function(dir, country, state = "", county = "", ...) {
   )
   GNRS_local(df, dir = dir, build_missing = FALSE, quiet = TRUE, ...)
 }
+
+# CShapes for tests that need the history component. Nothing derived from CShapes ships
+# with the package (CC BY-NC-SA 4.0; the package is MIT), so the history component is
+# assembled from the user's own CShapes. For tests that copy is built ONCE per session
+# from the cshapes package (no download) and copied into each test cache; a test that
+# needs it skips where cshapes, countrycode or sf is not installed.
+gnrs_test_cshapes <- function(dir) {
+  testthat::skip_if_not_installed("cshapes")
+  testthat::skip_if_not_installed("countrycode")
+  testthat::skip_if_not_installed("sf")
+  src <- file.path(tempdir(), "gnrs-test-cshapes")
+  if (!file.exists(gnrs_cshapes_versions_path(src))) {
+    dir.create(src, recursive = TRUE, showWarnings = FALSE)
+    gnrs_build_cshapes(dir = src, quiet = TRUE)
+  }
+  file.copy(list.files(src, pattern = "^cshapes-", full.names = TRUE), dir, overwrite = TRUE)
+  invisible(dir)
+}

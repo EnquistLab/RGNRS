@@ -1,0 +1,22 @@
+entity_key,name,geonameid,iso3166_1,iso3166_3,valid_from,valid_to,kind,note
+SUHH,Union of Soviet Socialist Republics,8354411,,SUHH,1922-12-30,1991-12-25,historical,Treaty on the Creation of the USSR to dissolution
+CSHH,Czechoslovakia,8505031,,CSHH,1918-10-28,1992-12-31,historical,including the Czechoslovak Socialist Republic
+DDDE,German Democratic Republic,8354410,,DDDE,1949-10-07,1990-10-02,historical,absorbed by the Federal Republic of Germany
+YUCS,"Yugoslavia (Kingdom of Serbs, Croats and Slovenes; Kingdom of Yugoslavia; SFR Yugoslavia)",,,YUCS,1918-12-01,1992-04-26,historical,"no GeoNames PCLH; ISO YUCS also covered FR Yugoslavia, modelled separately as CSXX"
+CSXX,Serbia and Montenegro (Federal Republic of Yugoslavia to 2003),8505033,,CSXX,1992-04-27,2006-06-03,historical,GeoNames also has FR Yugoslavia as 7500737; one state renamed in 2003
+YDYE,People's Democratic Republic of Yemen,8505034,,YDYE,1967-11-30,1990-05-21,historical,merged with the Yemen Arab Republic
+VNRV,Republic of Vietnam,11608491,,,1955-10-26,1975-04-30,historical,synthetic key; absorbed into Vietnam
+ANHH,Netherlands Antilles,8505032,,ANHH,1954-12-15,2010-10-09,historical,Aruba separated 1986
+RUBI,Ruanda-Urundi,11612757,,,1922-07-20,1962-06-30,historical,synthetic key; Belgian mandate
+GEHH,Gilbert and Ellice Islands,,,GEHH,1892-05-27,1975-12-31,historical,split into Kiribati and Tuvalu
+PCHH,Trust Territory of the Pacific Islands,,,PCHH,1947-07-18,1994-10-01,historical,"divided into FM, MH, MP and PW"
+SKIN,Sikkim,,,SKIN,1642-01-01,1975-05-16,historical,absorbed by India
+PZPA,Panama Canal Zone,,,PZPA,1903-11-18,1979-09-30,historical,returned to Panama
+NTHH,Saudi Arabian-Iraqi Neutral Zone,,,NTHH,1922-12-02,1991-12-26,historical,divided between SA and IQ
+CTKI,Canton and Enderbury Islands,,,CTKI,1939-04-06,1979-07-12,historical,to Kiribati
+FQHH,French Southern and Antarctic Territories (former code),,,FQHH,,1979-12-31,historical,now AQ and TF
+CSH665,Mandatory Palestine,,,,1920-04-26,1948-05-14,historical,synthetic key from CShapes 665
+CSH3,Territory of Alaska,,,,1867-10-18,1959-01-02,historical,US territory; a US state since 1959
+CSH4,Territory of Hawaii,,,,1898-07-07,1959-08-20,historical,US territory; a US state since 1959
+CSH21,Dominion of Newfoundland,,,,1907-09-26,1949-03-31,historical,joined Canada
+CSH730,Korea (before partition),,,,,1945-08-14,historical,Korean Empire / Japanese Korea; successors KP and KR

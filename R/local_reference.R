@@ -262,10 +262,16 @@ gnrs_scope <- function(bb, what, parent = NA, index = FALSE) {
   co <- bb$country
 
   scope <- switch(what,
-    # Every country, by its standard name
-    country_std = pick(co, seq_len(nrow(co)), "country_id", "country"),
-    # Every country's GeoNames alternate names
-    country_alt = pick(bb$country_names, which(bb$country_names$original), "id", "name"),
+    # Every country, by its standard name.  Rows flagged fuzzy = FALSE (added by the
+    # history component) take part in exact matching only.
+    country_std = pick(co, if (is.null(co$fuzzy)) seq_len(nrow(co)) else which(co$fuzzy %in% TRUE),
+                       "country_id", "country"),
+    # Every country's GeoNames alternate names (and, with the history component,
+    # historical names flagged for fuzzy matching)
+    country_alt = pick(bb$country_names,
+                       which(bb$country_names$original &
+                         (if (is.null(bb$country_names$fuzzy)) TRUE else bb$country_names$fuzzy %in% TRUE)),
+                       "id", "name"),
     # Countries that are subdivisions of the given country, by standard name
     sac_std = pick(co, which(!is.na(co$alt_country_id) & co$alt_country_id == parent), "country_id", "country"),
     # Their alternate names, of every type

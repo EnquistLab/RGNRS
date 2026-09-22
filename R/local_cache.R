@@ -85,6 +85,37 @@ gnrs_builtin_registry <- function() {
       download_mb = 195,
       disk_mb = 8
     ),
+    history = list(
+      source = "history",
+      full_name = "Historical political divisions (entities, names, lineage)",
+      publisher = "Botanical Information and Ecology Network",
+      url = "shipped with the package",
+      license = "Curated tables: package licence; names from GeoNames (CC BY 4.0), CShapes 2.0 (CC BY-NC-SA 4.0), Unicode CLDR, ISO 3166-3 (Debian iso-codes)",
+      citation = paste(
+        "Historical country entities, names and lineage compiled for GNRS from CShapes 2.0",
+        "(Schvitz et al. 2022, Journal of Conflict Resolution 66: 144-161), GeoNames, Unicode CLDR",
+        "and ISO 3166-3."
+      ),
+      # Built from tables shipped with the package; nothing is downloaded
+      download_mb = 0,
+      disk_mb = 1
+    ),
+    cshapes = list(
+      source = "cshapes",
+      full_name = "CShapes 2.0 historical state boundaries",
+      publisher = "International Conflict Research, ETH Zurich",
+      version = "2.0",
+      url = "https://icr.ethz.ch/data/cshapes/CShapes-2.0.geojson",
+      license = "CC BY-NC-SA 4.0",
+      citation = paste(
+        "Schvitz G., Girardin L., Ruegger S., Weidmann N. B., Cederman L.-E. & Gleditsch K. S.",
+        "(2022). Mapping the International System, 1886-2019: The CShapes 2.0 Dataset.",
+        "Journal of Conflict Resolution 66(1): 144-161."
+      ),
+      # Read from the cshapes package when installed; otherwise the GeoJSON
+      download_mb = 60,
+      disk_mb = 25
+    ),
     points = list(
       source = "points",
       full_name = "GeoNames coordinates",
@@ -183,6 +214,8 @@ gnrs_is_built <- function(source, dir = gnrs_cache_dir()) {
     gadm = file.exists(gnrs_gadm_path(dir)),
     geonames = file.exists(gnrs_altnames_path(dir)),
     points = file.exists(gnrs_points_path(dir)),
+    history = file.exists(gnrs_history_path("entities", dir)),
+    cshapes = file.exists(gnrs_cshapes_versions_path(dir)),
     FALSE
   )
 }

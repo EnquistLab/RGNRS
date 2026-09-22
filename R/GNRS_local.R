@@ -24,9 +24,28 @@
 #'   the size and asks first.  In a script it is therefore FALSE and nothing is
 #'   downloaded silently: the function reports what is missing and the call that
 #'   would fix it.  Set it to TRUE to allow an unattended build.
+#' @param history Historical political divisions: \code{"all"} (the default;
+#'   also matches former countries such as the USSR, Yugoslavia or
+#'   Czechoslovakia, flagging such matches, so a record named with a political
+#'   division that was ever accurate resolves), \code{"current"} (today's
+#'   divisions only, as the web service does), or \code{"at_date"} (as "all",
+#'   but a former country is accepted only if it existed at the record's date,
+#'   taken from an optional \code{date} column of years or ISO dates; a name
+#'   marked as former, such as "Former USSR", is accepted for any later date,
+#'   and a state or county that resolves within a successor is kept and flagged
+#'   whatever the date).  Needs the \code{"history"} component, which is built
+#'   from tables shipped with the package and downloads nothing.
+#' @param tolerance_years With \code{history = "at_date"}, how many years
+#'   either side of a former country's existence a record date may fall.
 #' @param quiet Suppress progress messages?
 #' @return A data.frame with the same columns as \code{GNRS()}, one row per
-#'   input row in input order.  Scores are numeric rather than the character
+#'   input row in input order.  With \code{history} other than "current",
+#'   further columns: \code{entity_key}, \code{is_historical},
+#'   \code{entity_valid_from}, \code{entity_valid_to}, \code{successors} (the
+#'   current countries descending from a matched former country),
+#'   \code{subnational_resolved_in} and \code{subnational_status} (a state or
+#'   county given under a former country is looked up within its successors;
+#'   "unverifiable" if none contains it), and \code{date_check}.  Scores are numeric rather than the character
 #'   strings the web service returns; identifiers are character, as the web
 #'   service returns them; empty values are "".
 #' @note \strong{This is a new implementation and should be treated as beta.}
@@ -67,7 +86,10 @@ GNRS_local <- function(political_division_dataframe,
                        alternate_names = TRUE,
                        dir = gnrs_cache_dir(),
                        build_missing = interactive(),
+                       history = c("all", "current", "at_date"),
+                       tolerance_years = 1,
                        quiet = FALSE) {
+  history <- match.arg(history)
   if (!inherits(political_division_dataframe, "data.frame")) {
     stop("political_division_dataframe should be a data.frame", call. = FALSE)
   }
@@ -81,9 +103,44 @@ GNRS_local <- function(political_division_dataframe,
 
   input <- gnrs_check_input(political_division_dataframe)
 
+  dates <- if (history == "at_date") {
+    if (!"date" %in% names(political_division_dataframe)) {
+      message("history = \"at_date\" but no date column: former countries are matched without a date check.")
+      NULL
+    } else {
+      gnrs_parse_record_date(political_division_dataframe$date)
+    }
+  } else {
+    NULL
+  }
+
   sources <- if (alternate_names) c("gnrs", "geonames") else "gnrs"
   if (!gnrs_require_sources(sources, dir = dir, build_missing = build_missing, quiet = quiet)) {
     return(invisible(NULL))
+  }
+  # The history component is assembled from the curation shipped with the package and
+  # the user's own copy of CShapes (nothing derived from CShapes ships: it is CC BY-NC-SA
+  # 4.0 and the package is MIT). With the cshapes package installed that downloads
+  # nothing, so it happens on first use as it always did; without it CShapes has to be
+  # downloaded, which follows build_missing like every other download.
+  if (history != "current" && !gnrs_is_built("history", dir)) {
+    need <- c("sf", "countrycode")[!vapply(c("sf", "countrycode"), requireNamespace, logical(1), quietly = TRUE)]
+    if (length(need)) {
+      message("history = \"", history, "\" needs the ", paste(need, collapse = " and "),
+              " package", if (length(need) > 1) "s" else "", ". Install ",
+              if (length(need) > 1) "them" else "it", ", or call again with history = \"current\".")
+      return(invisible(NULL))
+    }
+    if (!gnrs_is_built("cshapes", dir)) {
+      if (requireNamespace("cshapes", quietly = TRUE)) {
+        if (!quiet) message("Building the CShapes component from the cshapes package (no download) ...")
+        gnrs_build_cshapes(dir = dir, quiet = TRUE)
+      } else if (!gnrs_require_sources("cshapes", dir = dir, build_missing = build_missing, quiet = quiet)) {
+        return(invisible(NULL))
+      }
+    }
+    if (!quiet) message("Building the history component (no download) ...")
+    gnrs_build_history(dir = dir, quiet = TRUE)
   }
   if (!alternate_names && gnrs_is_built("geonames", dir)) {
     # Built but not wanted: the name table on disk includes the GeoNames
@@ -113,10 +170,25 @@ GNRS_local <- function(political_division_dataframe,
   if (!quiet && nrow(u) > 0) {
     message("Resolving ", nrow(u), " distinct political division", if (nrow(u) == 1) "" else "s", " ...")
   }
-  resolved <- gnrs_resolve(u, bb, threshold = threshold)
-
   m <- match(key, key[distinct])
-  gnrs_build_output(resolved[m, , drop = FALSE], input, threshold)
+  if (history == "current") {
+    resolved <- gnrs_resolve(u, bb, threshold = threshold)
+    return(gnrs_build_output(resolved[m, , drop = FALSE], input, threshold))
+  }
+
+  r <- gnrs_resolve_history(u, m, dates, bb, dir = dir, threshold = threshold,
+                            history = history, tolerance_years = tolerance_years)
+  out <- gnrs_build_output(r, input, threshold)
+  chr <- function(x) { x <- as.character(x); x[is.na(x)] <- ""; x }
+  out$entity_key <- chr(r$entity_key)
+  out$is_historical <- r$is_historical
+  out$entity_valid_from <- chr(r$entity_valid_from)
+  out$entity_valid_to <- chr(r$entity_valid_to)
+  out$successors <- chr(r$successors)
+  out$subnational_resolved_in <- chr(r$subnational_resolved_in)
+  out$subnational_status <- chr(r$subnational_status)
+  out$date_check <- chr(r$date_check)
+  out
 }
 
 #' Check the submitted data.frame and put it in a standard form

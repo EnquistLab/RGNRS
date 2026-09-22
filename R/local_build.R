@@ -111,6 +111,10 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
   # The reference tables come first whatever order was given, then the
   # alternate names and the coordinates, then the GADM layer, whose linking
   # uses the alternate names and the coordinates when it has them
+  # The history component checks its names against the assembled name table, so it
+  # is built last; CShapes geometry is independent of the other components
+  history_wanted <- "history" %in% sources
+  cshapes_wanted <- "cshapes" %in% sources
   sources <- intersect(c("gnrs", "geonames", "points", "gadm"), sources)
 
   if (!dir.exists(dir)) {
@@ -158,6 +162,16 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
   # build
   if (gnrs_is_built("gnrs", dir)) {
     gnrs_assemble_names(dir = dir, quiet = quiet)
+  }
+  # the history component is derived from CShapes at build time, so it needs CShapes
+  # built even when only "history" was asked for (without rebuilding an existing copy)
+  if ((cshapes_wanted && (overwrite || !gnrs_is_built("cshapes", dir))) ||
+      (history_wanted && !gnrs_is_built("cshapes", dir))) {
+    gnrs_build_cshapes(dir = dir, quiet = quiet)
+  }
+  if (history_wanted && (overwrite || !gnrs_is_built("history", dir))) {
+    if (!quiet) message("Building the history component ...")
+    gnrs_build_history(dir = dir, quiet = quiet)
   }
   gnrs_forget_backbone()
 

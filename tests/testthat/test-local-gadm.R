@@ -114,6 +114,7 @@ test_that("GADM divisions link by identifier, HASC and name, and the rest are ad
 
 test_that("a built layer changes what GNRS_local() reports, and can be removed again", {
   dir <- gnrs_test_backbone()
+  gnrs_test_cshapes(dir)   # GNRS_local() defaults to history = "all"
   nanoparquet::write_parquet(gnrs_test_gadm(), gnrs_gadm_path(dir), compression = "gzip")
   saveRDS(list(source = "gadm", version = "test", downloaded = "2024-06-01"), gnrs_provenance_path("gadm", dir))
   gnrs_finalize_reference(dir, quiet = TRUE)
