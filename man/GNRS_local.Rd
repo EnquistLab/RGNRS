@@ -10,9 +10,9 @@ GNRS_local(
   alternate_names = TRUE,
   dir = gnrs_cache_dir(),
   build_missing = interactive(),
+  quiet = FALSE,
   history = c("all", "current", "at_date"),
-  tolerance_years = 1,
-  quiet = FALSE
+  tolerance_years = 1
 )
 }
 \arguments{
@@ -39,6 +39,8 @@ the size and asks first.  In a script it is therefore FALSE and nothing is
 downloaded silently: the function reports what is missing and the call that
 would fix it.  Set it to TRUE to allow an unattended build.}
 
+\item{quiet}{Suppress progress messages?}
+
 \item{history}{Historical political divisions: \code{"all"} (the default;
 also matches former countries such as the USSR, Yugoslavia or
 Czechoslovakia, flagging such matches, so a record named with a political
@@ -58,8 +60,6 @@ nothing beyond the ordinary components is needed.}
 \item{tolerance_years}{With \code{history = "at_date"}, how many years
 either side of a former country's existence a record date may fall.  A
 single non-negative number.}
-
-\item{quiet}{Suppress progress messages?}
 }
 \value{
 A data.frame with the same columns as \code{GNRS()}, one row per

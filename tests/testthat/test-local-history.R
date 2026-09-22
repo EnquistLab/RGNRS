@@ -136,3 +136,18 @@ test_that("a component counts as built only when every one of its files is there
   expect_false(gnrs_is_built("history", partial))
   expect_false(gnrs_is_built("cshapes", partial))
 })
+
+test_that("without alternate names a former country is found by its own name only", {
+  with_alt <- gnrs_test_resolve(dir, c("USSR", "Union of Soviet Socialist Republics"))
+  expect_equal(with_alt$entity_key, c("SUHH", "SUHH"))
+  without <- gnrs_test_resolve(dir, c("USSR", "Union of Soviet Socialist Republics"), alternate_names = FALSE)
+  expect_false(without$entity_key[1] == "SUHH")
+  expect_equal(without$entity_key[2], "SUHH")
+})
+
+test_that("the history arguments come after quiet, so positional callers still work", {
+  df <- data.frame(user_id = 1, country = "Mexico", state_province = "", county_parish = "")
+  r <- GNRS_local(df, 0.5, TRUE, dir, FALSE, TRUE)
+  expect_equal(r$country, "Mexico")
+  expect_equal(names(formals(GNRS_local))[6], "quiet")
+})

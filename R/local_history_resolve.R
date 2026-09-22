@@ -149,9 +149,14 @@ gnrs_history <- function(dir = gnrs_cache_dir()) {
 #' alternate names, so the unchanged cascade finds them by exact or fuzzy
 #' alternate name.  They carry no ISO or GADM codes.  The copy has its own match
 #' cache, so indexes built for the current-only backbone are not reused.
+#'
+#' With \code{alternate_names = FALSE} only each entity's own name and its
+#' ISO 3166-3 codes are appended, as \code{gnrs_without_alternate_names()}
+#' keeps only the current divisions' own names: the curated, CShapes and
+#' GeoNames aliases are alternate names in the same sense.
 #' @keywords internal
 #' @noRd
-gnrs_backbone_with_history <- function(bb, dir = gnrs_cache_dir()) {
+gnrs_backbone_with_history <- function(bb, dir = gnrs_cache_dir(), alternate_names = TRUE) {
   h <- gnrs_history(dir)
   he <- h$entities[h$entities$kind == "historical", , drop = FALSE]
   co <- bb$country
@@ -177,11 +182,15 @@ gnrs_backbone_with_history <- function(bb, dir = gnrs_cache_dir()) {
     level = "country", id = h$names$entity_id, name = h$names$name,
     name_type = paste("historical:", h$names$source), stringsAsFactors = FALSE
   )
-  new_names <- new_names[!is.na(new_names$id), , drop = FALSE]
+  keep <- !is.na(new_names$id)
+  if (!alternate_names) {
+    keep <- keep & h$names$source %in% c("entity name", "ISO 3166-3")
+  }
+  new_names <- new_names[keep, , drop = FALSE]
   new_names$lower <- gnrs_lower(new_names$name)
   new_names$original <- TRUE
   # per-name decision shipped in history_names.csv (data-raw/history_crosswalk.R)
-  new_names$fuzzy <- as.logical(h$names$fuzzy[!is.na(h$names$entity_id)])
+  new_names$fuzzy <- as.logical(h$names$fuzzy[keep])
   cn$fuzzy <- TRUE
   for (col in setdiff(names(cn), names(new_names))) new_names[[col]] <- NA
   new_names <- new_names[, names(cn), drop = FALSE]
@@ -274,9 +283,9 @@ gnrs_current_successors <- function(entity_id, h) {
 #' result is "unverifiable".
 #' @keywords internal
 #' @noRd
-gnrs_resolve_history <- function(u, m, dates, bb_current, dir, threshold, history, tolerance_years = 1) {
+gnrs_resolve_history <- function(u, m, dates, bb_current, dir, threshold, history, tolerance_years = 1, alternate_names = TRUE) {
   h <- gnrs_history(dir)
-  bb_all <- gnrs_backbone_with_history(bb_current, dir)
+  bb_all <- gnrs_backbone_with_history(bb_current, dir, alternate_names = alternate_names)
 
   old <- gnrs_env$backbone
   on.exit(gnrs_env$backbone <- old, add = TRUE)

@@ -49,7 +49,7 @@ is kept in the standard user cache directory, and can be removed again with
 \code{GNRS_local_remove()}.
 }
 \details{
-Two components are fetched by default, and two more can be added.
+Two components are fetched by default, and four more can be added.
 \code{"gnrs"} is the web service's own
 reference tables of countries, states/provinces and counties/parishes,
 fetched through its API in a few small requests: every political division it
@@ -91,6 +91,17 @@ an identifier or a code alone when the point lies more than 25 km away.
 A link whose names agree outright is kept whatever the point says, since
 GeoNames places its points near an edge often enough.  Build it before
 \code{"gadm"} (the order is arranged whatever order is given).
+
+\code{"cshapes"} and \code{"history"} serve the historical modes of
+\code{GNRS_local()}.  The first is CShapes 2.0, the boundaries of every
+independent state and dependency from 1886 to 2019, read from the
+\code{cshapes} package when it is installed and otherwise downloaded from
+its publisher (about 60 MB; CC BY-NC-SA 4.0, so nothing derived from it
+ships with the package).  The second assembles the historical entities,
+their names, codes and lineage from tables shipped with the package and
+from CShapes, and prunes its names against the current name table, so it
+is built last and rebuilt whenever a component it draws on is rebuilt.
+Asking for \code{"history"} builds \code{"cshapes"} if it is missing.
 
 Each component is recorded with its version, so that results obtained locally
 can be cited as precisely as results from the web service.  Use

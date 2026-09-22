@@ -24,6 +24,7 @@
 #'   the size and asks first.  In a script it is therefore FALSE and nothing is
 #'   downloaded silently: the function reports what is missing and the call that
 #'   would fix it.  Set it to TRUE to allow an unattended build.
+#' @param quiet Suppress progress messages?
 #' @param history Historical political divisions: \code{"all"} (the default;
 #'   also matches former countries such as the USSR, Yugoslavia or
 #'   Czechoslovakia, flagging such matches, so a record named with a political
@@ -42,7 +43,6 @@
 #' @param tolerance_years With \code{history = "at_date"}, how many years
 #'   either side of a former country's existence a record date may fall.  A
 #'   single non-negative number.
-#' @param quiet Suppress progress messages?
 #' @return A data.frame with the same columns as \code{GNRS()}, one row per
 #'   input row in input order.  With \code{history} other than "current",
 #'   further columns: \code{entity_key}, \code{is_historical},
@@ -91,9 +91,9 @@ GNRS_local <- function(political_division_dataframe,
                        alternate_names = TRUE,
                        dir = gnrs_cache_dir(),
                        build_missing = interactive(),
+                       quiet = FALSE,
                        history = c("all", "current", "at_date"),
-                       tolerance_years = 1,
-                       quiet = FALSE) {
+                       tolerance_years = 1) {
   history <- match.arg(history)
   if (!inherits(political_division_dataframe, "data.frame")) {
     stop("political_division_dataframe should be a data.frame", call. = FALSE)
@@ -186,7 +186,8 @@ GNRS_local <- function(political_division_dataframe,
   }
 
   r <- gnrs_resolve_history(u, m, dates, bb, dir = dir, threshold = threshold,
-                            history = history, tolerance_years = tolerance_years)
+                            history = history, tolerance_years = tolerance_years,
+                            alternate_names = alternate_names)
   out <- gnrs_build_output(r, input, threshold)
   chr <- function(x) { x <- as.character(x); x[is.na(x)] <- ""; x }
   out$entity_key <- chr(r$entity_key)

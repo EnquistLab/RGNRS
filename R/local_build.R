@@ -6,7 +6,7 @@
 #' is kept in the standard user cache directory, and can be removed again with
 #' \code{GNRS_local_remove()}.
 #'
-#' Two components are fetched by default, and two more can be added.
+#' Two components are fetched by default, and four more can be added.
 #' \code{"gnrs"} is the web service's own
 #' reference tables of countries, states/provinces and counties/parishes,
 #' fetched through its API in a few small requests: every political division it
@@ -48,6 +48,17 @@
 #' A link whose names agree outright is kept whatever the point says, since
 #' GeoNames places its points near an edge often enough.  Build it before
 #' \code{"gadm"} (the order is arranged whatever order is given).
+#'
+#' \code{"cshapes"} and \code{"history"} serve the historical modes of
+#' \code{GNRS_local()}.  The first is CShapes 2.0, the boundaries of every
+#' independent state and dependency from 1886 to 2019, read from the
+#' \code{cshapes} package when it is installed and otherwise downloaded from
+#' its publisher (about 60 MB; CC BY-NC-SA 4.0, so nothing derived from it
+#' ships with the package).  The second assembles the historical entities,
+#' their names, codes and lineage from tables shipped with the package and
+#' from CShapes, and prunes its names against the current name table, so it
+#' is built last and rebuilt whenever a component it draws on is rebuilt.
+#' Asking for \code{"history"} builds \code{"cshapes"} if it is missing.
 #'
 #' Each component is recorded with its version, so that results obtained locally
 #' can be cited as precisely as results from the web service.  Use
@@ -126,6 +137,9 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
   }
 
+  # the history component prunes its names against the assembled name table,
+  # so it is rebuilt when any component that table draws on was rebuilt here
+  dependency_rebuilt <- FALSE
   for (source in sources) {
     if (gnrs_is_built(source, dir) && !overwrite) {
       if (!quiet) message("Source '", source, "' is already built; skipping.")
@@ -145,6 +159,7 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
       next
     }
 
+    dependency_rebuilt <- TRUE
     if (source == "gnrs") {
       gnrs_build_reference(dir = dir, url = url, quiet = quiet)
     } else if (source == "gadm") {
@@ -176,10 +191,10 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
     gnrs_build_cshapes(dir = dir, quiet = quiet)
     cshapes_rebuilt <- TRUE
   }
-  # a history component already built is derived from the CShapes that was
-  # replaced, so it is rebuilt with it
+  # a history component already built is derived from the CShapes and the
+  # name table that were just replaced, so it is rebuilt with them
   if ((history_wanted && (overwrite || !gnrs_is_built("history", dir))) ||
-      (cshapes_rebuilt && gnrs_is_built("history", dir))) {
+      ((cshapes_rebuilt || dependency_rebuilt) && gnrs_is_built("history", dir))) {
     if (!quiet) message("Building the history component ...")
     gnrs_build_history(dir = dir, quiet = quiet)
   }
