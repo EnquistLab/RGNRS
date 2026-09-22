@@ -158,17 +158,23 @@ gnrs_history_assemble <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
   gn_names <- merge(gn, entities[!is.na(entities$geonameid), c("geonameid", "entity_key")], by = "geonameid")
   gn_names <- gn_names[nzchar(gn_names$name), c("entity_key", "name")]
   gn_names$source <- "GeoNames (CC BY 4.0)"
-  iso_names <- unique(data.frame(entity_key = codes$entity_key, name = codes$name, source = "ISO 3166-3",
+  # the former codes themselves ("SUHH", "ANHH"), which a record may carry in place
+  # of a name, and the names ISO lists them under
+  iso_codes <- unique(data.frame(entity_key = codes$entity_key, name = codes$code, source = "ISO 3166-3",
                                  stringsAsFactors = FALSE))
-  hnames <- rbind(ent_names, curated_names, cs_names, gn_names, iso_names)
+  iso_names <- unique(data.frame(entity_key = codes$entity_key, name = codes$name, source = "ISO 3166-3 name",
+                                 stringsAsFactors = FALSE))
+  hnames <- rbind(ent_names, curated_names, cs_names, gn_names, iso_codes, iso_names)
   hnames <- hnames[!duplicated(hnames[, c("entity_key", "name")]), , drop = FALSE]
   hnames <- hnames[nzchar(trimws(hnames$name)), , drop = FALSE]
   # fuzzy: may this name take part in GNRS fuzzy matching? Exact-only for names of
   # synthetic entities made from CShapes colonies (obscure names that drew fuzzy matches
   # from current countries on GBIF data: "Northern Rhodesia> Zambia" -> "Northeastern
   # Rhodesia") and for short former names that are near-duplicates of other entities'
+  # ... and never for a code, which is matched whole or not at all
   hnames$fuzzy <- !grepl("^CSH[0-9]+$", hnames$entity_key) &
-    !(hnames$name %in% gnrs_history_exact_only_names())
+    !(hnames$name %in% gnrs_history_exact_only_names()) &
+    hnames$source != "ISO 3166-3"
   bad <- setdiff(hnames$entity_key, entities$entity_key)
   if (length(bad)) stop("History names reference unknown entities: ", paste(bad, collapse = ", "), call. = FALSE)
 

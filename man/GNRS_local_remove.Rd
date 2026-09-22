@@ -12,7 +12,9 @@ GNRS_local_remove(dir = gnrs_cache_dir(), sources = NULL, ask = interactive())
 \item{sources}{NULL, the default, removes everything.  Otherwise the
 components to remove, for instance \code{"gadm"} to go back to resolving
 against the service's own GADM identifiers; the reference tables are
-rederived from what remains.}
+rederived from what remains, and a built \code{"history"} component is
+rebuilt against them, or removed along with \code{"cshapes"}, which it
+is derived from.}
 
 \item{ask}{Ask for confirmation before deleting? Defaults to TRUE in an
 interactive session.}

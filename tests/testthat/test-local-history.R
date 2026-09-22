@@ -145,6 +145,29 @@ test_that("without alternate names a former country is found by its own name onl
   expect_equal(without$entity_key[2], "SUHH")
 })
 
+test_that("former ISO 3166-3 codes resolve, with or without alternate names, and never fuzzily", {
+  r <- gnrs_test_resolve(dir, c("SUHH", "ANHH", "SUHX"))
+  expect_equal(r$entity_key[1:2], c("SUHH", "ANHH"))
+  expect_false(r$entity_key[3] %in% c("SUHH", "ANHH"))
+  strict <- gnrs_test_resolve(dir, c("SUHH", "ANHH"), alternate_names = FALSE)
+  expect_equal(strict$entity_key, c("SUHH", "ANHH"))
+})
+
+test_that("removing a name source rebuilds the history component, and removing CShapes removes it", {
+  # its own cache: the default would rebuild and then strip the file's dir
+  rm_dir <- gnrs_test_backbone(file.path(tempdir(), "gnrs-test-remove"))
+  gnrs_test_cshapes(rm_dir)
+  gnrs_build_history(dir = rm_dir, quiet = TRUE)
+  before <- file.mtime(gnrs_history_path("names", rm_dir))
+  Sys.sleep(1.1)
+  expect_true(GNRS_local_remove(rm_dir, sources = "geonames", ask = FALSE))
+  expect_true(gnrs_is_built("history", rm_dir))
+  expect_gt(as.numeric(file.mtime(gnrs_history_path("names", rm_dir))), as.numeric(before))
+  expect_true(GNRS_local_remove(rm_dir, sources = "cshapes", ask = FALSE))
+  expect_false(gnrs_is_built("cshapes", rm_dir))
+  expect_false(gnrs_is_built("history", rm_dir))
+})
+
 test_that("the history arguments come after quiet, so positional callers still work", {
   df <- data.frame(user_id = 1, country = "Mexico", state_province = "", county_parish = "")
   r <- GNRS_local(df, 0.5, TRUE, dir, FALSE, TRUE)

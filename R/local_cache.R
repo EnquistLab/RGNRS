@@ -333,7 +333,9 @@ GNRS_local_status <- function(dir = gnrs_cache_dir()) {
 #' @param sources NULL, the default, removes everything.  Otherwise the
 #'   components to remove, for instance \code{"gadm"} to go back to resolving
 #'   against the service's own GADM identifiers; the reference tables are
-#'   rederived from what remains.
+#'   rederived from what remains, and a built \code{"history"} component is
+#'   rebuilt against them, or removed along with \code{"cshapes"}, which it
+#'   is derived from.
 #' @param ask Ask for confirmation before deleting? Defaults to TRUE in an
 #'   interactive session.
 #' @return TRUE if anything was removed, FALSE otherwise, invisibly.
@@ -387,9 +389,18 @@ GNRS_local_remove <- function(dir = gnrs_cache_dir(), sources = NULL, ask = inte
     unlink(files)
     for (s in sources) unlink(gnrs_provenance_path(s, dir))
     if ("gadm" %in% sources) unlink(gnrs_gadm_archive_path(dir))
+    # the history component is derived from CShapes and pruned against the
+    # name table: it goes with CShapes, and is rebuilt when a name source goes
+    if ("cshapes" %in% sources && !"history" %in% sources) {
+      unlink(gnrs_source_files("history", dir))
+      unlink(gnrs_provenance_path("history", dir))
+    }
     if (gnrs_is_built("gnrs", dir)) {
       gnrs_finalize_reference(dir, quiet = TRUE)
       gnrs_assemble_names(dir, quiet = TRUE)
+      if (any(c("gadm", "geonames") %in% sources) && gnrs_is_built("history", dir) && gnrs_is_built("cshapes", dir)) {
+        gnrs_build_history(dir = dir, quiet = TRUE)
+      }
     }
   }
   gnrs_forget_backbone()

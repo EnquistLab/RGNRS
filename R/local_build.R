@@ -803,7 +803,8 @@ gnrs_assemble_names <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
     is_geo <- tbl$is_geoname
 
     rows <- alt[alt$geonameid %in% ids[is_geo], , drop = FALSE]
-    out <- data.frame(id = rows$geonameid, name = rows$name, name_type = original, stringsAsFactors = FALSE)
+    # rep(): with no alternate names built there are no rows to recycle over
+    out <- data.frame(id = rows$geonameid, name = rows$name, name_type = rep(original, nrow(rows)), stringsAsFactors = FALSE)
     for (col in name_cols) {
       out <- rbind(out, data.frame(
         id = ids[is_geo], name = tbl[[col]][is_geo], name_type = original, stringsAsFactors = FALSE
