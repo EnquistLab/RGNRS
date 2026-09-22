@@ -33,10 +33,15 @@
 #'   taken from an optional \code{date} column of years or ISO dates; a name
 #'   marked as former, such as "Former USSR", is accepted for any later date,
 #'   and a state or county that resolves within a successor is kept and flagged
-#'   whatever the date).  Needs the \code{"history"} component, which is built
-#'   from tables shipped with the package and downloads nothing.
+#'   whatever the date).  Needs the \code{"history"} component, built from
+#'   tables shipped with the package plus the CShapes historical boundaries,
+#'   which are read from the \code{cshapes} package when it is installed and
+#'   otherwise downloaded from the publisher (about 60 MB) when
+#'   \code{build_missing} allows building; with \code{history = "current"}
+#'   nothing beyond the ordinary components is needed.
 #' @param tolerance_years With \code{history = "at_date"}, how many years
-#'   either side of a former country's existence a record date may fall.
+#'   either side of a former country's existence a record date may fall.  A
+#'   single non-negative number.
 #' @param quiet Suppress progress messages?
 #' @return A data.frame with the same columns as \code{GNRS()}, one row per
 #'   input row in input order.  With \code{history} other than "current",
@@ -99,6 +104,10 @@ GNRS_local <- function(political_division_dataframe,
   }
   if (!is.logical(alternate_names) || length(alternate_names) != 1L || is.na(alternate_names)) {
     stop("alternate_names should be TRUE or FALSE", call. = FALSE)
+  }
+  if (!is.numeric(tolerance_years) || length(tolerance_years) != 1L ||
+    !is.finite(tolerance_years) || tolerance_years < 0) {
+    stop("tolerance_years should be a single non-negative number", call. = FALSE)
   }
 
   input <- gnrs_check_input(political_division_dataframe)

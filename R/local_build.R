@@ -54,8 +54,13 @@
 #' \code{GNRS_local_status()} to see what has been built.
 #'
 #' @param sources Character vector of components to build: \code{"gnrs"},
-#'   \code{"geonames"} (the two defaults), \code{"points"} and
-#'   \code{"gadm"}.  The other components are layered on or filtered to the
+#'   \code{"geonames"} (the two defaults), \code{"points"}, \code{"gadm"},
+#'   and, for \code{GNRS_local()}'s historical modes, \code{"cshapes"} (the
+#'   CShapes 2.0 boundaries of former countries, from the \code{cshapes}
+#'   package when it is installed, otherwise a 60 MB download) and
+#'   \code{"history"} (the historical entities, names and lineage, assembled
+#'   from tables shipped with the package and from CShapes, which it builds if
+#'   it is missing).  The other components are layered on or filtered to the
 #'   service's tables, so \code{"gnrs"} is built first if it is missing
 #'   whatever is asked for.
 #' @param dir Cache directory. Defaults to the standard user cache location.
@@ -165,11 +170,16 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
   }
   # the history component is derived from CShapes at build time, so it needs CShapes
   # built even when only "history" was asked for (without rebuilding an existing copy)
+  cshapes_rebuilt <- FALSE
   if ((cshapes_wanted && (overwrite || !gnrs_is_built("cshapes", dir))) ||
       (history_wanted && !gnrs_is_built("cshapes", dir))) {
     gnrs_build_cshapes(dir = dir, quiet = quiet)
+    cshapes_rebuilt <- TRUE
   }
-  if (history_wanted && (overwrite || !gnrs_is_built("history", dir))) {
+  # a history component already built is derived from the CShapes that was
+  # replaced, so it is rebuilt with it
+  if ((history_wanted && (overwrite || !gnrs_is_built("history", dir))) ||
+      (cshapes_rebuilt && gnrs_is_built("history", dir))) {
     if (!quiet) message("Building the history component ...")
     gnrs_build_history(dir = dir, quiet = quiet)
   }

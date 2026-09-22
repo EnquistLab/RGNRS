@@ -43,9 +43,14 @@
 
 suppressMessages({library(data.table); library(nanoparquet); library(jsonlite); library(arrow)})
 
-SRC <- "C:/Users/bmaitner/Desktop/current_projects/gvs_ms/data/history_sources"
-GNRS_CACHE <- "C:/Users/bmaitner/AppData/Local/R/cache/R/GNRS"
-OUT <- file.path("C:/Users/bmaitner/Desktop/current_projects/RGNRS", "inst", "extdata")
+# Run from the package root.  The source downloads (CLDR, GeoNames, ...) live
+# wherever GNRS_HISTORY_SOURCES points; the service's country table is read
+# from the package's own cache, built with GNRS_local_build().
+SRC <- Sys.getenv("GNRS_HISTORY_SOURCES", unset = NA)
+if (is.na(SRC)) stop("Set GNRS_HISTORY_SOURCES to the directory holding the source downloads.")
+GNRS_CACHE <- Sys.getenv("GNRS_CACHE_DIR", unset = tools::R_user_dir("GNRS", "cache"))
+OUT <- file.path("inst", "extdata")
+if (!file.exists("DESCRIPTION")) stop("Run this script from the package root.")
 dir.create(OUT, recursive = TRUE, showWarnings = FALSE)
 D <- function(x) as.Date(x)
 

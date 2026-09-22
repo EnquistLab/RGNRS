@@ -231,18 +231,23 @@ gnrs_is_former_label <- function(x) {
 }
 
 #' Current successors of a historical entity, following the lineage to the present
+#'
+#' Internal.  The lineage is followed through current countries as well as
+#' former ones: a current country can itself have later successors (Kosovo
+#' seceded from Serbia in 2008, so it descends from Yugoslavia through
+#' Serbia), and every node is visited once.
 #' @keywords internal
 #' @noRd
 gnrs_current_successors <- function(entity_id, h) {
   cur <- h$entities$entity_id[h$entities$kind == "current"]
-  seen <- integer(0)
+  seen <- entity_id
   front <- entity_id
   out <- integer(0)
   while (length(front)) {
     nxt <- setdiff(unique(h$lineage$to_id[h$lineage$from_id %in% front]), seen)
     seen <- c(seen, nxt)
     out <- c(out, intersect(nxt, cur))
-    front <- setdiff(nxt, cur)
+    front <- nxt
   }
   unique(out)
 }

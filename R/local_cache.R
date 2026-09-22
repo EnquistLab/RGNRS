@@ -214,8 +214,9 @@ gnrs_is_built <- function(source, dir = gnrs_cache_dir()) {
     gadm = file.exists(gnrs_gadm_path(dir)),
     geonames = file.exists(gnrs_altnames_path(dir)),
     points = file.exists(gnrs_points_path(dir)),
-    history = file.exists(gnrs_history_path("entities", dir)),
-    cshapes = file.exists(gnrs_cshapes_versions_path(dir)),
+    # every table the resolver reads, so an interrupted build is rebuilt
+    history = all(file.exists(gnrs_history_path(c("entities", "names", "lineage", "periods"), dir))),
+    cshapes = file.exists(gnrs_cshapes_versions_path(dir)) && file.exists(gnrs_cshapes_geom_path(dir)),
     FALSE
   )
 }

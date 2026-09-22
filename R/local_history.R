@@ -60,12 +60,18 @@ gnrs_read_cshapes <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
   if (!file.exists(f)) {
     if (!quiet) message("Downloading ", spec$full_name, " (about ", spec$download_mb, " MB) ...")
     partial <- paste0(f, ".part")
-    status <- utils::download.file(spec$url, partial, mode = "wb", quiet = quiet)
-    if (status != 0) {
+    # R's default of 60 seconds is not enough for a file this size
+    old <- options(timeout = max(3600, getOption("timeout")))
+    on.exit(options(old), add = TRUE)
+    status <- utils::download.file(spec$url, partial, mode = "wb", quiet = quiet, cacheOK = FALSE)
+    if (status != 0 || !file.exists(partial)) {
       unlink(partial)
       stop("Download failed for CShapes.", call. = FALSE)
     }
-    file.rename(partial, f)
+    if (!file.rename(partial, f)) {
+      unlink(partial)
+      stop("Could not move the downloaded CShapes file into place.", call. = FALSE)
+    }
   }
   x <- sf::st_read(f, quiet = TRUE)
   # the geojson spells the Gleditsch & Ward code and dates like the package does

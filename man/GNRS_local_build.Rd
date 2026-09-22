@@ -15,8 +15,13 @@ GNRS_local_build(
 }
 \arguments{
 \item{sources}{Character vector of components to build: \code{"gnrs"},
-\code{"geonames"} (the two defaults), \code{"points"} and
-\code{"gadm"}.  The other components are layered on or filtered to the
+\code{"geonames"} (the two defaults), \code{"points"}, \code{"gadm"},
+and, for \code{GNRS_local()}'s historical modes, \code{"cshapes"} (the
+CShapes 2.0 boundaries of former countries, from the \code{cshapes}
+package when it is installed, otherwise a 60 MB download) and
+\code{"history"} (the historical entities, names and lineage, assembled
+from tables shipped with the package and from CShapes, which it builds if
+it is missing).  The other components are layered on or filtered to the
 service's tables, so \code{"gnrs"} is built first if it is missing
 whatever is asked for.}
 

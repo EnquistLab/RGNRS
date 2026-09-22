@@ -78,6 +78,9 @@ test_that("former countries resolve with history = 'all'", {
   expect_equal(r$is_historical, c(TRUE, TRUE, TRUE, FALSE))
   expect_match(r$successors[1], "(^|;)RU(;|$)")
   expect_match(r$successors[1], "(^|;)LT(;|$)")
+  # the lineage is followed through Serbia to Kosovo, which seceded from it
+  expect_match(r$successors[2], "(^|;)RS(;|$)")
+  expect_match(r$successors[2], "(^|;)XK(;|$)")
   expect_equal(r$successors[4], "")
   # "Czechoslovakia (former)" is not an exact alternate name (case differs): fuzzy
   expect_match(r$match_method_country[3], "^fuzzy")
@@ -113,4 +116,23 @@ test_that("a name marked as former is accepted after the division ended, not bef
   expect_equal(r$entity_key, c("SUHH", "SUHH", ""))
   expect_match(r$date_check[1], "named as former")
   expect_match(r$date_check[3], "outside its validity")
+})
+
+test_that("tolerance_years must be a single non-negative number", {
+  df <- data.frame(user_id = 1, country = "USSR", state_province = "", county_parish = "", date = "1970")
+  expect_error(GNRS_local(df, dir = dir, history = "at_date", tolerance_years = NA, quiet = TRUE), "tolerance_years")
+  expect_error(GNRS_local(df, dir = dir, history = "at_date", tolerance_years = c(1, 2), quiet = TRUE), "tolerance_years")
+  expect_error(GNRS_local(df, dir = dir, history = "at_date", tolerance_years = -1, quiet = TRUE), "tolerance_years")
+})
+
+test_that("a component counts as built only when every one of its files is there", {
+  expect_true(gnrs_is_built("history", dir))
+  expect_true(gnrs_is_built("cshapes", dir))
+  partial <- file.path(tempdir(), "gnrs-partial-history")
+  unlink(partial, recursive = TRUE)
+  dir.create(partial)
+  file.copy(gnrs_history_path("entities", dir), gnrs_history_path("entities", partial))
+  file.copy(gnrs_cshapes_versions_path(dir), gnrs_cshapes_versions_path(partial))
+  expect_false(gnrs_is_built("history", partial))
+  expect_false(gnrs_is_built("cshapes", partial))
 })
