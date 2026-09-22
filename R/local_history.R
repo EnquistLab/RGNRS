@@ -102,11 +102,20 @@ gnrs_build_cshapes <- function(dir = gnrs_cache_dir(create = TRUE), quiet = FALS
   # Repair with GEOS, not s2: s2's st_make_valid re-expresses polygons that cross the
   # antimeridian with longitudes beyond 180 (Russia's planar centroid came out at
   # 214.8 degrees instead of 96.8), which breaks point-in-polygon and the planar
-  # centroids GVS compares against GADM. Area is then ellipsoidal (lwgeom), because
-  # s2 rejects some unrepaired CShapes rings (degenerate edges).
+  # centroids GVS compares against GADM.  s2 also rejects some unrepaired CShapes
+  # rings (degenerate edges), and an ellipsoidal area with s2 off would need the
+  # lwgeom package, so the area is taken in an equal-area projection with planar
+  # geometry, which needs only PROJ.  Long straight edges in longitude/latitude
+  # (the 129th meridian between Western and South Australia has two vertices)
+  # are densified first, since a chord between distant vertices cuts area off
+  # one side and adds it to the other once projected; the cylindrical equal-area
+  # projection keeps meridians and parallels straight and gives the ellipsoidal
+  # area.  Checked against lwgeom's ellipsoidal area over all 710 CShapes
+  # country-periods: median ratio 1.0000, 99 percent within 0.1 percent, the
+  # worst 0.4 percent (a diagonal border treated as a rhumb line, not a geodesic).
   suppressMessages(sf::sf_use_s2(FALSE))
   x <- sf::st_make_valid(x)
-  area_km2 <- suppressWarnings(as.numeric(sf::st_area(x)) / 1e6)
+  area_km2 <- gnrs_equal_area_km2(sf::st_geometry(x))
   bb <- sf::st_bbox(x)
   if (bb[["xmin"]] < -180 || bb[["xmax"]] > 180 || bb[["ymin"]] < -90 || bb[["ymax"]] > 90) {
     stop("CShapes geometry outside WGS84 longitude/latitude bounds after repair.", call. = FALSE)
@@ -218,4 +227,23 @@ gnrs_max_vertex_distance <- function(geom, centres) {
     }
     max(sqrt((xy[, 1] - centres[i, 1])^2 + (xy[, 2] - centres[i, 2])^2))
   }, numeric(1))
+}
+
+#' Area of longitude/latitude polygons without s2 or lwgeom
+#'
+#' Internal.  Planar densification of the edges (every 0.05 degrees, about
+#' 5 km), then the cylindrical equal-area projection on the WGS84 ellipsoid
+#' (EPSG:6933) and a planar area.  Used where s2 is switched off and the
+#' lwgeom package cannot be assumed.
+#'
+#' @param geometry An sfc of polygons in longitude/latitude.
+#' @return Areas in square kilometres.
+#' @keywords internal
+#' @noRd
+gnrs_equal_area_km2 <- function(geometry) {
+  planar <- sf::st_set_crs(geometry, NA)
+  dense <- sf::st_segmentize(planar, 0.05)
+  dense <- sf::st_set_crs(dense, 4326)
+  projected <- sf::st_transform(dense, "EPSG:6933")
+  as.numeric(sf::st_area(projected)) / 1e6
 }

@@ -10,6 +10,8 @@ GNRS_local(
   alternate_names = TRUE,
   dir = gnrs_cache_dir(),
   build_missing = interactive(),
+  history = c("all", "current", "at_date"),
+  tolerance_years = 1,
   quiet = FALSE
 )
 }
@@ -37,11 +39,32 @@ the size and asks first.  In a script it is therefore FALSE and nothing is
 downloaded silently: the function reports what is missing and the call that
 would fix it.  Set it to TRUE to allow an unattended build.}
 
+\item{history}{Historical political divisions: \code{"all"} (the default;
+also matches former countries such as the USSR, Yugoslavia or
+Czechoslovakia, flagging such matches, so a record named with a political
+division that was ever accurate resolves), \code{"current"} (today's
+divisions only, as the web service does), or \code{"at_date"} (as "all",
+but a former country is accepted only if it existed at the record's date,
+taken from an optional \code{date} column of years or ISO dates; a name
+marked as former, such as "Former USSR", is accepted for any later date,
+and a state or county that resolves within a successor is kept and flagged
+whatever the date).  Needs the \code{"history"} component, which is built
+from tables shipped with the package and downloads nothing.}
+
+\item{tolerance_years}{With \code{history = "at_date"}, how many years
+either side of a former country's existence a record date may fall.}
+
 \item{quiet}{Suppress progress messages?}
 }
 \value{
 A data.frame with the same columns as \code{GNRS()}, one row per
-  input row in input order.  Scores are numeric rather than the character
+  input row in input order.  With \code{history} other than "current",
+  further columns: \code{entity_key}, \code{is_historical},
+  \code{entity_valid_from}, \code{entity_valid_to}, \code{successors} (the
+  current countries descending from a matched former country),
+  \code{subnational_resolved_in} and \code{subnational_status} (a state or
+  county given under a former country is looked up within its successors;
+  "unverifiable" if none contains it), and \code{date_check}.  Scores are numeric rather than the character
   strings the web service returns; identifiers are character, as the web
   service returns them; empty values are "".
 }
