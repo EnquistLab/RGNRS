@@ -20,6 +20,8 @@ test_that("the output has the web service's columns, in its order", {
     "match_method_county_parish", "match_score_country",
     "match_score_state_province", "match_score_county_parish", "threshold_fuzzy",
     "overall_score", "poldiv_submitted", "poldiv_matched", "match_status", "user_id",
+    # the service's own columns end here; the components append theirs
+    "alt_division", "alt_division_system", "alt_division_level", "alt_division_extent_known",
     # history = "all" (the default) appends the historical-division columns
     "entity_key", "is_historical", "entity_valid_from", "entity_valid_to", "successors",
     "subnational_resolved_in", "subnational_status", "date_check"
@@ -200,18 +202,19 @@ test_that("a missing backbone is reported rather than erroring", {
 
 test_that("status and citations describe what was built", {
   s <- suppressMessages(GNRS_local_status(dir))
-  expect_equal(s$source, c("gnrs", "gadm", "geonames", "history", "cshapes", "points"))
+  expect_equal(s$source, c("gnrs", "gadm", "geonames", "history", "altdiv", "cshapes", "points"))
   # the history component is built on first use of GNRS_local() (history = "all"), from
   # the CShapes copy in the cache: CShapes is a component of its own, since nothing
   # derived from it ships with the package
-  expect_equal(s$built, c(TRUE, FALSE, TRUE, TRUE, TRUE, FALSE))
+  expect_equal(s$built, c(TRUE, FALSE, TRUE, TRUE, TRUE, TRUE, FALSE))
   expect_equal(s$version[1], "database test (2024-01-01), code test")
   cit <- GNRS_local_citations(dir, quiet = TRUE)
-  expect_equal(cit$what, c("method", "software", "source", "source", "source", "source"))
+  expect_equal(cit$what, c("method", "software", "source", "source", "source", "source", "source"))
   expect_true(all(grepl("2024-01-01", cit$citation[3:4])))
   expect_match(cit$citation[5], "CShapes 2.0")
   # CShapes is CC BY-NC-SA 4.0: attribution is a condition of use, so it is cited in full
-  expect_match(cit$citation[6], "Mapping the International System")
+  expect_match(cit$citation[6], "Alternative and superseded sub-national divisions")
+  expect_match(cit$citation[7], "Mapping the International System")
   bib <- tempfile(fileext = ".bib")
   GNRS_local_citations(dir, bibtex_file = bib, quiet = TRUE)
   expect_true(any(grepl("^@article", readLines(bib))))

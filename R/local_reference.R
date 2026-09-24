@@ -225,6 +225,9 @@ gnrs_backbone <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
     sep = sep
   )
 
+  # the alternative and superseded divisions, so a resolution step can reach them
+  # without the cache directory being threaded through every call
+  backbone$altdiv <- gnrs_altdiv(dir)
   gnrs_env$key <- key
   gnrs_env$backbone <- backbone
   backbone

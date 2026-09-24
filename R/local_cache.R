@@ -100,6 +100,21 @@ gnrs_builtin_registry <- function() {
       download_mb = 0,
       disk_mb = 1
     ),
+    altdiv = list(
+      source = "altdiv",
+      full_name = "Alternative and superseded sub-national divisions",
+      publisher = "Botanical Information and Ecology Network",
+      url = "shipped with the package",
+      license = "Curated tables: package licence",
+      citation = paste(
+        "Alternative and superseded sub-national divisions compiled for GNRS:",
+        "Swedish landskap, lappmarker and lan name forms; Watsonian vice-counties of",
+        "Britain and Ireland; Norwegian counties of the 2018 and 2020 reforms."
+      ),
+      # Built from tables shipped with the package; nothing is downloaded
+      download_mb = 0,
+      disk_mb = 1
+    ),
     cshapes = list(
       source = "cshapes",
       full_name = "CShapes 2.0 historical state boundaries",
@@ -217,6 +232,7 @@ gnrs_is_built <- function(source, dir = gnrs_cache_dir()) {
     # every table the resolver reads, so an interrupted build is rebuilt
     history = all(file.exists(gnrs_history_path(c("entities", "names", "lineage", "periods"), dir))),
     cshapes = file.exists(gnrs_cshapes_versions_path(dir)) && file.exists(gnrs_cshapes_geom_path(dir)),
+    altdiv = all(file.exists(gnrs_altdiv_path(c("units", "names", "extent"), dir))),
     FALSE
   )
 }

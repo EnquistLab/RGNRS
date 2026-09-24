@@ -131,6 +131,7 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
   # is built last; CShapes geometry is independent of the other components
   history_wanted <- "history" %in% sources
   cshapes_wanted <- "cshapes" %in% sources
+  altdiv_wanted <- "altdiv" %in% sources
   sources <- intersect(c("gnrs", "geonames", "points", "gadm"), sources)
 
   if (!dir.exists(dir)) {
@@ -197,6 +198,12 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
       ((cshapes_rebuilt || dependency_rebuilt) && gnrs_is_built("history", dir))) {
     if (!quiet) message("Building the history component ...")
     gnrs_build_history(dir = dir, quiet = quiet)
+  }
+  # Alternative and superseded sub-national divisions: shipped curation, nothing
+  # downloaded and nothing derived from another component, so it stands alone.
+  if (altdiv_wanted && (overwrite || !gnrs_is_built("altdiv", dir))) {
+    if (!quiet) message("Building the alternative-division component ...")
+    gnrs_build_altdiv(dir = dir, quiet = quiet)
   }
   gnrs_forget_backbone()
 

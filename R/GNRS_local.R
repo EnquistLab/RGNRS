@@ -123,6 +123,14 @@ GNRS_local <- function(political_division_dataframe,
     NULL
   }
 
+  # Alternative and superseded sub-national divisions (Swedish landskap, Watsonian
+  # vice-counties, Norwegian counties after the 2018 and 2020 reforms): shipped
+  # curation, nothing downloaded, so it is built on first use.
+  if (!gnrs_is_built("altdiv", dir)) {
+    if (!quiet) message("Building the alternative-division component (no download) ...")
+    gnrs_build_altdiv(dir = dir, quiet = TRUE)
+  }
+
   sources <- if (alternate_names) c("gnrs", "geonames") else "gnrs"
   if (!gnrs_require_sources(sources, dir = dir, build_missing = build_missing, quiet = quiet)) {
     return(invisible(NULL))
@@ -332,6 +340,14 @@ gnrs_build_output <- function(r, input, threshold) {
     user_id = input$user_id,
     stringsAsFactors = FALSE
   )
+  # A declared division belonging to another division system, recognised as itself
+  # rather than forced onto the nearest GADM unit. Appended after the service's own
+  # columns, as the history component's are: extent_known says whether the GADM units
+  # it covers are known, and so whether a coordinate can be checked against it.
+  out$alt_division <- chr(r$alt_division)
+  out$alt_division_system <- chr(r$alt_division_system)
+  out$alt_division_level <- chr(r$alt_division_level)
+  out$alt_division_extent_known <- r$alt_division_extent_known
   rownames(out) <- NULL
   out
 }

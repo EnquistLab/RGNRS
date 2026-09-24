@@ -48,6 +48,13 @@ gnrs_resolve <- function(u, bb, threshold = 0.5) {
   u$match_score_country <- na_num
   u$match_score_state_province <- na_num
   u$match_score_county_parish <- na_num
+  # a declared division that belongs to another division system (Swedish landskap,
+  # Watsonian vice-counties, Norwegian counties after the 2018 and 2020 reforms):
+  # recognised as itself rather than forced onto the nearest-looking GADM unit
+  u$alt_division <- na_chr
+  u$alt_division_system <- na_chr
+  u$alt_division_level <- na_chr
+  u$alt_division_extent_known <- NA
 
   if (n == 0) {
     return(gnrs_summarize(u, bb))
@@ -60,10 +67,14 @@ gnrs_resolve <- function(u, bb, threshold = 0.5) {
   u <- gnrs_step_countryasstate_exact(u, ctx)
   u <- gnrs_step_countryasstate_fuzzy(u, ctx)
   u <- gnrs_step_state_exact(u, ctx)
+  u <- gnrs_step_altdiv(u, ctx, "state")
+  u <- gnrs_step_state_altname(u, ctx)
   u <- gnrs_step_state_fuzzy(u, ctx)
   u <- gnrs_step_stateascountry_exact(u, ctx)
   u <- gnrs_step_stateascountry_fuzzy(u, ctx)
   u <- gnrs_step_county_exact(u, ctx)
+  u <- gnrs_step_altdiv(u, ctx, "county")
+  u <- gnrs_step_county_altname(u, ctx)
   u <- gnrs_step_county_fuzzy(u, ctx)
   u <- gnrs_step_stateascounty_exact(u, ctx)
   u <- gnrs_step_stateascounty_fuzzy(u, ctx)
@@ -366,6 +377,21 @@ gnrs_step_state_exact <- function(u, ctx) {
     u <- gnrs_set_state(u, hit$rows, hit$ids, t[[3]])
   }
 
+  u
+}
+
+#' The exact match on a state's GeoNames alternate names
+#'
+#' Internal.  Split from \code{gnrs_step_state_exact()} so that
+#' \code{gnrs_step_altdiv()} can run between the two: a name that IS a GADM unit's
+#' own name wins, a name that is only an alternate of one does not.
+#' @keywords internal
+#' @noRd
+gnrs_step_state_altname <- function(u, ctx) {
+  st <- ctx$bb$state
+  sn <- ctx$bb$state_names
+  sv <- u$state_province_verbatim
+  cid <- u$country_id
   rows <- which(!is.na(cid) & is.na(u$state_province_id) &
     is.na(u$match_method_state_province) & !gnrs_blank(sv))
   hit <- gnrs_exact(rows, gnrs_key(cid[rows], sv[rows]), sn$key_original, sn$id)
@@ -547,9 +573,88 @@ gnrs_step_county_exact <- function(u, ctx) {
     u <- gnrs_set_county(u, hit$rows, hit$ids, t[[3]])
   }
 
-  rows <- which(!is.na(u$country_id) & !is.na(sid) & is.na(u$county_parish_id) & !gnrs_blank(cpv))
+  u
+}
+
+#' The exact match on a county's GeoNames alternate names
+#' @keywords internal
+#' @noRd
+gnrs_step_county_altname <- function(u, ctx) {
+  cn <- ctx$bb$county_names
+  cpv <- u$county_parish_verbatim
+  sid <- u$state_province_id
+  rows <- which(!is.na(u$country_id) & !is.na(sid) & is.na(u$county_parish_id) &
+    is.na(u$match_method_county_parish) & !gnrs_blank(cpv))
   hit <- gnrs_exact(rows, gnrs_key(sid[rows], cpv[rows]), cn$key_original, cn$id)
   gnrs_set_county(u, hit$rows, hit$ids, "exact alternate name")
+}
+
+#' Recognise a declared division that belongs to another division system
+#'
+#' Internal.  Runs between the exact matches on a GADM unit's OWN names and codes
+#' and the match on its GeoNames alternate names, which is the precedence the data
+#' calls for: Skane is both a landskap and a lan and stays the lan, while Uppland is
+#' a landskap and stops being matched to Uppsala lan, a division it is not in.
+#'
+#' Nothing is written to \code{state_province_id} or \code{county_parish_id},
+#' because these are not GADM divisions. The match method records what was
+#' recognised, which also stops the later steps, and the \code{alt_division_*}
+#' columns carry it to the caller. Where both levels are recognised the finer one
+#' is reported.
+#' @keywords internal
+#' @noRd
+gnrs_step_altdiv <- function(u, ctx, level = c("state", "county")) {
+  level <- match.arg(level)
+  a <- ctx$bb$altdiv
+  if (is.null(a)) return(u)
+  iso <- ctx$bb$country$iso[match(u$country_id, ctx$bb$country$country_id)]
+  if (level == "state") {
+    v <- u$state_province_verbatim
+    rows <- which(!is.na(u$country_id) & is.na(u$state_province_id) &
+      is.na(u$match_method_state_province) & !gnrs_blank(v))
+  } else {
+    v <- u$county_parish_verbatim
+    # a county is only looked up once its state is known, EXCEPT here: the declared
+    # state may itself be an alternative division, in which case there is no state id
+    rows <- which(!is.na(u$country_id) & is.na(u$county_parish_id) &
+      is.na(u$match_method_county_parish) & !gnrs_blank(v))
+  }
+  if (!length(rows)) return(u)
+  # no dates here: the period of a superseded division is checked where record dates
+  # live, in the geovalidity test, not in name resolution
+  m <- gnrs_altdiv_match(iso[rows], v[rows], altdiv = a)
+  ok <- which(!is.na(m$entity_key))
+  if (!length(ok)) return(u)
+  r <- rows[ok]
+  method <- paste0("alternative division (", m$system[ok], ")")
+
+  # An ALIAS is the same GADM unit under another name - "Norrbottens lan" IS
+  # Norrbotten - so it resolves like any other match and stays in the ordinary output.
+  # Only units that are genuinely not GADM divisions are left unresolved and reported
+  # through alt_division.
+  for (j in which(m$kind[ok] == "alias")) {
+    gid <- a$extent$gid[a$extent$entity_key == m$entity_key[ok][j]]
+    if (length(gid) != 1L) next
+    if (level == "state") {
+      id <- ctx$bb$state$state_province_id[match(gid, ctx$bb$state$gid_1)]
+      if (!is.na(id)) u <- gnrs_set_state(u, r[j], id, method[j])
+    } else {
+      id <- ctx$bb$county$county_parish_id[match(gid, ctx$bb$county$gid_2)]
+      if (!is.na(id)) u <- gnrs_set_county(u, r[j], id, method[j])
+    }
+  }
+  if (level == "state") {
+    u$match_method_state_province[r] <- ifelse(is.na(u$match_method_state_province[r]),
+                                               method, u$match_method_state_province[r])
+  } else {
+    u$match_method_county_parish[r] <- ifelse(is.na(u$match_method_county_parish[r]),
+                                              method, u$match_method_county_parish[r])
+  }
+  u$alt_division[r] <- m$entity_key[ok]
+  u$alt_division_system[r] <- m$system[ok]
+  u$alt_division_level[r] <- level
+  u$alt_division_extent_known[r] <- m$extent_known[ok]
+  u
 }
 
 gnrs_step_county_fuzzy <- function(u, ctx) {

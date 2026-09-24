@@ -10,7 +10,8 @@ gnrs_test_cshapes(dir)
 gnrs_build_history(dir = dir, quiet = TRUE)
 
 test_that("nothing derived from CShapes ships with the package", {
-  shipped <- list.files(dirname(gnrs_extdata("history_codes.csv")), pattern = "[.]csv$")
+  # the history component's own files; other components ship theirs alongside
+  shipped <- list.files(dirname(gnrs_extdata("history_codes.csv")), pattern = "^history_.*[.]csv$")
   expect_true(file.exists(file.path(dirname(gnrs_extdata("history_codes.csv")), "SOURCES.md")))
   expect_setequal(shipped, c("history_codes.csv", "history_current_entities.csv",
                              "history_curated_entities.csv", "history_curated_lineage.csv",
