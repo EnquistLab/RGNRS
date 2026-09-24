@@ -6,7 +6,7 @@
 #' is kept in the standard user cache directory, and can be removed again with
 #' \code{GNRS_local_remove()}.
 #'
-#' Two components are fetched by default, and two more can be added.
+#' Two components are fetched by default, and five more can be added.
 #' \code{"gnrs"} is the web service's own
 #' reference tables of countries, states/provinces and counties/parishes,
 #' fetched through its API in a few small requests: every political division it
@@ -49,13 +49,32 @@
 #' GeoNames places its points near an edge often enough.  Build it before
 #' \code{"gadm"} (the order is arranged whatever order is given).
 #'
+#' \code{"cshapes"} and \code{"history"} serve the historical modes of
+#' \code{GNRS_local()}.  The first is CShapes 2.0, the boundaries of every
+#' independent state and dependency from 1886 to 2019, read from the
+#' \code{cshapes} package when it is installed and otherwise downloaded from
+#' its publisher (about 60 MB; CC BY-NC-SA 4.0, so nothing derived from it
+#' ships with the package).  The second assembles the historical entities,
+#' their names, codes and lineage from tables shipped with the package and
+#' from CShapes, and prunes its names against the current name table, so it
+#' is built last and rebuilt whenever a component it draws on is rebuilt.
+#' Asking for \code{"history"} builds \code{"cshapes"} if it is missing.
+#'
 #' Each component is recorded with its version, so that results obtained locally
 #' can be cited as precisely as results from the web service.  Use
 #' \code{GNRS_local_status()} to see what has been built.
 #'
 #' @param sources Character vector of components to build: \code{"gnrs"},
-#'   \code{"geonames"} (the two defaults), \code{"points"} and
-#'   \code{"gadm"}.  The other components are layered on or filtered to the
+#'   \code{"geonames"} (the two defaults), \code{"points"}, \code{"gadm"},
+#'   and, for \code{GNRS_local()}'s historical modes, \code{"cshapes"} (the
+#'   CShapes 2.0 boundaries of former countries, from the \code{cshapes}
+#'   package when it is installed, otherwise a 60 MB download) and
+#'   \code{"altdiv"} (alternative and superseded sub-national divisions, from
+#'   curation shipped with the package: nothing is downloaded, and
+#'   \code{GNRS_local()} builds it on first use) and
+#'   \code{"history"} (the historical entities, names and lineage, assembled
+#'   from tables shipped with the package and from CShapes, which it builds if
+#'   it is missing).  The other components are layered on or filtered to the
 #'   service's tables, so \code{"gnrs"} is built first if it is missing
 #'   whatever is asked for.
 #' @param dir Cache directory. Defaults to the standard user cache location.
@@ -102,7 +121,10 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
     return(invisible(NULL))
   }
 
-  if (!"gnrs" %in% sources && !gnrs_is_built("gnrs", dir)) {
+  # CShapes and the alternative divisions stand alone; everything else is
+  # layered on or filtered to the service's tables
+  dependent <- setdiff(sources, c("cshapes", "altdiv"))
+  if (length(dependent) && !"gnrs" %in% sources && !gnrs_is_built("gnrs", dir)) {
     if (!quiet) {
       message("The other components are layered on the service's reference tables, so 'gnrs' is built first.")
     }
@@ -111,12 +133,20 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
   # The reference tables come first whatever order was given, then the
   # alternate names and the coordinates, then the GADM layer, whose linking
   # uses the alternate names and the coordinates when it has them
+  # The history component checks its names against the assembled name table, so it
+  # is built last; CShapes geometry is independent of the other components
+  history_wanted <- "history" %in% sources
+  cshapes_wanted <- "cshapes" %in% sources
+  altdiv_wanted <- "altdiv" %in% sources
   sources <- intersect(c("gnrs", "geonames", "points", "gadm"), sources)
 
   if (!dir.exists(dir)) {
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
   }
 
+  # the history component prunes its names against the assembled name table,
+  # so it is rebuilt when any component that table draws on was rebuilt here
+  dependency_rebuilt <- FALSE
   for (source in sources) {
     if (gnrs_is_built(source, dir) && !overwrite) {
       if (!quiet) message("Source '", source, "' is already built; skipping.")
@@ -136,6 +166,7 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
       next
     }
 
+    dependency_rebuilt <- TRUE
     if (source == "gnrs") {
       gnrs_build_reference(dir = dir, url = url, quiet = quiet)
     } else if (source == "gadm") {
@@ -158,6 +189,27 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
   # build
   if (gnrs_is_built("gnrs", dir)) {
     gnrs_assemble_names(dir = dir, quiet = quiet)
+  }
+  # the history component is derived from CShapes at build time, so it needs CShapes
+  # built even when only "history" was asked for (without rebuilding an existing copy)
+  cshapes_rebuilt <- FALSE
+  if ((cshapes_wanted && (overwrite || !gnrs_is_built("cshapes", dir))) ||
+      (history_wanted && !gnrs_is_built("cshapes", dir))) {
+    gnrs_build_cshapes(dir = dir, quiet = quiet)
+    cshapes_rebuilt <- TRUE
+  }
+  # a history component already built is derived from the CShapes and the
+  # name table that were just replaced, so it is rebuilt with them
+  if ((history_wanted && (overwrite || !gnrs_is_built("history", dir))) ||
+      ((cshapes_rebuilt || dependency_rebuilt) && gnrs_is_built("history", dir))) {
+    if (!quiet) message("Building the history component ...")
+    gnrs_build_history(dir = dir, quiet = quiet)
+  }
+  # Alternative and superseded sub-national divisions: shipped curation, nothing
+  # downloaded and nothing derived from another component, so it stands alone.
+  if (altdiv_wanted && (overwrite || !gnrs_is_built("altdiv", dir))) {
+    if (!quiet) message("Building the alternative-division component ...")
+    gnrs_build_altdiv(dir = dir, quiet = quiet)
   }
   gnrs_forget_backbone()
 
@@ -764,7 +816,8 @@ gnrs_assemble_names <- function(dir = gnrs_cache_dir(), quiet = FALSE) {
     is_geo <- tbl$is_geoname
 
     rows <- alt[alt$geonameid %in% ids[is_geo], , drop = FALSE]
-    out <- data.frame(id = rows$geonameid, name = rows$name, name_type = original, stringsAsFactors = FALSE)
+    # rep(): with no alternate names built there are no rows to recycle over
+    out <- data.frame(id = rows$geonameid, name = rows$name, name_type = rep(original, nrow(rows)), stringsAsFactors = FALSE)
     for (col in name_cols) {
       out <- rbind(out, data.frame(
         id = ids[is_geo], name = tbl[[col]][is_geo], name_type = original, stringsAsFactors = FALSE

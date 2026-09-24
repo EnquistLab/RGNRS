@@ -85,6 +85,52 @@ gnrs_builtin_registry <- function() {
       download_mb = 195,
       disk_mb = 8
     ),
+    history = list(
+      source = "history",
+      full_name = "Historical political divisions (entities, names, lineage)",
+      publisher = "Botanical Information and Ecology Network",
+      url = "shipped with the package",
+      license = "Curated tables: package licence; names from GeoNames (CC BY 4.0), CShapes 2.0 (CC BY-NC-SA 4.0), Unicode CLDR, ISO 3166-3 (Debian iso-codes)",
+      citation = paste(
+        "Historical country entities, names and lineage compiled for GNRS from CShapes 2.0",
+        "(Schvitz et al. 2022, Journal of Conflict Resolution 66: 144-161), GeoNames, Unicode CLDR",
+        "and ISO 3166-3."
+      ),
+      # Built from tables shipped with the package; nothing is downloaded
+      download_mb = 0,
+      disk_mb = 1
+    ),
+    altdiv = list(
+      source = "altdiv",
+      full_name = "Alternative and superseded sub-national divisions",
+      publisher = "Botanical Information and Ecology Network",
+      url = "shipped with the package",
+      license = "Curated tables: package licence",
+      citation = paste(
+        "Alternative and superseded sub-national divisions compiled for GNRS:",
+        "Swedish landskap, lappmarker and lan name forms; Watsonian vice-counties of",
+        "Britain and Ireland; Norwegian counties of the 2018 and 2020 reforms."
+      ),
+      # Built from tables shipped with the package; nothing is downloaded
+      download_mb = 0,
+      disk_mb = 1
+    ),
+    cshapes = list(
+      source = "cshapes",
+      full_name = "CShapes 2.0 historical state boundaries",
+      publisher = "International Conflict Research, ETH Zurich",
+      version = "2.0",
+      url = "https://icr.ethz.ch/data/cshapes/CShapes-2.0.geojson",
+      license = "CC BY-NC-SA 4.0",
+      citation = paste(
+        "Schvitz G., Girardin L., Ruegger S., Weidmann N. B., Cederman L.-E. & Gleditsch K. S.",
+        "(2022). Mapping the International System, 1886-2019: The CShapes 2.0 Dataset.",
+        "Journal of Conflict Resolution 66(1): 144-161."
+      ),
+      # Read from the cshapes package when installed; otherwise the GeoJSON
+      download_mb = 60,
+      disk_mb = 25
+    ),
     points = list(
       source = "points",
       full_name = "GeoNames coordinates",
@@ -183,6 +229,10 @@ gnrs_is_built <- function(source, dir = gnrs_cache_dir()) {
     gadm = file.exists(gnrs_gadm_path(dir)),
     geonames = file.exists(gnrs_altnames_path(dir)),
     points = file.exists(gnrs_points_path(dir)),
+    # every table the resolver reads, so an interrupted build is rebuilt
+    history = all(file.exists(gnrs_history_path(c("entities", "names", "lineage", "periods"), dir))),
+    cshapes = file.exists(gnrs_cshapes_versions_path(dir)) && file.exists(gnrs_cshapes_geom_path(dir)),
+    altdiv = all(file.exists(gnrs_altdiv_path(c("units", "names", "extent"), dir))),
     FALSE
   )
 }
@@ -299,7 +349,9 @@ GNRS_local_status <- function(dir = gnrs_cache_dir()) {
 #' @param sources NULL, the default, removes everything.  Otherwise the
 #'   components to remove, for instance \code{"gadm"} to go back to resolving
 #'   against the service's own GADM identifiers; the reference tables are
-#'   rederived from what remains.
+#'   rederived from what remains, and a built \code{"history"} component is
+#'   rebuilt against them, or removed along with \code{"cshapes"}, which it
+#'   is derived from.
 #' @param ask Ask for confirmation before deleting? Defaults to TRUE in an
 #'   interactive session.
 #' @return TRUE if anything was removed, FALSE otherwise, invisibly.
@@ -353,9 +405,18 @@ GNRS_local_remove <- function(dir = gnrs_cache_dir(), sources = NULL, ask = inte
     unlink(files)
     for (s in sources) unlink(gnrs_provenance_path(s, dir))
     if ("gadm" %in% sources) unlink(gnrs_gadm_archive_path(dir))
+    # the history component is derived from CShapes and pruned against the
+    # name table: it goes with CShapes, and is rebuilt when a name source goes
+    if ("cshapes" %in% sources && !"history" %in% sources) {
+      unlink(gnrs_source_files("history", dir))
+      unlink(gnrs_provenance_path("history", dir))
+    }
     if (gnrs_is_built("gnrs", dir)) {
       gnrs_finalize_reference(dir, quiet = TRUE)
       gnrs_assemble_names(dir, quiet = TRUE)
+      if (any(c("gadm", "geonames") %in% sources) && gnrs_is_built("history", dir) && gnrs_is_built("cshapes", dir)) {
+        gnrs_build_history(dir = dir, quiet = TRUE)
+      }
     }
   }
   gnrs_forget_backbone()

@@ -19,6 +19,8 @@ Imports:
         tools,
         utils
 Suggests:
+    countrycode,
+    cshapes,
     DBI,
     RSQLite,
     sf,

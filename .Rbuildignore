@@ -8,3 +8,4 @@
 ^CRAN-RELEASE$
 ^dev_notes$
 ^\.github$
+^data-raw$

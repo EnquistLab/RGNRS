@@ -25,10 +25,44 @@
 #'   downloaded silently: the function reports what is missing and the call that
 #'   would fix it.  Set it to TRUE to allow an unattended build.
 #' @param quiet Suppress progress messages?
+#' @param history Historical political divisions: \code{"all"} (the default;
+#'   also matches former countries such as the USSR, Yugoslavia or
+#'   Czechoslovakia, flagging such matches, so a record named with a political
+#'   division that was ever accurate resolves), \code{"current"} (today's
+#'   divisions only, as the web service does), or \code{"at_date"} (as "all",
+#'   but a former country is accepted only if it existed at the record's date,
+#'   taken from an optional \code{date} column of years or ISO dates; a name
+#'   marked as former, such as "Former USSR", is accepted for any later date,
+#'   and a state or county that resolves within a successor is kept and flagged
+#'   whatever the date).  Needs the \code{"history"} component, built from
+#'   tables shipped with the package plus the CShapes historical boundaries,
+#'   which are read from the \code{cshapes} package when it is installed and
+#'   otherwise downloaded from the publisher (about 60 MB) when
+#'   \code{build_missing} allows building; with \code{history = "current"}
+#'   nothing beyond the ordinary components is needed.  When the component
+#'   cannot be prepared (a package not installed, a download declined), the
+#'   call says so and resolves current divisions only.
+#' @param tolerance_years With \code{history = "at_date"}, how many years
+#'   either side of a former country's existence a record date may fall.  A
+#'   single non-negative number.
 #' @return A data.frame with the same columns as \code{GNRS()}, one row per
-#'   input row in input order.  Scores are numeric rather than the character
-#'   strings the web service returns; identifiers are character, as the web
-#'   service returns them; empty values are "".
+#'   input row in input order.  With \code{history} other than "current",
+#'   further columns: \code{entity_key}, \code{is_historical},
+#'   \code{entity_valid_from}, \code{entity_valid_to}, \code{successors} (the
+#'   current countries descending from a matched former country),
+#'   \code{subnational_resolved_in} and \code{subnational_status} (a state or
+#'   county given under a former country is looked up within its successors;
+#'   "unverifiable" if none contains it), and \code{date_check}.  Whatever
+#'   \code{history} is, four further columns report a state or county that is
+#'   an alternative or superseded division rather than one the service knows
+#'   (a Swedish landskap, a Watsonian vice-county, a Norwegian county from
+#'   before the 2020 reform): \code{alt_division} (its name),
+#'   \code{alt_division_system}, \code{alt_division_level} and
+#'   \code{alt_division_extent_known} (whether the GADM units it covers are
+#'   recorded, so that a coordinate could be checked against it); "" or NA
+#'   for a row that resolved ordinarily.  Scores are numeric rather than the
+#'   character strings the web service returns; identifiers are character, as
+#'   the web service returns them; empty values are "".
 #' @note \strong{This is a new implementation and should be treated as beta.}
 #'   It is a port of the SQL the web service runs, resolving against the
 #'   service's own reference tables, so identifiers, standard names and codes
@@ -67,7 +101,10 @@ GNRS_local <- function(political_division_dataframe,
                        alternate_names = TRUE,
                        dir = gnrs_cache_dir(),
                        build_missing = interactive(),
-                       quiet = FALSE) {
+                       quiet = FALSE,
+                       history = c("all", "current", "at_date"),
+                       tolerance_years = 1) {
+  history <- match.arg(history)
   if (!inherits(political_division_dataframe, "data.frame")) {
     stop("political_division_dataframe should be a data.frame", call. = FALSE)
   }
@@ -78,12 +115,67 @@ GNRS_local <- function(political_division_dataframe,
   if (!is.logical(alternate_names) || length(alternate_names) != 1L || is.na(alternate_names)) {
     stop("alternate_names should be TRUE or FALSE", call. = FALSE)
   }
+  if (!is.numeric(tolerance_years) || length(tolerance_years) != 1L ||
+    !is.finite(tolerance_years) || tolerance_years < 0) {
+    stop("tolerance_years should be a single non-negative number", call. = FALSE)
+  }
 
   input <- gnrs_check_input(political_division_dataframe)
+
+  dates <- if (history == "at_date") {
+    if (!"date" %in% names(political_division_dataframe)) {
+      message("history = \"at_date\" but no date column: former countries are matched without a date check.")
+      NULL
+    } else {
+      gnrs_parse_record_date(political_division_dataframe$date)
+    }
+  } else {
+    NULL
+  }
+
+  # Alternative and superseded sub-national divisions (Swedish landskap, Watsonian
+  # vice-counties, Norwegian counties after the 2018 and 2020 reforms): shipped
+  # curation, nothing downloaded, so it is built on first use.
+  if (!gnrs_is_built("altdiv", dir)) {
+    if (!quiet) message("Building the alternative-division component (no download) ...")
+    gnrs_build_altdiv(dir = dir, quiet = TRUE)
+  }
 
   sources <- if (alternate_names) c("gnrs", "geonames") else "gnrs"
   if (!gnrs_require_sources(sources, dir = dir, build_missing = build_missing, quiet = quiet)) {
     return(invisible(NULL))
+  }
+  # The history component is assembled from the curation shipped with the package and
+  # the user's own copy of CShapes (nothing derived from CShapes ships: it is CC BY-NC-SA
+  # 4.0 and the package is MIT). With the cshapes package installed that downloads
+  # nothing, so it happens on first use as it always did; without it CShapes has to be
+  # downloaded, which follows build_missing like every other download.
+  # When it cannot be prepared (a package missing, or a download declined), the
+  # call goes on with current divisions only, and says so, rather than returning
+  # nothing: the default build prepares the ordinary components only.
+  if (history != "current" && !gnrs_is_built("history", dir)) {
+    ready <- FALSE
+    need <- c("sf", "countrycode")[!vapply(c("sf", "countrycode"), requireNamespace, logical(1), quietly = TRUE)]
+    if (length(need)) {
+      message("history = \"", history, "\" needs the ", paste(need, collapse = " and "),
+              " package", if (length(need) > 1) "s" else "", ", which ",
+              if (length(need) > 1) "are" else "is", " not installed.")
+    } else if (!gnrs_is_built("cshapes", dir) && !requireNamespace("cshapes", quietly = TRUE) &&
+               !gnrs_require_sources("cshapes", dir = dir, build_missing = build_missing, quiet = quiet)) {
+      message("The CShapes data that history = \"", history, "\" needs was not built.")
+    } else {
+      if (!gnrs_is_built("cshapes", dir)) {
+        if (!quiet) message("Building the CShapes component from the cshapes package (no download) ...")
+        gnrs_build_cshapes(dir = dir, quiet = TRUE)
+      }
+      if (!quiet) message("Building the history component (no download) ...")
+      gnrs_build_history(dir = dir, quiet = TRUE)
+      ready <- TRUE
+    }
+    if (!ready) {
+      message("Resolving against current political divisions only (history = \"current\").")
+      history <- "current"
+    }
   }
   if (!alternate_names && gnrs_is_built("geonames", dir)) {
     # Built but not wanted: the name table on disk includes the GeoNames
@@ -113,10 +205,26 @@ GNRS_local <- function(political_division_dataframe,
   if (!quiet && nrow(u) > 0) {
     message("Resolving ", nrow(u), " distinct political division", if (nrow(u) == 1) "" else "s", " ...")
   }
-  resolved <- gnrs_resolve(u, bb, threshold = threshold)
-
   m <- match(key, key[distinct])
-  gnrs_build_output(resolved[m, , drop = FALSE], input, threshold)
+  if (history == "current") {
+    resolved <- gnrs_resolve(u, bb, threshold = threshold)
+    return(gnrs_build_output(resolved[m, , drop = FALSE], input, threshold))
+  }
+
+  r <- gnrs_resolve_history(u, m, dates, bb, dir = dir, threshold = threshold,
+                            history = history, tolerance_years = tolerance_years,
+                            alternate_names = alternate_names)
+  out <- gnrs_build_output(r, input, threshold)
+  chr <- function(x) { x <- as.character(x); x[is.na(x)] <- ""; x }
+  out$entity_key <- chr(r$entity_key)
+  out$is_historical <- r$is_historical
+  out$entity_valid_from <- chr(r$entity_valid_from)
+  out$entity_valid_to <- chr(r$entity_valid_to)
+  out$successors <- chr(r$successors)
+  out$subnational_resolved_in <- chr(r$subnational_resolved_in)
+  out$subnational_status <- chr(r$subnational_status)
+  out$date_check <- chr(r$date_check)
+  out
 }
 
 #' Check the submitted data.frame and put it in a standard form
@@ -250,6 +358,14 @@ gnrs_build_output <- function(r, input, threshold) {
     user_id = input$user_id,
     stringsAsFactors = FALSE
   )
+  # A declared division belonging to another division system, recognised as itself
+  # rather than forced onto the nearest GADM unit. Appended after the service's own
+  # columns, as the history component's are: extent_known says whether the GADM units
+  # it covers are known, and so whether a coordinate can be checked against it.
+  out$alt_division <- chr(r$alt_division)
+  out$alt_division_system <- chr(r$alt_division_system)
+  out$alt_division_level <- chr(r$alt_division_level)
+  out$alt_division_extent_known <- r$alt_division_extent_known
   rownames(out) <- NULL
   out
 }

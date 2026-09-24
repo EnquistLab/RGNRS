@@ -1,0 +1,63 @@
+code,code_type,name,withdrawn,entity_key
+AIDJ,ISO 3166-3 alpha-4,French Afars and Issas,1977,DJ
+ANHH,ISO 3166-3 alpha-4,Netherlands Antilles,2010-12-15,ANHH
+BQAQ,ISO 3166-3 alpha-4,British Antarctic Territory,1979,AQ
+BUMM,ISO 3166-3 alpha-4,"Burma, Socialist Republic of the Union of",1989-12-05,MM
+BYAA,ISO 3166-3 alpha-4,Byelorussian SSR Soviet Socialist Republic,1992-06-15,BY
+CSHH,ISO 3166-3 alpha-4,"Czechoslovakia, Czechoslovak Socialist Republic",1993-06-15,CSHH
+CSXX,ISO 3166-3 alpha-4,Serbia and Montenegro,2006-09-26,CSXX
+CTKI,ISO 3166-3 alpha-4,Canton and Enderbury Islands,1984,CTKI
+DDDE,ISO 3166-3 alpha-4,German Democratic Republic,1990-10-30,DDDE
+DYBJ,ISO 3166-3 alpha-4,Dahomey,1977,BJ
+FQHH,ISO 3166-3 alpha-4,French Southern and Antarctic Territories,1979,FQHH
+FXFR,ISO 3166-3 alpha-4,"France, Metropolitan",1997-07-14,FR
+GEHH,ISO 3166-3 alpha-4,Gilbert and Ellice Islands,1979,GEHH
+HVBF,ISO 3166-3 alpha-4,"Upper Volta, Republic of",1984,BF
+JTUM,ISO 3166-3 alpha-4,Johnston Island,1986,UM
+MIUM,ISO 3166-3 alpha-4,Midway Islands,1986,UM
+NHVU,ISO 3166-3 alpha-4,New Hebrides,1980,VU
+NQAQ,ISO 3166-3 alpha-4,Dronning Maud Land,1983,AQ
+NTHH,ISO 3166-3 alpha-4,Neutral Zone,1993-07-12,NTHH
+PCHH,ISO 3166-3 alpha-4,Pacific Islands (trust territory),1986,PCHH
+PUUM,ISO 3166-3 alpha-4,US Miscellaneous Pacific Islands,1986,UM
+PZPA,ISO 3166-3 alpha-4,Panama Canal Zone,1980,PZPA
+RHZW,ISO 3166-3 alpha-4,Southern Rhodesia,1980,ZW
+SKIN,ISO 3166-3 alpha-4,Sikkim,1975,SKIN
+SUHH,ISO 3166-3 alpha-4,"USSR, Union of Soviet Socialist Republics",1992-08-30,SUHH
+TPTL,ISO 3166-3 alpha-4,East Timor,2002-05-20,TL
+VDVN,ISO 3166-3 alpha-4,"Viet-Nam, Democratic Republic of",1977,VN
+WKUM,ISO 3166-3 alpha-4,Wake Island,1986,UM
+YDYE,ISO 3166-3 alpha-4,"Yemen, Democratic, People's Democratic Republic of",1990-08-14,YDYE
+YUCS,ISO 3166-3 alpha-4,"Yugoslavia, (Socialist) Federal Republic of",2003-07-23,YUCS
+ZRCD,ISO 3166-3 alpha-4,"Zaire, Republic of",1997-07-14,CD
+AI,ISO 3166-1 alpha-2 (former),French Afars and Issas,1977,DJ
+AN,ISO 3166-1 alpha-2 (former),Netherlands Antilles,2010-12-15,ANHH
+BQ,ISO 3166-1 alpha-2 (former),British Antarctic Territory,1979,AQ
+BU,ISO 3166-1 alpha-2 (former),"Burma, Socialist Republic of the Union of",1989-12-05,MM
+BY,ISO 3166-1 alpha-2 (former),Byelorussian SSR Soviet Socialist Republic,1992-06-15,BY
+CS,ISO 3166-1 alpha-2 (former),"Czechoslovakia, Czechoslovak Socialist Republic",1993-06-15,CSHH
+CS,ISO 3166-1 alpha-2 (former),Serbia and Montenegro,2006-09-26,CSXX
+CT,ISO 3166-1 alpha-2 (former),Canton and Enderbury Islands,1984,CTKI
+DD,ISO 3166-1 alpha-2 (former),German Democratic Republic,1990-10-30,DDDE
+DY,ISO 3166-1 alpha-2 (former),Dahomey,1977,BJ
+FQ,ISO 3166-1 alpha-2 (former),French Southern and Antarctic Territories,1979,FQHH
+FX,ISO 3166-1 alpha-2 (former),"France, Metropolitan",1997-07-14,FR
+GE,ISO 3166-1 alpha-2 (former),Gilbert and Ellice Islands,1979,GEHH
+HV,ISO 3166-1 alpha-2 (former),"Upper Volta, Republic of",1984,BF
+JT,ISO 3166-1 alpha-2 (former),Johnston Island,1986,UM
+MI,ISO 3166-1 alpha-2 (former),Midway Islands,1986,UM
+NH,ISO 3166-1 alpha-2 (former),New Hebrides,1980,VU
+NQ,ISO 3166-1 alpha-2 (former),Dronning Maud Land,1983,AQ
+NT,ISO 3166-1 alpha-2 (former),Neutral Zone,1993-07-12,NTHH
+PC,ISO 3166-1 alpha-2 (former),Pacific Islands (trust territory),1986,PCHH
+PU,ISO 3166-1 alpha-2 (former),US Miscellaneous Pacific Islands,1986,UM
+PZ,ISO 3166-1 alpha-2 (former),Panama Canal Zone,1980,PZPA
+RH,ISO 3166-1 alpha-2 (former),Southern Rhodesia,1980,ZW
+SK,ISO 3166-1 alpha-2 (former),Sikkim,1975,SKIN
+SU,ISO 3166-1 alpha-2 (former),"USSR, Union of Soviet Socialist Republics",1992-08-30,SUHH
+TP,ISO 3166-1 alpha-2 (former),East Timor,2002-05-20,TL
+VD,ISO 3166-1 alpha-2 (former),"Viet-Nam, Democratic Republic of",1977,VN
+WK,ISO 3166-1 alpha-2 (former),Wake Island,1986,UM
+YD,ISO 3166-1 alpha-2 (former),"Yemen, Democratic, People's Democratic Republic of",1990-08-14,YDYE
+YU,ISO 3166-1 alpha-2 (former),"Yugoslavia, (Socialist) Federal Republic of",2003-07-23,YUCS
+ZR,ISO 3166-1 alpha-2 (former),"Zaire, Republic of",1997-07-14,CD

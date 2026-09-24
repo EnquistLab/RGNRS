@@ -1,0 +1,61 @@
+system,entity_key,country_iso,name,kind,valid_from,valid_to,note
+no-fylke,NO-TRONDELAG,NO,Trøndelag,superseded,2018-01-01,,2018 merger of Nord-Trøndelag and Sør-Trøndelag
+no-fylke,NO-VIKEN,NO,Viken,superseded,2020-01-01,2023-12-31,"Akershus, Buskerud and Østfold; dissolved 2024-01-01"
+no-fylke,NO-INNLANDET,NO,Innlandet,superseded,2020-01-01,,Hedmark and Oppland
+no-fylke,NO-VESTLAND,NO,Vestland,superseded,2020-01-01,,Hordaland and Sogn og Fjordane
+no-fylke,NO-VESTFOLD-TELEMARK,NO,Vestfold og Telemark,superseded,2020-01-01,2023-12-31,Vestfold and Telemark; dissolved 2024-01-01
+no-fylke,NO-TROMS-FINNMARK,NO,Troms og Finnmark,superseded,2020-01-01,2023-12-31,Troms and Finnmark; dissolved 2024-01-01
+no-fylke,NO-AGDER,NO,Agder,superseded,2020-01-01,,Aust-Agder and Vest-Agder
+se-lan-alias,SE-LAN-SWE.1_1,SE,Blekinge,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.10_1,SE,Norrbotten,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.11_1,SE,Orebro,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.12_1,SE,Östergötland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.13_1,SE,Skåne,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.14_1,SE,Södermanland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.15_1,SE,Stockholm,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.16_1,SE,Uppsala,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.17_1,SE,Värmland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.18_1,SE,Västerbotten,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.19_1,SE,Västernorrland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.2_1,SE,Dalarna,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.20_1,SE,Västmanland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.21_1,SE,Västra Götaland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.3_1,SE,Gävleborg,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.4_1,SE,Gotland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.5_1,SE,Halland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.6_1,SE,Jämtland,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.7_1,SE,Jönköping,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.8_1,SE,Kalmar,alias,,,the same GADM unit under the name records use
+se-lan-alias,SE-LAN-SWE.9_1,SE,Kronoberg,alias,,,the same GADM unit under the name records use
+se-landskap,SE-LS-Blekinge,SE,Blekinge,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Bohuslan,SE,Bohuslän,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Dalarna,SE,Dalarna,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Dalsland,SE,Dalsland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Gotland,SE,Gotland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Gastrikland,SE,Gästrikland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Halland,SE,Halland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Halsingland,SE,Hälsingland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Harjedalen,SE,Härjedalen,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Jamtland,SE,Jämtland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Lappland,SE,Lappland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Medelpad,SE,Medelpad,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Norrbotten,SE,Norrbotten,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Narke,SE,Närke,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Skane,SE,Skåne,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Smaland,SE,Småland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Sodermanland,SE,Södermanland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Uppland,SE,Uppland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Varmland,SE,Värmland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Vasterbotten,SE,Västerbotten,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Vastergotland,SE,Västergötland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Vastmanland,SE,Västmanland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Angermanland,SE,Ångermanland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Oland,SE,Öland,parallel,,,landskap (province); extent not yet sourced
+se-landskap,SE-LS-Ostergotland,SE,Östergötland,parallel,,,landskap (province); extent not yet sourced
+se-lappmark,SE-LP-Lule,SE,Lule lappmark,parallel,,,lappmark; extent not yet sourced
+se-lappmark,SE-LP-Lycksele,SE,Lycksele lappmark,parallel,,,lappmark; extent not yet sourced
+se-lappmark,SE-LP-Pite,SE,Pite lappmark,parallel,,,lappmark; extent not yet sourced
+se-lappmark,SE-LP-Torne,SE,Torne lappmark,parallel,,,lappmark; extent not yet sourced
+se-lappmark,SE-LP-Asele,SE,Åsele lappmark,parallel,,,lappmark; extent not yet sourced
+gb-vice-county,GB-VC,GB,Watsonian vice-county,parallel,,,"botanical recording unit, boundaries frozen at 1852; extent not yet sourced"
+gb-vice-county,IE-VC,IE,Watsonian vice-county,parallel,,,"botanical recording unit, boundaries frozen at 1852; extent not yet sourced"

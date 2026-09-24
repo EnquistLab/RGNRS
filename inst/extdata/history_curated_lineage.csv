@@ -1,0 +1,58 @@
+from_entity,to_entity,relation,date,source
+SUHH,RU,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,AM,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,AZ,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,BY,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,EE,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,GE,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,KZ,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,KG,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,LV,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,LT,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,MD,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,TJ,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,TM,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,UA,dissolution,1991-12-26,CLDR territoryAlias SU
+SUHH,UZ,dissolution,1991-12-26,CLDR territoryAlias SU
+CSHH,CZ,dissolution,1993-01-01,CLDR territoryAlias 200
+CSHH,SK,dissolution,1993-01-01,CLDR territoryAlias 200
+DDDE,DE,absorbed,1990-10-03,CLDR territoryAlias DD
+YDYE,YE,merged,1990-05-22,CLDR territoryAlias YD
+YUCS,SI,dissolution,1992-04-27,"CLDR territoryAlias 890 (RS ME replaced by CSXX, their direct predecessor)"
+YUCS,HR,dissolution,1992-04-27,"CLDR territoryAlias 890 (RS ME replaced by CSXX, their direct predecessor)"
+YUCS,MK,dissolution,1992-04-27,"CLDR territoryAlias 890 (RS ME replaced by CSXX, their direct predecessor)"
+YUCS,BA,dissolution,1992-04-27,"CLDR territoryAlias 890 (RS ME replaced by CSXX, their direct predecessor)"
+YUCS,CSXX,dissolution,1992-04-27,"CLDR territoryAlias 890 (RS ME replaced by CSXX, their direct predecessor)"
+CSXX,RS,dissolution,2006-06-03,CLDR territoryAlias CS
+CSXX,ME,dissolution,2006-06-03,CLDR territoryAlias CS
+RS,XK,secession,2008-02-17,curated
+ANHH,CW,dissolution,2010-10-10,CLDR territoryAlias AN
+ANHH,SX,dissolution,2010-10-10,CLDR territoryAlias AN
+ANHH,BQ,dissolution,2010-10-10,CLDR territoryAlias AN
+ANHH,AW,secession,1986-01-01,curated (ISO 3166-3 comment)
+VNRV,VN,absorbed,1976-07-02,curated
+RUBI,RW,dissolution,1962-07-01,curated
+RUBI,BI,dissolution,1962-07-01,curated
+GEHH,KI,dissolution,1976-01-01,ISO 3166-3 comment
+GEHH,TV,dissolution,1976-01-01,ISO 3166-3 comment
+PCHH,FM,dissolution,1994-10-01,ISO 3166-3 comment
+PCHH,MH,dissolution,1994-10-01,ISO 3166-3 comment
+PCHH,MP,dissolution,1994-10-01,ISO 3166-3 comment
+PCHH,PW,dissolution,1994-10-01,ISO 3166-3 comment
+SKIN,IN,absorbed,1975-05-16,curated
+PZPA,PA,absorbed,1979-10-01,curated
+NTHH,SA,dissolution,1991-12-26,CLDR territoryAlias NT
+NTHH,IQ,dissolution,1991-12-26,CLDR territoryAlias NT
+CTKI,KI,absorbed,1979-07-12,curated
+CSH665,IL,partition,1948-05-14,curated
+CSH665,PS,partition,1948-05-14,curated
+CSH3,US,absorbed,1959-01-03,curated
+CSH4,US,absorbed,1959-08-21,curated
+CSH21,CA,absorbed,1949-03-31,curated
+CSH730,KP,partition,1945-08-15,curated
+CSH730,KR,partition,1945-08-15,curated
+FQHH,AQ,dissolution,1980-01-01,CLDR territoryAlias FQ
+FQHH,TF,dissolution,1980-01-01,CLDR territoryAlias FQ
+CSH291,DE,territory_to,1939-09-01,"curated: annexed by Germany 1939, part of Poland from 1945"
+CSH291,PL,territory_to,1939-09-01,"curated: annexed by Germany 1939, part of Poland from 1945"
+CSH462,GH,absorbed,1957-03-06,curated: joined the Gold Coast at Ghana's independence (outside the one-year geometry window)

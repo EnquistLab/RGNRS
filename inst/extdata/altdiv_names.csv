@@ -1,0 +1,103 @@
+entity_key,name,match
+NO-TRONDELAG,Trøndelag,exact
+NO-VIKEN,Viken,exact
+NO-INNLANDET,Innlandet,exact
+NO-VESTLAND,Vestland,exact
+NO-VESTFOLD-TELEMARK,Vestfold og Telemark,exact
+NO-TROMS-FINNMARK,Troms og Finnmark,exact
+NO-AGDER,Agder,exact
+SE-LAN-SWE.1_1,Blekinge,exact
+SE-LAN-SWE.1_1,Blekinge län,exact
+SE-LAN-SWE.1_1,Blekinges län,exact
+SE-LAN-SWE.10_1,Norrbotten,exact
+SE-LAN-SWE.10_1,Norrbotten län,exact
+SE-LAN-SWE.10_1,Norrbottens län,exact
+SE-LAN-SWE.11_1,Orebro,exact
+SE-LAN-SWE.11_1,Orebro län,exact
+SE-LAN-SWE.11_1,Orebros län,exact
+SE-LAN-SWE.12_1,Östergötland,exact
+SE-LAN-SWE.12_1,Östergötland län,exact
+SE-LAN-SWE.12_1,Östergötlands län,exact
+SE-LAN-SWE.13_1,Skåne,exact
+SE-LAN-SWE.13_1,Skåne län,exact
+SE-LAN-SWE.13_1,Skånes län,exact
+SE-LAN-SWE.14_1,Södermanland,exact
+SE-LAN-SWE.14_1,Södermanland län,exact
+SE-LAN-SWE.14_1,Södermanlands län,exact
+SE-LAN-SWE.15_1,Stockholm,exact
+SE-LAN-SWE.15_1,Stockholm län,exact
+SE-LAN-SWE.15_1,Stockholms län,exact
+SE-LAN-SWE.16_1,Uppsala,exact
+SE-LAN-SWE.16_1,Uppsala län,exact
+SE-LAN-SWE.16_1,Uppsalas län,exact
+SE-LAN-SWE.17_1,Värmland,exact
+SE-LAN-SWE.17_1,Värmland län,exact
+SE-LAN-SWE.17_1,Värmlands län,exact
+SE-LAN-SWE.18_1,Västerbotten,exact
+SE-LAN-SWE.18_1,Västerbotten län,exact
+SE-LAN-SWE.18_1,Västerbottens län,exact
+SE-LAN-SWE.19_1,Västernorrland,exact
+SE-LAN-SWE.19_1,Västernorrland län,exact
+SE-LAN-SWE.19_1,Västernorrlands län,exact
+SE-LAN-SWE.2_1,Dalarna,exact
+SE-LAN-SWE.2_1,Dalarna län,exact
+SE-LAN-SWE.2_1,Dalarnas län,exact
+SE-LAN-SWE.20_1,Västmanland,exact
+SE-LAN-SWE.20_1,Västmanland län,exact
+SE-LAN-SWE.20_1,Västmanlands län,exact
+SE-LAN-SWE.21_1,Västra Götaland,exact
+SE-LAN-SWE.21_1,Västra Götaland län,exact
+SE-LAN-SWE.21_1,Västra Götalands län,exact
+SE-LAN-SWE.3_1,Gävleborg,exact
+SE-LAN-SWE.3_1,Gävleborg län,exact
+SE-LAN-SWE.3_1,Gävleborgs län,exact
+SE-LAN-SWE.4_1,Gotland,exact
+SE-LAN-SWE.4_1,Gotland län,exact
+SE-LAN-SWE.4_1,Gotlands län,exact
+SE-LAN-SWE.5_1,Halland,exact
+SE-LAN-SWE.5_1,Halland län,exact
+SE-LAN-SWE.5_1,Hallands län,exact
+SE-LAN-SWE.6_1,Jämtland,exact
+SE-LAN-SWE.6_1,Jämtland län,exact
+SE-LAN-SWE.6_1,Jämtlands län,exact
+SE-LAN-SWE.7_1,Jönköping,exact
+SE-LAN-SWE.7_1,Jönköping län,exact
+SE-LAN-SWE.7_1,Jönköpings län,exact
+SE-LAN-SWE.8_1,Kalmar,exact
+SE-LAN-SWE.8_1,Kalmar län,exact
+SE-LAN-SWE.8_1,Kalmars län,exact
+SE-LAN-SWE.9_1,Kronoberg,exact
+SE-LAN-SWE.9_1,Kronoberg län,exact
+SE-LAN-SWE.9_1,Kronobergs län,exact
+SE-LS-Blekinge,Blekinge,exact
+SE-LS-Bohuslan,Bohuslän,exact
+SE-LS-Dalarna,Dalarna,exact
+SE-LS-Dalsland,Dalsland,exact
+SE-LS-Gotland,Gotland,exact
+SE-LS-Gastrikland,Gästrikland,exact
+SE-LS-Halland,Halland,exact
+SE-LS-Halsingland,Hälsingland,exact
+SE-LS-Harjedalen,Härjedalen,exact
+SE-LS-Jamtland,Jämtland,exact
+SE-LS-Lappland,Lappland,exact
+SE-LS-Medelpad,Medelpad,exact
+SE-LS-Norrbotten,Norrbotten,exact
+SE-LS-Narke,Närke,exact
+SE-LS-Skane,Skåne,exact
+SE-LS-Smaland,Småland,exact
+SE-LS-Sodermanland,Södermanland,exact
+SE-LS-Uppland,Uppland,exact
+SE-LS-Varmland,Värmland,exact
+SE-LS-Vasterbotten,Västerbotten,exact
+SE-LS-Vastergotland,Västergötland,exact
+SE-LS-Vastmanland,Västmanland,exact
+SE-LS-Angermanland,Ångermanland,exact
+SE-LS-Oland,Öland,exact
+SE-LS-Ostergotland,Östergötland,exact
+SE-LP-Lule,Lule lappmark,exact
+SE-LP-Lycksele,Lycksele lappmark,exact
+SE-LP-Pite,Pite lappmark,exact
+SE-LP-Torne,Torne lappmark,exact
+SE-LP-Asele,Åsele lappmark,exact
+GB-VC,^VC ?[0-9]+,regex
+IE-VC,^VC ?[0-9]+,regex

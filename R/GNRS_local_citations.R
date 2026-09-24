@@ -108,11 +108,16 @@ GNRS_local_citations <- function(dir = gnrs_cache_dir(), bibtex_file = NULL, qui
         "GeoNames. Gazetteer (allCountries), file dated ", version,
         ". https://www.geonames.org/ (CC BY 4.0). Accessed ", accessed, "."
       )
-    } else {
+    } else if (source %in% c("history", "cshapes")) {
+      # the registry carries the full citation for these components
+      paste0(spec$citation, if (!is.na(accessed)) paste0(" Built ", accessed, ".") else "")
+    } else if (source == "geonames") {
       paste0(
         "GeoNames. Alternate names (alternateNamesV2), file dated ", version,
         ". https://www.geonames.org/ (CC BY 4.0). Accessed ", accessed, "."
       )
+    } else {
+      paste0(spec$full_name, ". ", spec$citation %||% spec$url)
     }
     rows[[length(rows) + 1]] <- data.frame(
       what = "source", name = spec$full_name, version = version,
