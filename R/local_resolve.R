@@ -54,7 +54,7 @@ gnrs_resolve <- function(u, bb, threshold = 0.5) {
   u$alt_division <- na_chr
   u$alt_division_system <- na_chr
   u$alt_division_level <- na_chr
-  u$alt_division_extent_known <- NA
+  u$alt_division_extent_known <- rep(NA, nrow(u))
 
   if (n == 0) {
     return(gnrs_summarize(u, bb))

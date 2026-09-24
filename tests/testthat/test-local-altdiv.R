@@ -73,3 +73,16 @@ test_that("extents name GADM units that exist", {
   expect_true(all(grepl("^[A-Z]{3}[.][0-9]+(_[0-9]+)?$", a$extent$gid)))
   expect_true(all(a$extent$level %in% c(1L, 2L)))
 })
+
+test_that("the session cache is for one directory, and the build creates the directory", {
+  a <- file.path(tempdir(), "gnrs-altdiv-a", "nested")
+  b <- file.path(tempdir(), "gnrs-altdiv-b")
+  unlink(c(dirname(a), b), recursive = TRUE)
+  expect_false(dir.exists(a))
+  gnrs_build_altdiv(dir = a, quiet = TRUE)
+  expect_true(gnrs_is_built("altdiv", a))
+  expect_false(is.null(gnrs_altdiv(a)))
+  # a directory without the component gets nothing, not a's tables
+  expect_null(gnrs_altdiv(b))
+  expect_false(is.null(gnrs_altdiv(a)))
+})

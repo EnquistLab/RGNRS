@@ -6,7 +6,7 @@
 #' is kept in the standard user cache directory, and can be removed again with
 #' \code{GNRS_local_remove()}.
 #'
-#' Two components are fetched by default, and four more can be added.
+#' Two components are fetched by default, and five more can be added.
 #' \code{"gnrs"} is the web service's own
 #' reference tables of countries, states/provinces and counties/parishes,
 #' fetched through its API in a few small requests: every political division it
@@ -69,6 +69,9 @@
 #'   and, for \code{GNRS_local()}'s historical modes, \code{"cshapes"} (the
 #'   CShapes 2.0 boundaries of former countries, from the \code{cshapes}
 #'   package when it is installed, otherwise a 60 MB download) and
+#'   \code{"altdiv"} (alternative and superseded sub-national divisions, from
+#'   curation shipped with the package: nothing is downloaded, and
+#'   \code{GNRS_local()} builds it on first use) and
 #'   \code{"history"} (the historical entities, names and lineage, assembled
 #'   from tables shipped with the package and from CShapes, which it builds if
 #'   it is missing).  The other components are layered on or filtered to the
@@ -118,7 +121,10 @@ GNRS_local_build <- function(sources = c("gnrs", "geonames"),
     return(invisible(NULL))
   }
 
-  if (!"gnrs" %in% sources && !gnrs_is_built("gnrs", dir)) {
+  # CShapes and the alternative divisions stand alone; everything else is
+  # layered on or filtered to the service's tables
+  dependent <- setdiff(sources, c("cshapes", "altdiv"))
+  if (length(dependent) && !"gnrs" %in% sources && !gnrs_is_built("gnrs", dir)) {
     if (!quiet) {
       message("The other components are layered on the service's reference tables, so 'gnrs' is built first.")
     }

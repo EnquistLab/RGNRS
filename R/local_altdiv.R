@@ -30,6 +30,7 @@ gnrs_altdiv_path <- function(table, dir = gnrs_cache_dir()) {
 #' @keywords internal
 #' @noRd
 gnrs_build_altdiv <- function(dir = gnrs_cache_dir(create = TRUE), quiet = FALSE) {
+  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE, showWarnings = FALSE)
   rd <- function(f) utils::read.csv(gnrs_extdata(f), stringsAsFactors = FALSE,
                                     encoding = "UTF-8", na.strings = "")
   units <- rd("altdiv_units.csv")
@@ -82,9 +83,12 @@ gnrs_build_altdiv <- function(dir = gnrs_cache_dir(create = TRUE), quiet = FALSE
 #' @keywords internal
 #' @noRd
 gnrs_altdiv <- function(dir = gnrs_cache_dir()) {
-  if (!is.null(gnrs_env$altdiv)) return(gnrs_env$altdiv)
   paths <- gnrs_altdiv_path(c("units", "names", "extent"), dir)
   if (!all(file.exists(paths))) return(NULL)
+  # the cache is for this directory and these files: a call with another dir,
+  # or after a rebuild, reads afresh
+  stamp <- paste(normalizePath(dir, winslash = "/"), paste(file.mtime(paths), collapse = "|"))
+  if (!is.null(gnrs_env$altdiv) && identical(gnrs_env$altdiv_stamp, stamp)) return(gnrs_env$altdiv)
   rd <- function(p) as.data.frame(nanoparquet::read_parquet(p))
   a <- list(units = rd(paths[1]), names = rd(paths[2]), extent = rd(paths[3]))
   a$units$valid_from <- as.Date(a$units$valid_from)
@@ -101,6 +105,7 @@ gnrs_altdiv <- function(dir = gnrs_cache_dir()) {
   a$exact <- a$names$match == "exact"
   a$key_exact <- paste(a$country_of[a$exact], a$names$lower[a$exact], sep = "\u001f")
   gnrs_env$altdiv <- a
+  gnrs_env$altdiv_stamp <- stamp
   a
 }
 

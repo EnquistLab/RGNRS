@@ -175,3 +175,15 @@ test_that("the history arguments come after quiet, so positional callers still w
   expect_equal(r$country, "Mexico")
   expect_equal(names(formals(GNRS_local))[6], "quiet")
 })
+
+test_that("a state resolved within a successor carries the summary of that resolution", {
+  # the Territory of Hawaii was absorbed into the United States, which the
+  # synthetic reference has, so a state given under it resolves there
+  r <- gnrs_test_resolve(dir, "Territory of Hawaii", "Arizona")
+  expect_equal(r$entity_key, "CSH4")
+  expect_equal(r$subnational_status, "resolved in successor")
+  expect_equal(r$state_province, "Arizona")
+  expect_equal(r$geonameid, r$state_province_id)
+  expect_true(is.finite(r$overall_score))
+  expect_equal(r$overall_score, round((r$match_score_country + r$match_score_state_province) / 2, 2))
+})

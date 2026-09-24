@@ -38,8 +38,12 @@
 # ---------------------------------------------------------------------------
 suppressMessages({library(data.table); library(nanoparquet)})
 
-OUT <- file.path("C:/Users/bmaitner/Desktop/current_projects/RGNRS", "inst", "extdata")
-GADM <- "C:/Users/bmaitner/Desktop/current_projects/garden_variety_traits/data/services_cache/gadmindex-units.gz.parquet"
+# Run from the package root.  The GADM unit index (RGVS's gadmindex-units
+# parquet) is read from wherever GNRS_GADM_INDEX points.
+if (!file.exists("DESCRIPTION")) stop("Run this script from the package root.")
+OUT <- file.path("inst", "extdata")
+GADM <- Sys.getenv("GNRS_GADM_INDEX", unset = NA)
+if (is.na(GADM)) stop("Set GNRS_GADM_INDEX to the path of the GADM unit index parquet.")
 dir.create(OUT, recursive = TRUE, showWarnings = FALSE)
 D <- function(x) as.Date(x)
 units <- list(); names_ <- list(); extent <- list()

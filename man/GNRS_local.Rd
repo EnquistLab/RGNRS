@@ -55,7 +55,9 @@ tables shipped with the package plus the CShapes historical boundaries,
 which are read from the \code{cshapes} package when it is installed and
 otherwise downloaded from the publisher (about 60 MB) when
 \code{build_missing} allows building; with \code{history = "current"}
-nothing beyond the ordinary components is needed.}
+nothing beyond the ordinary components is needed.  When the component
+cannot be prepared (a package not installed, a download declined), the
+call says so and resolves current divisions only.}
 
 \item{tolerance_years}{With \code{history = "at_date"}, how many years
 either side of a former country's existence a record date may fall.  A
@@ -69,9 +71,17 @@ A data.frame with the same columns as \code{GNRS()}, one row per
   current countries descending from a matched former country),
   \code{subnational_resolved_in} and \code{subnational_status} (a state or
   county given under a former country is looked up within its successors;
-  "unverifiable" if none contains it), and \code{date_check}.  Scores are numeric rather than the character
-  strings the web service returns; identifiers are character, as the web
-  service returns them; empty values are "".
+  "unverifiable" if none contains it), and \code{date_check}.  Whatever
+  \code{history} is, four further columns report a state or county that is
+  an alternative or superseded division rather than one the service knows
+  (a Swedish landskap, a Watsonian vice-county, a Norwegian county from
+  before the 2020 reform): \code{alt_division} (its name),
+  \code{alt_division_system}, \code{alt_division_level} and
+  \code{alt_division_extent_known} (whether the GADM units it covers are
+  recorded, so that a coordinate could be checked against it); "" or NA
+  for a row that resolved ordinarily.  Scores are numeric rather than the
+  character strings the web service returns; identifiers are character, as
+  the web service returns them; empty values are "".
 }
 \description{
 Resolves country, state/province and county/parish names against a locally

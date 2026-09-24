@@ -94,3 +94,11 @@ test_that("reading the alternate names keeps only what the SQL keeps", {
   expect_equal(alt$name, c("Estados Unidos", "United States"))
   expect_equal(alt$geonameid, c(6252001L, 6252001L))
 })
+
+test_that("a standalone component builds without the service's tables", {
+  fresh <- file.path(tempdir(), "gnrs-standalone")
+  unlink(fresh, recursive = TRUE)
+  expect_silent(GNRS_local_build("altdiv", dir = fresh, quiet = TRUE))
+  expect_true(gnrs_is_built("altdiv", fresh))
+  expect_false(gnrs_is_built("gnrs", fresh))
+})

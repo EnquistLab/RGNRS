@@ -312,8 +312,10 @@ gnrs_resolve_history <- function(u, m, dates, bb_current, dir, threshold, histor
                  state_province_verbatim = u$state_province_verbatim[i],
                  county_parish_verbatim = u$county_parish_verbatim[i], stringsAsFactors = FALSE)
     }))
+    # successors the current backbone lacks are dropped before, not after, the
+    # emptiness test
+    if (!is.null(cand)) cand <- cand[!is.na(cand$country_verbatim), , drop = FALSE]
     if (!is.null(cand) && nrow(cand)) {
-      cand <- cand[!is.na(cand$country_verbatim), , drop = FALSE]
       rs <- gnrs_resolve(cand[, c("country_verbatim", "state_province_verbatim", "county_parish_verbatim")],
                          bb_current, threshold = threshold)
       rs$row <- cand$row
@@ -341,6 +343,14 @@ gnrs_resolve_history <- function(u, m, dates, bb_current, dir, threshold, histor
         r_all$poldiv_submitted[rs$row] <- lvl_sub
         r_all$poldiv_matched[rs$row] <- lvl_mat
         r_all$match_status[rs$row] <- ifelse(lvl_sub == lvl_mat, "full match", "partial match")
+        # ... as were the lowest matched identifier and the overall score, which
+        # combines the historical country's score with the successor's divisions'
+        r_all$geonameid[rs$row] <- ifelse(is.na(rs$county_parish_id), rs$state_province_id, rs$county_parish_id)
+        sc <- r_all$match_score_country[rs$row]
+        ss <- rs$match_score_state_province
+        sk <- rs$match_score_county_parish
+        overall <- ifelse(is.na(sk), (sc + ss) / 2, (sc + ss + sk) / 3)
+        r_all$overall_score[rs$row] <- gnrs_numeric2(overall)
       }
     }
     unres <- sub_rows[is.na(r_all$subnational_status[sub_rows])]

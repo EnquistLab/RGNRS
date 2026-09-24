@@ -39,7 +39,9 @@
 #'   which are read from the \code{cshapes} package when it is installed and
 #'   otherwise downloaded from the publisher (about 60 MB) when
 #'   \code{build_missing} allows building; with \code{history = "current"}
-#'   nothing beyond the ordinary components is needed.
+#'   nothing beyond the ordinary components is needed.  When the component
+#'   cannot be prepared (a package not installed, a download declined), the
+#'   call says so and resolves current divisions only.
 #' @param tolerance_years With \code{history = "at_date"}, how many years
 #'   either side of a former country's existence a record date may fall.  A
 #'   single non-negative number.
@@ -50,9 +52,17 @@
 #'   current countries descending from a matched former country),
 #'   \code{subnational_resolved_in} and \code{subnational_status} (a state or
 #'   county given under a former country is looked up within its successors;
-#'   "unverifiable" if none contains it), and \code{date_check}.  Scores are numeric rather than the character
-#'   strings the web service returns; identifiers are character, as the web
-#'   service returns them; empty values are "".
+#'   "unverifiable" if none contains it), and \code{date_check}.  Whatever
+#'   \code{history} is, four further columns report a state or county that is
+#'   an alternative or superseded division rather than one the service knows
+#'   (a Swedish landskap, a Watsonian vice-county, a Norwegian county from
+#'   before the 2020 reform): \code{alt_division} (its name),
+#'   \code{alt_division_system}, \code{alt_division_level} and
+#'   \code{alt_division_extent_known} (whether the GADM units it covers are
+#'   recorded, so that a coordinate could be checked against it); "" or NA
+#'   for a row that resolved ordinarily.  Scores are numeric rather than the
+#'   character strings the web service returns; identifiers are character, as
+#'   the web service returns them; empty values are "".
 #' @note \strong{This is a new implementation and should be treated as beta.}
 #'   It is a port of the SQL the web service runs, resolving against the
 #'   service's own reference tables, so identifiers, standard names and codes
@@ -140,24 +150,32 @@ GNRS_local <- function(political_division_dataframe,
   # 4.0 and the package is MIT). With the cshapes package installed that downloads
   # nothing, so it happens on first use as it always did; without it CShapes has to be
   # downloaded, which follows build_missing like every other download.
+  # When it cannot be prepared (a package missing, or a download declined), the
+  # call goes on with current divisions only, and says so, rather than returning
+  # nothing: the default build prepares the ordinary components only.
   if (history != "current" && !gnrs_is_built("history", dir)) {
+    ready <- FALSE
     need <- c("sf", "countrycode")[!vapply(c("sf", "countrycode"), requireNamespace, logical(1), quietly = TRUE)]
     if (length(need)) {
       message("history = \"", history, "\" needs the ", paste(need, collapse = " and "),
-              " package", if (length(need) > 1) "s" else "", ". Install ",
-              if (length(need) > 1) "them" else "it", ", or call again with history = \"current\".")
-      return(invisible(NULL))
-    }
-    if (!gnrs_is_built("cshapes", dir)) {
-      if (requireNamespace("cshapes", quietly = TRUE)) {
+              " package", if (length(need) > 1) "s" else "", ", which ",
+              if (length(need) > 1) "are" else "is", " not installed.")
+    } else if (!gnrs_is_built("cshapes", dir) && !requireNamespace("cshapes", quietly = TRUE) &&
+               !gnrs_require_sources("cshapes", dir = dir, build_missing = build_missing, quiet = quiet)) {
+      message("The CShapes data that history = \"", history, "\" needs was not built.")
+    } else {
+      if (!gnrs_is_built("cshapes", dir)) {
         if (!quiet) message("Building the CShapes component from the cshapes package (no download) ...")
         gnrs_build_cshapes(dir = dir, quiet = TRUE)
-      } else if (!gnrs_require_sources("cshapes", dir = dir, build_missing = build_missing, quiet = quiet)) {
-        return(invisible(NULL))
       }
+      if (!quiet) message("Building the history component (no download) ...")
+      gnrs_build_history(dir = dir, quiet = TRUE)
+      ready <- TRUE
     }
-    if (!quiet) message("Building the history component (no download) ...")
-    gnrs_build_history(dir = dir, quiet = TRUE)
+    if (!ready) {
+      message("Resolving against current political divisions only (history = \"current\").")
+      history <- "current"
+    }
   }
   if (!alternate_names && gnrs_is_built("geonames", dir)) {
     # Built but not wanted: the name table on disk includes the GeoNames
